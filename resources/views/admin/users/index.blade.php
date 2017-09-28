@@ -5,7 +5,6 @@
     @can('user_create')
     <p>
         <a href="{{ route('admin.users.create') }}" class="btn btn-success">@lang('quickadmin.qa_add_new')</a>
-        
     </p>
     @endcan
 

@@ -118,5 +118,39 @@ class AuthServiceProvider extends ServiceProvider
             return in_array($user->role_id, [1, 2]);
         });
 
+        // Auth gates for: Address
+        Gate::define('address_access', function ($user) {
+            return in_array($user->role_id, [1, 2]);
+        });
+        Gate::define('address_create', function ($user) {
+            return in_array($user->role_id, [1, 2]);
+        });
+        Gate::define('address_edit', function ($user) {
+            return in_array($user->role_id, [1, 2]);
+        });
+        Gate::define('address_view', function ($user) {
+            return in_array($user->role_id, [1, 2]);
+        });
+        Gate::define('address_delete', function ($user) {
+            return in_array($user->role_id, [1, 2]);
+        });
+
+        // Auth gates for: Competition
+        Gate::define('competition_access', function ($user) {
+            return in_array($user->role_id, [1, 2]);
+        });
+        Gate::define('competition_create', function ($user) {
+            return in_array($user->role_id, [1, 2]);
+        });
+        Gate::define('competition_edit', function ($user) {
+            return in_array($user->role_id, [1, 2]);
+        });
+        Gate::define('competition_view', function ($user) {
+            return in_array($user->role_id, [1, 2]);
+        });
+        Gate::define('competition_delete', function ($user) {
+            return in_array($user->role_id, [1, 2]);
+        });
+
     }
 }

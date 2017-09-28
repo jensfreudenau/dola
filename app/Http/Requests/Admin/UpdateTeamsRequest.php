@@ -23,7 +23,6 @@ class UpdateTeamsRequest extends FormRequest
     public function rules()
     {
         return [
-            
             'name' => 'required',
         ];
     }

@@ -73,9 +73,24 @@
                 </a>
             </li>
             @endcan
-            
 
-            
+            @can('address_access')
+                <li class="{{ $request->segment(2) == 'addresses' ? 'active' : '' }}">
+                    <a href="{{ route('admin.addresses.index') }}">
+                        <i class="fa fa-soccer-ball-o"></i>
+                        <span class="title">@lang('quickadmin.addresses.title')</span>
+                    </a>
+                </li>
+            @endcan
+
+            @can('competition_access')
+                <li class="{{ $request->segment(2) == 'competitions' ? 'active' : '' }}">
+                    <a href="{{ route('admin.competitions.index') }}">
+                        <i class="fa fa-soccer-ball-o"></i>
+                        <span class="title">@lang('quickadmin.competitions.title')</span>
+                    </a>
+                </li>
+            @endcan
 
             
 

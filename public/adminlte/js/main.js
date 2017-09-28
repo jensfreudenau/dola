@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$excel(document).ready(function () {
 
     var activeSub = $(document).find('.active-sub');
     if (activeSub.length > 0) {
@@ -11,40 +11,7 @@ $(document).ready(function () {
         dom: 'lBfrtip<"actions">',
         columnDefs: [],
         "iDisplayLength": 100,
-        "aaSorting": [],
-        buttons: [
-            {
-                extend: 'copy',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend: 'csv',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend: 'excel',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend: 'pdf',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend: 'print',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            'colvis'
-        ]
+        "aaSorting": []
     };
     $('.datatable').each(function () {
         if ($(this).hasClass('dt-select')) {

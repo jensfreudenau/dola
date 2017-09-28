@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Address;
 use App\Team;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -37,13 +38,14 @@ class TeamsController extends Controller
         if (! Gate::allows('team_create')) {
             return abort(401);
         }
-        return view('admin.teams.create');
+        $addresses = Address::get()->pluck('name', 'id')->prepend('Please select', '');
+        return view('admin.teams.create', compact('addresses'));
     }
 
     /**
      * Store a newly created Team in storage.
      *
-     * @param  \App\Http\Requests\StoreTeamsRequest  $request
+     * @param StoreTeamsRequest|\App\Http\Requests\StoreTeamsRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreTeamsRequest $request)
@@ -51,7 +53,13 @@ class TeamsController extends Controller
         if (! Gate::allows('team_create')) {
             return abort(401);
         }
-        $team = Team::create($request->all());
+
+        $team = Team::create([
+            'name'    => $request->name,
+            'leader'    => $request->leader,
+            'addresses_id'    => $request->address_id,
+            'homepage'    => $request->homepage,
+        ]);
 
 
 
@@ -71,15 +79,15 @@ class TeamsController extends Controller
             return abort(401);
         }
         $team = Team::findOrFail($id);
-
-        return view('admin.teams.edit', compact('team'));
+        $addresses = Address::get()->pluck('name', 'id')->prepend('Please select', '');
+        return view('admin.teams.edit', compact('team', 'addresses'));
     }
 
     /**
      * Update Team in storage.
      *
-     * @param  \App\Http\Requests\UpdateTeamsRequest  $request
-     * @param  int  $id
+     * @param UpdateTeamsRequest|\App\Http\Requests\UpdateTeamsRequest $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateTeamsRequest $request, $id)
@@ -107,11 +115,13 @@ class TeamsController extends Controller
         if (! Gate::allows('team_view')) {
             return abort(401);
         }
-        $players = \App\Player::where('team_id', $id)->get();$games = \App\Game::where('team1_id', $id)->get();$games = \App\Game::where('team2_id', $id)->get();
-
+        $players = \App\Player::where('team_id', $id)->get();
+        $games1 = \App\Game::where('team1_id', $id)->get();
+        $games = \App\Game::where('team2_id', $id)->get();
+        $players = \App\Player::where('team_id', $id)->get();
         $team = Team::findOrFail($id);
 
-        return view('admin.teams.show', compact('team', 'players', 'games', 'games'));
+        return view('admin.teams.show', compact('team', 'players', 'games1', 'games'));
     }
 
 
