@@ -25,6 +25,10 @@
                             <td>{{ $game->start_time }}</td>
                         </tr>
                         <tr>
+                            <th>@lang('quickadmin.games.fields.start-time')</th>
+                            <td>{{ $game->start_time }}</td>
+                        </tr>
+                        <tr>
                             <th>@lang('quickadmin.games.fields.result1')</th>
                             <td>{{ $game->result1 }}</td>
                         </tr>
