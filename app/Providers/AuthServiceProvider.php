@@ -84,20 +84,20 @@ class AuthServiceProvider extends ServiceProvider
             return in_array($user->role_id, [1, 2]);
         });
 
-        // Auth gates for: Players
-        Gate::define('player_access', function ($user) {
+        // Auth gates for: Participators
+        Gate::define('participator_access', function ($user) {
             return in_array($user->role_id, [1, 2]);
         });
-        Gate::define('player_create', function ($user) {
+        Gate::define('participator_create', function ($user) {
             return in_array($user->role_id, [1, 2]);
         });
-        Gate::define('player_edit', function ($user) {
+        Gate::define('participator_edit', function ($user) {
             return in_array($user->role_id, [1, 2]);
         });
-        Gate::define('player_view', function ($user) {
+        Gate::define('participator_view', function ($user) {
             return in_array($user->role_id, [1, 2]);
         });
-        Gate::define('player_delete', function ($user) {
+        Gate::define('participator_delete', function ($user) {
             return in_array($user->role_id, [1, 2]);
         });
 

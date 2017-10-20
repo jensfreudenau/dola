@@ -14,7 +14,7 @@ use App\Http\Controllers\Controller;
 
 class CompetitionController extends Controller
 {
-    use FileUploadTrait;
+
     public function index()
     {
         if (!Gate::allows('competition_access')) {
@@ -26,12 +26,18 @@ class CompetitionController extends Controller
 
     public function show($id)
     {
+        if (!Gate::allows('competition_access')) {
+            return abort(401);
+        }
         $competition = Competition::findOrFail($id);
         return view('admin.competitions.show', compact('competition'));
     }
 
     public function edit($id)
     {
+        if (!Gate::allows('competition_edit')) {
+            return abort(401);
+        }
         $competition = Competition::findOrFail($id);
         $addresses   = Address::get()->pluck('name', 'id');
         $teams       = Team::get()->pluck('name', 'id')->prepend('Please select', '');
@@ -58,17 +64,19 @@ class CompetitionController extends Controller
      */
     public function update(UpdateCompetitionsRequest $request, $id)
     {
-        if (!Competition::allows('game_edit')) {
+        if (!Gate::allows('competition_edit')) {
             return abort(401);
         }
-
         $competition = Competition::findOrFail($id);
         $competition->update($request->all());
-        return redirect('admin.competitions.index');
+        return redirect('/admin/competitions');
     }
 
     public function create()
     {
+        if (!Gate::allows('competition_create')) {
+            return abort(401);
+        }
         $addresses   = Address::get()->pluck('name', 'id')->prepend('Please select', '');
         $teams       = Team::get()->pluck('name', 'id')->prepend('Please select', '');
         $competition = '';
@@ -78,13 +86,15 @@ class CompetitionController extends Controller
         return view('admin.competitions.create', compact('addresses', 'teams', 'competition', 'indoor', 'cross', 'track'));
     }
 
+    use FileUploadTrait;
     public function store(StoreCompetitionsRequest $request)
     {
-
-        $timetables = $this->parseCSV($request);
+        if (!Gate::allows('competition_create')) {
+            return abort(401);
+        }
+        $timetables = $this->parseCSV($request, true);
         $request['timetable_1'] = $timetables['timetable_1'];
         $request['timetable_2'] = $timetables['timetable_2'];
-        $request['addresses_id'] = 2;
 
         Competition::create($request->all());
         return redirect('/admin/competitions');
@@ -98,7 +108,7 @@ class CompetitionController extends Controller
      */
     public function destroy($id)
     {
-        if (!Competition::allows('competition_delete')) {
+        if (!Gate::allows('competition_delete')) {
             return abort(401);
         }
         $game = Competition::findOrFail($id);

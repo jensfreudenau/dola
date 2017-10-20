@@ -11,17 +11,17 @@
     {!! Form::label('team_id', Lang::get('quickadmin.teams.title'), ['class' => 'control-label']) !!}
     {!! Form::select('team_id', $teams, ( $competition ? $competition->team_id: null), ['class' => 'form-control select2']) !!}
 
-    {!! Form::label('address_id', Lang::get('quickadmin.addresses.title'), ['class' => 'control-label']) !!}
-    {!! Form::select('address_id', $addresses, ( $competition ? $competition->addresses_id: null), ['class' => 'form-control select2']) !!}
+    {!! Form::label('addresses_id', Lang::get('quickadmin.addresses.title'), ['class' => 'control-label']) !!}
+    {!! Form::select('addresses_id', $addresses, ( $competition ? $competition->addresses_id: null), ['class' => 'form-control select2']) !!}
 
     {!! Form::label('info', Lang::get('quickadmin.competitions.fields.info')) !!}
-    {!! Form::text('info', null, ['id'=> 'competition-headline', 'class'=>'form-control']) !!}
+    {!! Form::text('info', null, ['id'=> 'competition-info', 'class'=>'form-control']) !!}
 
     {!! Form::label('award', Lang::get('quickadmin.competitions.fields.award')) !!}
-    {!! Form::text('award', null, ['id'=> 'competition-headline', 'class'=>'form-control']) !!}
+    {!! Form::text('award', null, ['id'=> 'competition-award', 'class'=>'form-control']) !!}
 
     {!! Form::label('classes', Lang::get('quickadmin.competitions.fields.classes')) !!}
-    {!! Form::text('classes', null, ['id'=> 'competition-headline', 'class'=>'form-control']) !!}
+    {!! Form::text('classes', null, ['id'=> 'competition-classes', 'class'=>'form-control']) !!}
 
 </div>
 
@@ -36,7 +36,7 @@
             {{ Form::radio('season', 'halle') }} @lang('quickadmin.competitions.indoor')
         </label>
         <label class="btn btn-primary {{$cross}}">
-            {{ Form::radio('season', 'cross', true, ['checked' => 'checked']) }} @lang('quickadmin.competitions.cross')
+            {{ Form::radio('season', 'cross') }} @lang('quickadmin.competitions.cross')
         </label>
     </div>
 </div>

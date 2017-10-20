@@ -9,12 +9,12 @@
                 <table class="table">
                     <tr>
                         <th>Team</th>
-                        <th>Players</th>
+                        <th>Participators</th>
                     </tr>
                     @forelse($teams as $team)
                         <tr>
                             <td>{{ $team->name }}</td>
-                            <td><a href="/players/{{ $team->id }}">{{ $team->players->count() }}</a></td>
+                            <td><a href="/participator/{{ $team->id }}">{{ $team->participator->count() }}</a></td>
                         </tr>
                     @empty
                         <tr>

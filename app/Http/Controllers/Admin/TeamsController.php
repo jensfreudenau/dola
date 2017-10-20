@@ -79,7 +79,7 @@ class TeamsController extends Controller
             return abort(401);
         }
         $team = Team::findOrFail($id);
-        $addresses = Address::get()->pluck('name', 'id')->prepend('Please select', '');
+        $addresses = Address::get()->pluck('name', 'id');
         return view('admin.teams.edit', compact('team', 'addresses'));
     }
 
@@ -115,13 +115,13 @@ class TeamsController extends Controller
         if (! Gate::allows('team_view')) {
             return abort(401);
         }
-        $players = \App\Player::where('team_id', $id)->get();
-        $games1 = \App\Game::where('team1_id', $id)->get();
-        $games = \App\Game::where('team2_id', $id)->get();
-        $players = \App\Player::where('team_id', $id)->get();
+        $tracks = \App\Competition::where('team_id', $id)->where('season', 'bahn')->get();
+        $indoors = \App\Competition::where('team_id', $id)->where('season', 'halle')->get();
+        $crosses = \App\Competition::where('team_id', $id)->where('season', 'cross')->get();
+
         $team = Team::findOrFail($id);
 
-        return view('admin.teams.show', compact('team', 'players', 'games1', 'games'));
+        return view('admin.teams.show', compact('team', 'tracks', 'indoors', 'crosses'));
     }
 
 

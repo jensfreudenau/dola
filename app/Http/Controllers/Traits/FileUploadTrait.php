@@ -8,7 +8,7 @@ use jensf\csv\CsvParser;
 
 trait FileUploadTrait
 {
-    public function parseCSV($request)
+    public function parseCSV($request, $bootstrap=false)
     {
         $timeTable1='';
         $timeTable2='';
@@ -22,15 +22,18 @@ trait FileUploadTrait
                 }
                 $inputCsv = CsvParser::createFromPath($uploadFile);
                 $inputCsv->setDelimiter(';');
+                $inputCsv->setBootstrap($bootstrap);
                # $inputCsv->setEncodingFrom("utf-8");
                 $headers    = $inputCsv->fetchOne();
                 $numHeaders = count($headers) - 1;
                 if ($numHeaders > $maxColumns) {
-                    $timeTable1 = $inputCsv->arrayToTable(0, 4);
+                    $dataStack = $inputCsv->arrayToTable(0, 4);
+                    $timeTable1 =$inputCsv->createHtmlTable($dataStack);
                     $inputCsv->setScheduler(false);
                     $timeTable2 = $inputCsv->arrayToTable(5, $numHeaders);
                 } else {
-                    $timeTable1 = $inputCsv->arrayToTable(0, $numHeaders);
+                    $dataStack = $inputCsv->arrayToTable(0, $numHeaders);
+                    $timeTable1 =$inputCsv->createHtmlTable($dataStack);
                 }
             }
         }

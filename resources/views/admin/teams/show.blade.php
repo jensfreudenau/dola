@@ -20,48 +20,48 @@
                 </div>
             </div><!-- Nav tabs -->
 <ul class="nav nav-tabs" role="tablist">
-    
-<li role="presentation" class="active"><a href="#players" aria-controls="players" role="tab" data-toggle="tab">Players</a></li>
-<li role="presentation" class=""><a href="#games" aria-controls="games" role="tab" data-toggle="tab">Games</a></li>
-<li role="presentation" class=""><a href="#games" aria-controls="games" role="tab" data-toggle="tab">Games</a></li>
+
+<li role="presentation" class="active"><a href="#track" aria-controls="track" role="tab" data-toggle="tab">@lang('quickadmin.competitions.track')</a></li>
+<li role="presentation" class=""><a href="#indoor" aria-controls="indoor" role="tab" data-toggle="tab">@lang('quickadmin.competitions.indoor')</a></li>
+<li role="presentation" class=""><a href="#cross" aria-controls="cross" role="tab" data-toggle="tab">@lang('quickadmin.competitions.cross')</a></li>
 </ul>
 
 <!-- Tab panes -->
 <div class="tab-content">
     
-<div role="tabpanel" class="tab-pane active" id="players">
-<table class="table table-bordered table-striped {{ count($players) > 0 ? 'datatable' : '' }}">
+<div role="tabpanel" class="tab-pane active" id="track">
+<table class="table table-bordered table-striped {{ count($tracks) > 0 ? 'datatable' : '' }}">
     <thead>
-        <tr>
-            <th>@lang('quickadmin.players.fields.team')</th>
-                        <th>@lang('quickadmin.players.fields.name')</th>
-                        <th>@lang('quickadmin.players.fields.surname')</th>
-                        <th>@lang('quickadmin.players.fields.birth-date')</th>
-                        <th>&nbsp;</th>
-        </tr>
+    <tr>
+        <th>@lang('quickadmin.competitions.fields.header')</th>
+        <th>@lang('quickadmin.competitions.fields.start_date')</th>
+        <th>@lang('quickadmin.competitions.fields.submit_date')</th>
+        <th>@lang('quickadmin.competitions.fields.classes')</th>
+        <th>&nbsp;</th>
+    </tr>
     </thead>
 
     <tbody>
-        @if (count($players) > 0)
-            @foreach ($players as $player)
-                <tr data-entry-id="{{ $player->id }}">
-                    <td>{{ $player->team->name or '' }}</td>
-                                <td>{{ $player->name }}</td>
-                                <td>{{ $player->surname }}</td>
-                                <td>{{ $player->birth_date }}</td>
+        @if (count($tracks) > 0)
+            @foreach ($tracks as $track)
+                <tr data-entry-id="{{ $track->id }}">
+                    <td>{{ $track->header}}</td>
+                    <td>{{ $track->start_date }}</td>
+                    <td>{{ $track->submit_date }}</td>
+                    <td>{{ $track->classes }}</td>
                                 <td>
-                                    @can('player_view')
-                                    <a href="{{ route('admin.players.show',[$player->id]) }}" class="btn btn-xs btn-primary">@lang('quickadmin.qa_view')</a>
+                                    @can('team_view')
+                                    <a href="{{ route('admin.competitions.show',[$track->id]) }}" class="btn btn-xs btn-primary">@lang('quickadmin.qa_view')</a>
                                     @endcan
-                                    @can('player_edit')
-                                    <a href="{{ route('admin.players.edit',[$player->id]) }}" class="btn btn-xs btn-info">@lang('quickadmin.qa_edit')</a>
+                                    @can('team_edit')
+                                    <a href="{{ route('admin.competitions.edit',[$track->id]) }}" class="btn btn-xs btn-info">@lang('quickadmin.qa_edit')</a>
                                     @endcan
-                                    @can('player_delete')
+                                    @can('team_delete')
                                     {!! Form::open(array(
                                         'style' => 'display: inline-block;',
                                         'method' => 'DELETE',
                                         'onsubmit' => "return confirm('".trans("quickadmin.qa_are_you_sure")."');",
-                                        'route' => ['admin.players.destroy', $player->id])) !!}
+                                        'route' => ['admin.competitions.destroy', $track->id])) !!}
                                     {!! Form::submit(trans('quickadmin.qa_delete'), array('class' => 'btn btn-xs btn-danger')) !!}
                                     {!! Form::close() !!}
                                     @endcan
@@ -76,41 +76,39 @@
     </tbody>
 </table>
 </div>
-<div role="tabpanel" class="tab-pane " id="games">
-<table class="table table-bordered table-striped {{ count($games) > 0 ? 'datatable' : '' }}">
+<div role="tabpanel" class="tab-pane " id="indoor">
+<table class="table table-bordered table-striped {{ count($indoors) > 0 ? 'datatable' : '' }}">
     <thead>
         <tr>
-            <th>@lang('quickadmin.games.fields.team1')</th>
-                        <th>@lang('quickadmin.games.fields.team2')</th>
-                        <th>@lang('quickadmin.games.fields.start-time')</th>
-                        <th>@lang('quickadmin.games.fields.result1')</th>
-                        <th>@lang('quickadmin.games.fields.result2')</th>
-                        <th>&nbsp;</th>
+            <th>@lang('quickadmin.competitions.fields.header')</th>
+            <th>@lang('quickadmin.competitions.fields.start_date')</th>
+            <th>@lang('quickadmin.competitions.fields.submit_date')</th>
+            <th>@lang('quickadmin.competitions.fields.classes')</th>
+            <th>&nbsp;</th>
         </tr>
     </thead>
 
     <tbody>
-        @if (count($games) > 0)
-            @foreach ($games as $game)
-                <tr data-entry-id="{{ $game->id }}">
-                    <td>{{ $game->team1->name or '' }}</td>
-                                <td>{{ $game->team2->name or '' }}</td>
-                                <td>{{ $game->start_time }}</td>
-                                <td>{{ $game->result1 }}</td>
-                                <td>{{ $game->result2 }}</td>
+        @if (count($indoors) > 0)
+            @foreach ($indoors as $indoor)
+                <tr data-entry-id="{{ $indoor->id }}">
+                                <td>{{ $indoor->header}}</td>
+                                <td>{{ $indoor->start_date }}</td>
+                                <td>{{ $indoor->submit_date }}</td>
+                                <td>{{ $indoor->classes }}</td>
                                 <td>
-                                    @can('game_view')
-                                    <a href="{{ route('admin.games.show',[$game->id]) }}" class="btn btn-xs btn-primary">@lang('quickadmin.qa_view')</a>
+                                    @can('team_view')
+                                    <a href="{{ route('admin.games.show',[$indoor->id]) }}" class="btn btn-xs btn-primary">@lang('quickadmin.qa_view')</a>
                                     @endcan
-                                    @can('game_edit')
-                                    <a href="{{ route('admin.games.edit',[$game->id]) }}" class="btn btn-xs btn-info">@lang('quickadmin.qa_edit')</a>
+                                    @can('team_edit')
+                                    <a href="{{ route('admin.games.edit',[$indoor->id]) }}" class="btn btn-xs btn-info">@lang('quickadmin.qa_edit')</a>
                                     @endcan
-                                    @can('game_delete')
+                                    @can('team_delete')
                                     {!! Form::open(array(
                                         'style' => 'display: inline-block;',
                                         'method' => 'DELETE',
                                         'onsubmit' => "return confirm('".trans("quickadmin.qa_are_you_sure")."');",
-                                        'route' => ['admin.games.destroy', $game->id])) !!}
+                                        'route' => ['admin.games.destroy', $indoor->id])) !!}
                                     {!! Form::submit(trans('quickadmin.qa_delete'), array('class' => 'btn btn-xs btn-danger')) !!}
                                     {!! Form::close() !!}
                                     @endcan
@@ -125,41 +123,39 @@
     </tbody>
 </table>
 </div>
-<div role="tabpanel" class="tab-pane " id="games">
-<table class="table table-bordered table-striped {{ count($games) > 0 ? 'datatable' : '' }}">
+<div role="tabpanel" class="tab-pane " id="cross">
+<table class="table table-bordered table-striped {{ count($crosses) > 0 ? 'datatable' : '' }}">
     <thead>
-        <tr>
-            <th>@lang('quickadmin.games.fields.team1')</th>
-                        <th>@lang('quickadmin.games.fields.team2')</th>
-                        <th>@lang('quickadmin.games.fields.start-time')</th>
-                        <th>@lang('quickadmin.games.fields.result1')</th>
-                        <th>@lang('quickadmin.games.fields.result2')</th>
-                        <th>&nbsp;</th>
-        </tr>
+    <tr>
+        <th>@lang('quickadmin.competitions.fields.header')</th>
+        <th>@lang('quickadmin.competitions.fields.start_date')</th>
+        <th>@lang('quickadmin.competitions.fields.submit_date')</th>
+        <th>@lang('quickadmin.competitions.fields.classes')</th>
+        <th>&nbsp;</th>
+    </tr>
     </thead>
 
     <tbody>
-        @if (count($games) > 0)
-            @foreach ($games as $game)
-                <tr data-entry-id="{{ $game->id }}">
-                    <td>{{ $game->team1->name or '' }}</td>
-                                <td>{{ $game->team2->name or '' }}</td>
-                                <td>{{ $game->start_time }}</td>
-                                <td>{{ $game->result1 }}</td>
-                                <td>{{ $game->result2 }}</td>
+        @if (count($crosses) > 0)
+            @foreach ($crosses as $cross)
+                <tr data-entry-id="{{ $cross->id }}">
+                    <td>{{ $cross->header}}</td>
+                    <td>{{ $cross->start_date }}</td>
+                    <td>{{ $cross->submit_date }}</td>
+                    <td>{{ $cross->classes }}</td>
                                 <td>
-                                    @can('game_view')
-                                    <a href="{{ route('admin.games.show',[$game->id]) }}" class="btn btn-xs btn-primary">@lang('quickadmin.qa_view')</a>
+                                    @can('team_view')
+                                    <a href="{{ route('admin.games.show',[$cross->id]) }}" class="btn btn-xs btn-primary">@lang('quickadmin.qa_view')</a>
                                     @endcan
-                                    @can('game_edit')
-                                    <a href="{{ route('admin.games.edit',[$game->id]) }}" class="btn btn-xs btn-info">@lang('quickadmin.qa_edit')</a>
+                                    @can('team_edit')
+                                    <a href="{{ route('admin.games.edit',[$cross->id]) }}" class="btn btn-xs btn-info">@lang('quickadmin.qa_edit')</a>
                                     @endcan
-                                    @can('game_delete')
+                                    @can('team_delete')
                                     {!! Form::open(array(
                                         'style' => 'display: inline-block;',
                                         'method' => 'DELETE',
                                         'onsubmit' => "return confirm('".trans("quickadmin.qa_are_you_sure")."');",
-                                        'route' => ['admin.games.destroy', $game->id])) !!}
+                                        'route' => ['admin.games.destroy', $cross->id])) !!}
                                     {!! Form::submit(trans('quickadmin.qa_delete'), array('class' => 'btn btn-xs btn-danger')) !!}
                                     {!! Form::close() !!}
                                     @endcan

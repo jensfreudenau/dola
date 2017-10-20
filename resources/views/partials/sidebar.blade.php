@@ -56,11 +56,11 @@
             </li>
             @endcan
             
-            @can('player_access')
-            <li class="{{ $request->segment(2) == 'players' ? 'active' : '' }}">
-                <a href="{{ route('admin.players.index') }}">
+            @can('participators_access')
+            <li class="{{ $request->segment(2) == 'participators' ? 'active' : '' }}">
+                <a href="{{ route('admin.participators.index') }}">
                     <i class="fa fa-user"></i>
-                    <span class="title">@lang('quickadmin.players.title')</span>
+                    <span class="title">@lang('quickadmin.participators.title')</span>
                 </a>
             </li>
             @endcan

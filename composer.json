@@ -6,21 +6,25 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
+        "doctrine/dbal": "^2.5",
+        "guzzlehttp/guzzle": "~6.3",
+        "intervention/image": "^2.3",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.3",
-        "intervention/image": "^2.3",
-        "doctrine/dbal": "^2.5",
         "league/csv": "^8.0"
     },
     "require-dev": {
+        "appzcoder/crud-generator": "^3.0",
         "fzaninotto/faker": "~1.4",
+        "laralib/l5scaffold": "^1.0",
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "~5.7"
     },
     "autoload": {
         "classmap": [
-            "database"
+            "database",
+            "vendor/jensf/csv"
         ],
         "psr-4": {
             "App\\": "app/"

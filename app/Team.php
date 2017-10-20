@@ -27,6 +27,11 @@ class Team extends Model
         return $this->belongsTo(Address::class);
     }
 
+    public function competition()
+    {
+        return $this->hasMany(Competition::class);
+    }
+
     public function getGamesAttribute()
     {
         return Game::where(function($query) {

@@ -16,56 +16,9 @@ $(document).ready(function () {
         retrieve: true,
         dom: 'lBfrtip<"actions">',
         columnDefs: [],
-        "iDisplayLength": 100,
+        "iDisplayLength": 200,
         "aaSorting": [],
-        buttons: [
-            {
-                extend: 'copy',
-                exportOptions: {
-                    columns: ':visible',
-                    format: {
-                        body: handleCheckboxes
-                    }
-                }
-            },
-            {
-                extend: 'csv',
-                exportOptions: {
-                    columns: ':visible',
-                    format: {
-                        body: handleCheckboxes
-                    }
-                }
-            },
-            {
-                extend: 'excel',
-                exportOptions: {
-                    columns: ':visible',
-                    format: {
-                        body: handleCheckboxes
-                    }
-                }
-            },
-            {
-                extend: 'pdf',
-                exportOptions: {
-                    columns: ':visible',
-                    format: {
-                        body: handleCheckboxes
-                    }
-                }
-            },
-            {
-                extend: 'print',
-                exportOptions: {
-                    columns: ':visible',
-                    format: {
-                        body: handleCheckboxes
-                    }
-                }
-            },
-            'colvis'
-        ]
+        buttons: []
     };
     $('.datatable').each(function () {
         if ($(this).hasClass('dt-select')) {

@@ -9,7 +9,10 @@
         </div>
         <div class="panel-body">
             <div class="row">
-                <div class="col-md-8">
+                <p>&nbsp;</p>
+                <a href="{{ route('admin.competitions.index') }}"
+                class="btn btn-default">@lang('quickadmin.qa_back_to_list')</a>
+                <div class="col-md-10">
                     <table class="table table-hover">
                         <tr>
                             <th>@lang('quickadmin.competitions.fields.start_date')</th>
@@ -29,11 +32,11 @@
                             <td>
                                 <div class="panel panel-default">
                                     <div class="panel-body">
-                                        {{ $competition->address->name }}<br>
-                                        {{ $competition->address->street }}<br>
-                                        {{ $competition->address->zip }}
-                                        {{ $competition->address->city }}<br>
-                                        {{ $competition->address->email }}<br>
+                                        {{ $competition->team->address->name }}<br>
+                                        {{ $competition->team->address->street }}<br>
+                                        {{ $competition->team->address->zip }}
+                                        {{ $competition->team->address->city }}<br>
+                                        {{ $competition->team->address->email }}<br>
                                         {{ $competition->team->homepage }}
                                     </div>
                                 </div>
@@ -54,10 +57,35 @@
                             <td colspan="2">{!! $competition->timetable_2 or '' !!}</td>
                         </tr>
                     </table>
+
+                    <div class="panel-body table-responsive">
+                        <table class="table table-bordered table-striped datatable">
+                            <thead>
+                            <tr>
+                                <th>@lang('quickadmin.participator_team.fields.clubname')</th>
+                                <th>@lang('quickadmin.participator_team.fields.annunciator')</th>
+                                <th>@lang('quickadmin.participator.fields.name')</th>
+                                <th>@lang('quickadmin.participator.fields.discipline')</th>
+                                <th>@lang('quickadmin.participator.fields.age_group')</th>
+
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            @foreach($competition->Posts as $participator)
+                                <tr>
+                                    <td>{{$participator->ParticipatorTeam->clubname}}</td>
+                                    <td>{{$participator->ParticipatorTeam->annunciator}}</td>
+                                    <td>{{$participator->prename}} &nbsp; {{$participator->lastname}}</td>
+                                    <td>{{$participator->discipline}}</td>
+                                    <td>{{$participator->age_group}}</td>
+                                </tr>
+                            @endforeach
+                            <tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-            <p>&nbsp;</p>
-            <a href="{{ route('admin.competitions.index') }}" class="btn btn-default">@lang('quickadmin.qa_back_to_list')</a>
         </div>
     </div>
 @stop

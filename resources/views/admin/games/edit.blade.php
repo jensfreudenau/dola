@@ -14,7 +14,7 @@
             <div class="row">
                 <div class="col-xs-12 form-group">
                     {!! Form::label('team1_id', 'Team1', ['class' => 'control-label']) !!}
-                    {!! Form::select('team1_id', $team1s, old('team1_id'), ['class' => 'form-control select2']) !!}
+                    {!! Form::select('team1_id', $teams, old('team1_id'), ['class' => 'form-control select2']) !!}
                     <p class="help-block"></p>
                     @if($errors->has('team1_id'))
                         <p class="help-block">

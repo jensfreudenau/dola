@@ -39,6 +39,7 @@ class StoreCompetitionsRequest extends FormRequest
     {
         return [
             'start_date' => 'date_format:'.config('app.date_format'),
+            'submit_date' => 'date_format:'.config('app.date_format'),
         ];
     }
 

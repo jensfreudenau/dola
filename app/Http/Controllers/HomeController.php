@@ -2,20 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Competition;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 
     /**
      * Show the application dashboard.
@@ -24,6 +16,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $count = Competition::count();
+        $competitions = Competition::orderBy('start_date', 'asc')->skip($count-5)->take(5)->get();
+        $results = Competition::where('results_1', '!=', '')->orderBy('start_date', 'desc')->take(5)->get();
+
+        return view('home', compact('competitions', 'results'));
     }
 }

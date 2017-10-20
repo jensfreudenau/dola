@@ -1,10 +1,23 @@
 <?php
-Route::get('/', function () { return redirect('/games'); });
-Route::get('/games', 'GamesController@index');
-Route::get('/teams', 'TeamsController@index');
-Route::get('/players/{team_id}', 'TeamsController@players');
-Route::get('/table', 'TableController@index');
+Route::get('/', 'HomeController@index');
 
+Route::post('competitions', 'CompetitionsController@create');
+Route::get('competitions/comps/{competition_id}', 'CompetitionsController@comps');
+
+Route::get('/track', 'CompetitionsController@track')->name('bahn');
+Route::get('/indoor', 'CompetitionsController@indoor')->name('halle');
+Route::get('/cross', 'CompetitionsController@cross');
+
+Route::get('/details/{competition_id}', 'CompetitionsController@details');
+Route::get('/players/{team_id}', 'TeamsOldController@players');
+Route::get('/table', 'TableController@index');
+Route::get('teams/competitions_select/{competition_id}', 'TeamsController@competitions_select');
+Route::get('teams/list_participator/{participator_team_id}', 'TeamsController@listParticipator');
+Route::get('/teams/create/{competition_id?}', 'TeamsController@create');
+Route::post('teams/store', 'TeamsController@store')->name('teams/store');
+
+
+#Route::resource('teams', 'TeamsController');
 // Authentication Routes...
 $this->get('login', 'Auth\LoginController@showLoginForm')->name('auth.login');
 $this->post('login', 'Auth\LoginController@login')->name('auth.login');
@@ -21,15 +34,15 @@ $this->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm
 $this->post('password/reset', 'Auth\ResetPasswordController@reset')->name('auth.password.reset');
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
-    Route::get('/home', 'HomeController@index');
+
     Route::resource('roles', 'Admin\RolesController');
     Route::post('roles_mass_destroy', ['uses' => 'Admin\RolesController@massDestroy', 'as' => 'roles.mass_destroy']);
     Route::resource('users', 'Admin\UsersController');
     Route::post('users_mass_destroy', ['uses' => 'Admin\UsersController@massDestroy', 'as' => 'users.mass_destroy']);
     Route::resource('teams', 'Admin\TeamsController');
     Route::post('teams_mass_destroy', ['uses' => 'Admin\TeamsController@massDestroy', 'as' => 'teams.mass_destroy']);
-    Route::resource('players', 'Admin\PlayersController');
-    Route::post('players_mass_destroy', ['uses' => 'Admin\PlayersController@massDestroy', 'as' => 'players.mass_destroy']);
+    Route::resource('participators', 'Admin\ParticipatorsController');
+    Route::post('participators_mass_destroy', ['uses' => 'Admin\ParticipatorsController@massDestroy', 'as' => 'participators.mass_destroy']);
     Route::resource('games', 'Admin\GamesController');
     Route::post('games_mass_destroy', ['uses' => 'Admin\GamesController@massDestroy', 'as' => 'games.mass_destroy']);
     Route::resource('addresses', 'Admin\AddressesController');

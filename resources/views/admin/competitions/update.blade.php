@@ -13,10 +13,10 @@
                 <div class="col-md-8">
                         <!-- Display Validation Errors -->
                     @include('common.errors')
-                    {!! Form::model($competition, [ 'method' => 'PATCH', 'enctype'=>'multipart/form-data', 'action'=>['Admin\CompetitionController@update', $competition->id]]) !!}
+
+                    {!! Form::model($competition, ['method' => 'PUT', 'route' => ['admin.competitions.update', $competition->id]]) !!}
                     @include('admin.competitions._form')
-
-
+                    {{ Form::submit() }}
                     {!! Form::close() !!}
                 </div>
             </div>
