@@ -16,6 +16,7 @@
     <link href="{{ asset('css/eventlist.css') }}" rel="stylesheet">
     <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/all.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
     @include('partials.javascripts')
     <script src="{{ asset('js/app.js') }}"></script>
     <!-- Scripts -->
@@ -35,6 +36,6 @@
 
 <!-- Scripts -->
 
-
+@include('partials.footer')
 </body>
 </html>

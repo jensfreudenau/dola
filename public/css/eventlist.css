@@ -9,7 +9,7 @@
     padding: 0px;
 }
 .event-list > li {
-    background-color: rgb(255, 255, 255);
+    background-color: #5b5ca4;
     box-shadow: 0px 0px 5px rgb(51, 51, 51);
     box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.7);
     padding: 0px;
@@ -19,14 +19,14 @@
 .event-list > li > time {
     display: inline-block;
     width: 100%;
-    background-color: #999;
+    /*background-color: #999;*/
     text-align: left;
     text-transform: uppercase;
     padding: 10px 5px 5px 5px;
     color: #ffffff;
 }
 .event-list > li:nth-child(even) > time {
-    background-color: #a45b6d;
+    /*background-color: #a45b6d;*/
     color: #ffffff;
 }
 .event-list > li > time > span {
@@ -35,13 +35,13 @@
 .event-list > li > time > .day {
     display: block;
     font-size: 25px;
-    font-weight: 100;
+    font-weight: 101;
     line-height: 1;
 }
 .event-list > li > time > .year {
     display: block;
     font-size: 25px;
-    font-weight: 100;
+    font-weight: 101;
     line-height: 1;
 }
 .event-list > li time > .month {
@@ -64,7 +64,6 @@
 }
 .event-list > li > .info > .desc {
     font-size: 14px;
-    font-weight: 300;
     margin: 0px;
 }
 .event-list > li > .info > ul,
@@ -112,7 +111,7 @@
         position: relative;
         display: block;
         width: 100%;
-        height: 100px;
+        height: auto;
         padding: 0;
     }
     .event-list > li > time,
@@ -131,12 +130,12 @@
     .event-list > li > time,
     .event-list > li > img {
         width: 120px;
-        height: 100px;
+        min-height: 100px;
         margin: 0px;
     }
     .event-list > li > .info {
         position: relative;
-        height: 100px;
+        min-height: 100px;
         text-align: left;
         padding-right: 40px;
     }

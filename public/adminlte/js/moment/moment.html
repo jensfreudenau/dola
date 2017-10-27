@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible"
+      content="IE=edge">
+<meta content="width=device-width, initial-scale=1.0"
+      name="viewport"/>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<script src="moment.js"></script>
+	<script src="locale/de.js"></script>
+	<title>moment</title>
+</head>
+<body>
+
+<script>
+    var march = moment('11.Februar 2018', ['DD.MMMM YYYY', 'DD.MM.YYYY']);
+	console.log(march.format('DD.MM.YYYY'));
+
+</script>
+</body>
+</html>

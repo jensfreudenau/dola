@@ -17,6 +17,7 @@ $(document).ready(function () {
         dom: 'lBfrtip<"actions">',
         columnDefs: [],
         "iDisplayLength": 200,
+        "aLengthMenu": [[250, 500, 750, -1], [250, 500, 750, "All"]],
         "aaSorting": [],
         buttons: []
     };
@@ -150,7 +151,182 @@ $(document).ready(function () {
 
     $('.select2').select2();
 
+    $('.datepicker').datepicker({
+        autoclose: true,
+        format: "dd.mm.yyyy",
+        language: 'de-DE'
+    });
+    tinyMCE.init({
+        mode: "textareas",
+        themes: "modern",
+        skin: "custom",
+        content_css : '/adminlte/css/tinymce_custom.css',
+        plugins: [
+            "advlist autolink lists link image charmap anchor searchreplace visualblocks code fullscreen insertdatetime media table contextmenu paste codesample"
+        ],
+        relative_urls: false,
+        convert_urls: false,
+        forced_root_block: "",
+        remove_script_host: false,
+//            document_base_url: "http://",
+        toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media code codesample",
+    });
+    Dropzone.options.csvuploader = {
+        maxFilesize: 10, // Mb+
+        autoProcessQueue: false,
+        accept: function (file, done) {
+            var reader = new FileReader();
+            reader.addEventListener("loadend", function (event) {
+                event.preventDefault();
+                processData(event.target.result);
+                done();
+            });
+            reader.readAsText(file);
+        }
+    };
+
+    Dropzone.options.participator = {
+        maxFilesize: 10, // Mb
+        paramName: "file",
+        sending : function(file, xhr, formData) {},
+        success : function(file, response) {},
+        error : function(file, error) {
+            console.error(error);
+        },
+        accept: function (file, done) {
+            location.reload();
+            done();
+        }
+    };
+
+    Dropzone.options.resultsets = {
+        maxFilesize: 10, // Mb
+        paramName: "resultsets",
+        sending : function(file, xhr, formData) {},
+        success : function(file, response) {},
+        error : function(file, error) {
+            console.error(error);
+        },
+        accept: function (file, done) {
+            location.reload();
+            done();
+        }
+    };
+
+    function parsedData(result) {
+        let parsedData = Papa.parse(result, {
+            delimiter: ';'
+        });
+        let $table = formDataTable(parsedData);
+        $(tinymce.get('competition-timetable_1').getBody()).html($table);
+    }
+
+    function formDataTable(response) {
+        var $th = '';
+        var firstColumn = response.data[0]; 
+        response.data.shift();
+        var $table = $('<table class="table table-hover">');
+        var $thead = $('<thead class="thead-inverse">').appendTo($table);
+        $tr = $('<tr>').appendTo($thead);
+        $(firstColumn).each(function (i) {
+            $th = $('<th>', {'html': firstColumn[i]}).appendTo($tr);
+        });
+ 
+        var allData = response.data;
+        var $tbody = $('<tbody>').appendTo($table);
+
+        $(allData).each(function (j) {
+            $tr = $('<tr>').appendTo($tbody);
+            $(allData[j]).each(function (k) {
+                var $td = $('<td>', {'html': allData[j][k]}).appendTo($tr);
+            });
+        });
+        return $table;
+    }
+
+    function processData(csv) {
+        var allTextLines = csv.split(/\r\n|\n/);
+        var lines = [];
+        var table = '';
+        // allTextLines.shift();
+        let flag = -1;
+        for (var i = 0; i < allTextLines.length; i++) {
+            var data = allTextLines[i].split(';');
+            var tarr = [];
+            var anfang = allTextLines[i].indexOf("Zeit");
+            var ende = allTextLines[i].indexOf("Elektr");
+            if (anfang === 0) {
+                flag = 1;
+                setClasses(allTextLines[i]);
+            }
+            if (ende == 0 && flag == 1) {
+                flag = -1;
+            }
+            if (flag === 1) {
+                table += allTextLines[i] + '\r\n';
+            }
+            for (var j = 0; j < data.length; j++) {
+                if (data[j].search("uszei") > 0) {
+                    setAward(data[j]);
+                }
+                if (data[j].search("eldeschl") > 0) {
+                    setMeldeschluss(data[j]);
+                }
+                if (data[j].search("eldung") > 0) {
+                    setMeldungReceiver(data);
+                }
+                tarr.push(data[j]);
+            }
+            lines.push(tarr);
+        }
+        parsedData(table);
+        let headerline = lines[1][0].split(',');
+        setHeader(headerline[0]);
+        setStartDate(headerline[1]);
+        return true;
+    }
 });
+function setHeader(headerline) {
+    let headerlineArr = headerline.split(' am');
+    $('#competition-headline').val(headerlineArr[0]);
+}
+function setStartDate(data) {
+    let startStr = data.toString();
+    var germanDate = moment(startStr, ['DD.MMMM YYYY', 'DD.MM.YYYY']);
+    $('#competition-start_date').val(germanDate.format('DD.MM.YYYY'));
+}
+function setMeldeschluss(data) {
+    let meldeschluss = data.split(':');
+    let meldeschlussStr = meldeschluss[1].replace(/\s/g,'');
+    var germanDate = moment(meldeschlussStr, ['DD.MMMM YYYY', 'DD.MM.YYYY']);
+    $('#competition-submit_date').val(germanDate.format('DD.MM.YYYY'));
+}
+function setClasses(allTextLines) {
+    let classes = allTextLines.split(';');
+    let classStr = classes.join();
+    classStr = classStr.replace(/[Zeit]/g, "");
+    classStr = classStr.replace(/[*]/g, "");
+    classStr = classStr.replace(/[,]/g, ", ");
+    if (classStr.substring(0, 1) == ',') {
+        classStr = classStr.substring(1);
+    }
+    $('#competition-classes').val($.trim(classStr));
+}
+
+function setMeldungReceiver(data) {
+    let meldungName = data[1].split(',');
+    let name = $.trim(meldungName[0]);
+
+    $("#addresses_id option").each(function (a, b) {
+        if ($(this).html() == name) $(this).attr("selected", "selected");
+        $(this).change();
+    });
+}
+function setAward(data) {
+    let ausszeichnung = data.split(':');
+    $('#competition-award').val($.trim(ausszeichnung[1]));
+}
+
 
 function processAjaxTables() {
     $('.ajaxTable').each(function () {

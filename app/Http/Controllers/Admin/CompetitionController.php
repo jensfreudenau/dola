@@ -8,19 +8,22 @@ use App\Http\Controllers\Traits\FileUploadTrait;
 use App\Http\Requests\Admin\StoreCompetitionsRequest;
 use App\Http\Requests\Admin\UpdateCompetitionsRequest;
 use App\Team;
+use App\Upload;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 
 class CompetitionController extends Controller
 {
-
     public function index()
     {
         if (!Gate::allows('competition_access')) {
             return abort(401);
         }
-        $competitions = Competition::all();
+        $competitions = Competition::orderBy('start_date', 'desc')->get();
         return view('admin.competitions.index', compact('competitions'));
     }
 
@@ -41,24 +44,24 @@ class CompetitionController extends Controller
         $competition = Competition::findOrFail($id);
         $addresses   = Address::get()->pluck('name', 'id');
         $teams       = Team::get()->pluck('name', 'id')->prepend('Please select', '');
-        $track = '';
-        $cross = '';
-        $indoor = '';
-        if($competition->season == 'bahn') {
+        $track       = '';
+        $cross       = '';
+        $indoor      = '';
+        if ($competition->season == 'bahn') {
             $track = 'active';
         }
-        if($competition->season == 'cross') {
+        if ($competition->season == 'cross') {
             $cross = 'active';
         }
-        if($competition->season == 'halle') {
+        if ($competition->season == 'halle') {
             $indoor = 'active';
         }
-        return view('admin.competitions.update', compact('addresses',  'competition', 'teams', 'indoor', 'cross', 'track'));
+        return view('admin.competitions.update', compact('addresses', 'competition', 'teams', 'indoor', 'cross', 'track'));
     }
 
     /**
      * Update the given post.
-     * @param  \App\Http\Requests\UpdateCompetitionsRequest $request
+     * @param UpdateCompetitionsRequest $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
@@ -72,6 +75,36 @@ class CompetitionController extends Controller
         return redirect('/admin/competitions');
     }
 
+    use FileUploadTrait;
+    public function participator(Request $request, $id)
+    {
+//        if (!Gate::allows('competition_participator')) {
+//            return abort(401);
+//        }
+        $uploads                    = $this->saveFiles($request);
+        $requests                   = $request->all();
+        $requests['competition_id'] = $id;
+        $requests['type']           = 'participator';
+        $requests['filename']       = $uploads->file;
+        Upload::create($requests);
+        return 'done';
+    }
+
+    public function resultsets(Request $request, $id)
+    {
+//        if (!Gate::allows('competition_resultlists')) {
+//            return abort(401);
+//        }
+        $uploads                    = $this->saveFiles($request);
+        $requests                   = $request->all();
+        Log::info($uploads);
+        $requests['competition_id'] = $id;
+        $requests['type']           = 'resultsets';
+        $requests['filename']       = $uploads->resultsets;
+        Upload::create($requests);
+        return 'done';
+    }
+
     public function create()
     {
         if (!Gate::allows('competition_create')) {
@@ -80,22 +113,17 @@ class CompetitionController extends Controller
         $addresses   = Address::get()->pluck('name', 'id')->prepend('Please select', '');
         $teams       = Team::get()->pluck('name', 'id')->prepend('Please select', '');
         $competition = '';
-        $track = 'active';
-        $cross = '';
-        $indoor = '';
+        $track       = 'active';
+        $cross       = '';
+        $indoor      = '';
         return view('admin.competitions.create', compact('addresses', 'teams', 'competition', 'indoor', 'cross', 'track'));
     }
 
-    use FileUploadTrait;
     public function store(StoreCompetitionsRequest $request)
     {
         if (!Gate::allows('competition_create')) {
             return abort(401);
         }
-        $timetables = $this->parseCSV($request, true);
-        $request['timetable_1'] = $timetables['timetable_1'];
-        $request['timetable_2'] = $timetables['timetable_2'];
-
         Competition::create($request->all());
         return redirect('/admin/competitions');
     }
@@ -114,5 +142,32 @@ class CompetitionController extends Controller
         $game = Competition::findOrFail($id);
         $game->delete();
         return redirect()->route('admin.competitions.index');
+    }
+
+    public function delete_file($id, Request $request)
+    {
+        $requestAll = $request->all();
+        $filename = Upload::findOrFail($id);
+        File::delete('upload/'.$filename->filename);
+        $filename->delete();
+        return redirect()->route('admin.competitions.edit', $requestAll['competition_id']);
+    }
+
+    /**
+     * Delete all selected Game at once.
+     *
+     * @param Request $request
+     */
+    public function massDestroy(Request $request)
+    {
+        if (!Gate::allows('competition_delete')) {
+            return abort(401);
+        }
+        if ($request->input('ids')) {
+            $entries = Competition::whereIn('id', $request->input('ids'))->get();
+            foreach ($entries as $entry) {
+                $entry->delete();
+            }
+        }
     }
 }

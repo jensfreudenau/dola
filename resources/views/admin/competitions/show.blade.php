@@ -58,6 +58,7 @@
                         </tr>
                     </table>
 
+                    <h3 class="text-green">Anzahl Teilnehmer: {{$competition->Participators->count()}}</h3>
                     <div class="panel-body table-responsive">
                         <table class="table table-bordered table-striped datatable">
                             <thead>
@@ -72,7 +73,7 @@
                             </thead>
 
                             <tbody>
-                            @foreach($competition->Posts as $participator)
+                            @foreach($competition->Participators as $participator)
                                 <tr>
                                     <td>{{$participator->ParticipatorTeam->clubname}}</td>
                                     <td>{{$participator->ParticipatorTeam->annunciator}}</td>

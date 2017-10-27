@@ -17,7 +17,7 @@ Route::get('/teams/create/{competition_id?}', 'TeamsController@create');
 Route::post('teams/store', 'TeamsController@store')->name('teams/store');
 
 
-#Route::resource('teams', 'TeamsController');
+
 // Authentication Routes...
 $this->get('login', 'Auth\LoginController@showLoginForm')->name('auth.login');
 $this->post('login', 'Auth\LoginController@login')->name('auth.login');
@@ -34,7 +34,7 @@ $this->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm
 $this->post('password/reset', 'Auth\ResetPasswordController@reset')->name('auth.password.reset');
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
-
+    Route::resource('home', 'Admin\HomeController');
     Route::resource('roles', 'Admin\RolesController');
     Route::post('roles_mass_destroy', ['uses' => 'Admin\RolesController@massDestroy', 'as' => 'roles.mass_destroy']);
     Route::resource('users', 'Admin\UsersController');
@@ -47,7 +47,10 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], 
     Route::post('games_mass_destroy', ['uses' => 'Admin\GamesController@massDestroy', 'as' => 'games.mass_destroy']);
     Route::resource('addresses', 'Admin\AddressesController');
     Route::post('addresses_mass_destroy', ['uses' => 'Admin\AddressesController@massDestroy', 'as' => 'addresses.mass_destroy']);
+    Route::post('competitions/resultsets/{competition_id}', 'Admin\CompetitionController@resultsets')->name('competitions.resultsets');
+    Route::post('competitions/participator/{competition_id}', 'Admin\CompetitionController@participator')->name('competitions.participator');
+    Route::delete('competitions/delete_file/{upload_id}', 'Admin\CompetitionController@delete_file')->name('competitions.delete_file');
     Route::resource('competitions', 'Admin\CompetitionController');
     Route::post('competitions_mass_destroy', ['uses' => 'Admin\CompetitionController@massDestroy', 'as' => 'competitions.mass_destroy']);
-
+    Route::resource('records', 'Admin\RecordController');
 });

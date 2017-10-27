@@ -10,31 +10,45 @@ use Illuminate\Support\Facades\Log;
 class Competition extends Model
 {
     use FormAccessible;
-    protected $fillable = ['addresses_id', 'team_id', 'start_date', 'reuslts_1', 'reuslts_2', 'timetable_1', 'timetable_2', 'participators_1', 'participators_2', 'submit_date', 'header', 'info', 'season', 'classes', 'award'];
+    protected $fillable = ['team_id', 'start_date', 'reuslts_1', 'reuslts_2', 'timetable_1', 'participators_1', 'participators_2', 'submit_date', 'header', 'info', 'season', 'classes', 'award'];
 
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
     }
-//    public function address()
-//    {
-//        return $this->belongsTo(Address::class, 'addresses_id');
-//    }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function team()
     {
         return $this->belongsTo(Team::class, 'team_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function Uploads()
+    {
+        return $this->hasMany(Upload::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function ParticipatorTeam()
     {
         return $this->hasMany(ParticipatorTeam::class);
     }
 
-    public function posts()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function Participators()
     {
-        return $this->hasManyThrough( Participator::class,ParticipatorTeam::class);
+        return $this->hasManyThrough(Participator::class, ParticipatorTeam::class);
     }
+
     /**
      * Get the user's first name.
      *
@@ -55,13 +69,13 @@ class Competition extends Model
     public function getStartDateAttribute($input)
     {
         if ($input != null) {
-            $customFormat =  Carbon::parse($input)->format('d.m.Y') ;
+            $customFormat = Carbon::parse($input)->format('d.m.Y');
         } else {
             $customFormat = '';
         }
-
         return $customFormat;
     }
+
     /**
      * Get attribute from date format
      * @param $input
@@ -71,11 +85,12 @@ class Competition extends Model
     public function setStartDateAttribute($input)
     {
         if ($input != null && $input != '') {
-            $this->attributes['start_time'] = Carbon::createFromFormat(config('app.date_format'), $input)->format('Y-m-d');
+            $this->attributes['start_date'] = Carbon::createFromFormat(config('app.date_format'), $input)->format('Y-m-d');
         } else {
-            $this->attributes['start_time'] = null;
+            $this->attributes['start_date'] = null;
         }
     }
+
     /**
      * Get attribute from date format
      * @param $input
@@ -85,13 +100,13 @@ class Competition extends Model
     public function getSubmitDateAttribute($input)
     {
         if ($input != null) {
-            $customFormat =  Carbon::parse($input)->format('d.m.Y') ;
+            $customFormat = Carbon::parse($input)->format('d.m.Y');
         } else {
             $customFormat = '';
         }
-
         return $customFormat;
     }
+
     /**
      * Get attribute from date format
      * @param $input
@@ -101,9 +116,9 @@ class Competition extends Model
     public function setSubmitDateAttribute($input)
     {
         if ($input != null && $input != '') {
-            $this->attributes['submit_time'] = Carbon::createFromFormat(config('app.date_format'), $input)->format('Y-m-d');
+            $this->attributes['submit_date'] = Carbon::createFromFormat(config('app.date_format'), $input)->format('Y-m-d');
         } else {
-            $this->attributes['submit_time'] = null;
+            $this->attributes['submit_date'] = null;
         }
     }
 }

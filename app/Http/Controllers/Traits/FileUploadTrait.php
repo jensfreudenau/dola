@@ -44,10 +44,10 @@ trait FileUploadTrait
      */
     public function saveFiles(Request $request)
     {
-        if (! file_exists(public_path('uploads'))) {
-            mkdir(public_path('uploads'), 0777);
-            mkdir(public_path('uploads/thumb'), 0777);
-        }
+//        if (! file_exists(public_path('upload'))) {
+//            mkdir(public_path('upload'), 0777);
+//            mkdir(public_path('upload/thumb'), 0777);
+//        }
 
         $finalRequest = $request;
 
@@ -79,7 +79,7 @@ trait FileUploadTrait
                     $finalRequest = new Request(array_merge($finalRequest->all(), [$key => $filename]));
                 } else {
                     $filename = time() . '-' . $request->file($key)->getClientOriginalName();
-                    $request->file($key)->move(public_path('uploads'), $filename);
+                    $request->file($key)->move(public_path('upload'), $filename);
                     $finalRequest = new Request(array_merge($finalRequest->all(), [$key => $filename]));
                 }
             }

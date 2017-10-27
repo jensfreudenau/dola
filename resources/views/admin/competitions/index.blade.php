@@ -17,16 +17,17 @@
         <div class="panel-body table-responsive">
             <table class="table table-bordered table-striped {{ count($competitions) > 0 ? 'datatable' : '' }} @can('competition_delete') dt-select @endcan">
                 <thead>
-                <tr>
-                    @can('competition_delete')
-                        <th style="text-align:center;"><input type="checkbox" id="select-all" /></th>
-                    @endcan
+                    <tr>
+                        @can('competition_delete')
+                            <th style="width:30px;text-align:center;"><input type="checkbox" id="select-all"/></th>
+                        @endcan
 
-                    <th>@lang('quickadmin.competitions.fields.header')</th>
+                        <th>@lang('quickadmin.competitions.fields.header')</th>
                         <th>@lang('quickadmin.competitions.fields.start_date')</th>
                         <th>@lang('quickadmin.competitions.fields.season')</th>
-                    <th>&nbsp;</th>
-                </tr>
+                        <th>@lang('quickadmin.competitions.fields.participator')</th>
+                        <th>&nbsp;</th>
+                    </tr>
                 </thead>
 
                 <tbody>
@@ -39,8 +40,9 @@
 
                             <td>{{ $competition->header or '' }}</td>
                             <td>{{ Carbon\Carbon::parse($competition->start_date)->format('d.m.Y') }}</td>
-                                <td>{{ $competition->season or '' }}</td>
-                                <td>
+                            <td>{{ $competition->season or '' }}</td>
+                            <td>{{ $competition->Participators->count() }}</td>
+                            <td>
                                 @can('competition_view')
                                     <a href="{{ route('admin.competitions.show',[$competition->id]) }}" class="btn btn-xs btn-primary">@lang('quickadmin.qa_view')</a>
                                 @endcan
