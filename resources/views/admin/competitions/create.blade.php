@@ -20,7 +20,7 @@
                 @include('common.errors')
                 {{ Form::open(['url'=>'admin/competitions', 'enctype'=>'multipart/form-data', 'class'=>'dropzone', 'id' => 'csvuploader']) }}
                     @include('admin.competitions._form')
-                    {{ Form::submit() }}
+                    {{ Form::submit('Speichern', ["class"=>"btn btn-primary pull-right"]) }}
                     {!! Form::close() !!}
                     <div id="preview"></div>
                 </div>

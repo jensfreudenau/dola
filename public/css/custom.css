@@ -1,3 +1,28 @@
-a {
-    color:#000;
+/*! normalize.css v3.0.2 | MIT License | git.io/normalize */
+
+
+html {
+    font-family:'Cairo', sans-serif;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+}
+
+a, a:hover, a:active, a:focus{
+    color: #337ab7;
+}
+a:hover {
+    color:#B80638;
+}
+.size-h1 {
+    font-weight: 600;
+}
+.table > thead > tr > th {
+    border-bottom: 1px solid #B80638;
+}
+.red {
+    color:#B80638;
 }

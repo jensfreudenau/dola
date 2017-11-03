@@ -102,19 +102,19 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         // Auth gates for: Games
-        Gate::define('game_access', function ($user) {
+        Gate::define('record_access', function ($user) {
             return in_array($user->role_id, [1, 2]);
         });
-        Gate::define('game_create', function ($user) {
+        Gate::define('record_create', function ($user) {
             return in_array($user->role_id, [1, 2]);
         });
-        Gate::define('game_edit', function ($user) {
+        Gate::define('record_edit', function ($user) {
             return in_array($user->role_id, [1, 2]);
         });
-        Gate::define('game_view', function ($user) {
+        Gate::define('record_view', function ($user) {
             return in_array($user->role_id, [1, 2]);
         });
-        Gate::define('game_delete', function ($user) {
+        Gate::define('record_delete', function ($user) {
             return in_array($user->role_id, [1, 2]);
         });
 

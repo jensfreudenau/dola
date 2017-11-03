@@ -39,8 +39,11 @@ trait FileUploadTrait
         }
         return ['timetable_1' => $timeTable1, 'timetable_2' => $timeTable2];
     }
+
     /**
      * File upload trait used in controllers to upload files
+     * @param Request $request
+     * @return Request
      */
     public function saveFiles(Request $request)
     {
@@ -79,7 +82,7 @@ trait FileUploadTrait
                     $finalRequest = new Request(array_merge($finalRequest->all(), [$key => $filename]));
                 } else {
                     $filename = time() . '-' . $request->file($key)->getClientOriginalName();
-                    $request->file($key)->move(public_path('upload'), $filename);
+                    $request->file($key)->move(public_path('upload/'.$request['type']), $filename);
                     $finalRequest = new Request(array_merge($finalRequest->all(), [$key => $filename]));
                 }
             }

@@ -6,7 +6,7 @@
         <ul class="sidebar-menu">
 
             <li class="{{ $request->segment(1) == 'home' ? 'active' : '' }}">
-                <a href="{{ url('/') }}">
+                <a href="{{ url('/admin') }}">
                     <i class="fa fa-wrench"></i>
                     <span class="title">@lang('quickadmin.qa_dashboard')</span>
                 </a>
@@ -65,11 +65,11 @@
             </li>
             @endcan
             
-            @can('game_access')
-            <li class="{{ $request->segment(2) == 'games' ? 'active' : '' }}">
-                <a href="{{ route('admin.games.index') }}">
+            @can('record_access')
+            <li class="{{ $request->segment(2) == 'records' ? 'active' : '' }}">
+                <a href="{{ route('admin.records.index') }}">
                     <i class="fa fa-soccer-ball-o"></i>
-                    <span class="title">@lang('quickadmin.games.title')</span>
+                    <span class="title">@lang('quickadmin.records.title')</span>
                 </a>
             </li>
             @endcan

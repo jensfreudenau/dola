@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="{{ config('app.locale') }}">
 
@@ -12,14 +11,11 @@
     <title>{{ config('app.name', 'Dortmunder Leichtathletik') }}</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/eventlist.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/all.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
-    @include('partials.javascripts')
-    <script src="{{ asset('js/app.js') }}"></script>
-    <!-- Scripts -->
+
+@include('partials.front.styles')
+@include('partials.front.javascripts')
+
+<!-- Scripts -->
     <script>
         window.Laravel = {!! json_encode([
             'csrfToken' => csrf_token(),
@@ -31,7 +27,27 @@
 <body>
 <div id="app">
     @include('partials.navbar')
-    @yield('content')
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <div class="page  ng-scope">
+            <section class="panel panel-default">
+                <div class="invoice-inner">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <a class="navbar-brand" href="{{ url('/') }}">
+                                    <p class="size-h1"> {{ config('app.name', 'DoLa') }}
+                                    </p></a>
+
+                            </div>
+                        </div>
+                    @yield('content')
+                </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <div class="col-md-1"></div>
 </div>
 
 <!-- Scripts -->

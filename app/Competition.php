@@ -7,14 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 use Collective\Html\Eloquent\FormAccessible;
 use Illuminate\Support\Facades\Log;
 
-class Competition extends Model
+class Competition extends BaseModel
 {
     use FormAccessible;
-    protected $fillable = ['team_id', 'start_date', 'reuslts_1', 'reuslts_2', 'timetable_1', 'participators_1', 'participators_2', 'submit_date', 'header', 'info', 'season', 'classes', 'award'];
+    protected $fillable = ['team_id', 'start_date', 'timetable_1',  'submit_date', 'header', 'info', 'season', 'classes', 'award', 'register'];
 
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
+    }
+
+    public static function boot()
+    {
+        parent::boot();
     }
 
     /**
@@ -47,6 +52,26 @@ class Competition extends Model
     public function Participators()
     {
         return $this->hasManyThrough(Participator::class, ParticipatorTeam::class);
+    }
+
+    public function save(array $options = [])
+    {
+        $this->replaceTableTag();
+        parent::save();
+    }
+
+    public function reduceClasses() {
+
+        //WK U10, WK U12, WJ U14, WJ U16, WJ U18/U20, MK U10, MK U12, MJ U14, MJ U16, MJ U18/U20
+        $sex = ['WK', 'WJ', 'MK', 'MJ'];
+        $class = str_replace($sex, '', $this->classes);
+        $class = explode(',', $class);
+        $result = array_unique($class);
+        return implode(',', $result);
+    }
+    protected function replaceTableTag()
+    {
+        $this->timetable_1 = str_replace('Uhr', '', $this->timetable_1);
     }
 
     /**

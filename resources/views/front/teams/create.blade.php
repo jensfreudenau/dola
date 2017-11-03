@@ -17,9 +17,11 @@
                                                     <div class="row">
                                                         <div class="col-md-10">
                                                             <div class="form-group">
-                                                                {!! Form::label('competition_id', Lang::get('quickadmin.competitions.title'), ['class' => 'control-label']) !!}:
-                                                                {!! Form::select('competition_id', $competitionselect, ( $competition ? $competition->id: null), ['id'=> '', 'class' => 'form-control']) !!}
 
+                                                                {!! Form::label('competition_id', Lang::get('quickadmin.competitions.title'), ['class' => 'control-label']) !!}:
+                                                                {!! Form::select('competition_id', $competitionselect, ( $competition ? $competition->id: null), ['id'=> 'competition_id', 'class' => 'competition_select form-control']) !!}
+
+                                                                <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
                                                             </div>
                                                             <div class="form-group">
                                                                 <div class="input-group">
@@ -183,10 +185,7 @@
 
                                                 </div>
                                             </div>
-
-
                                             {!! Form::close() !!}
-
                                         </div>
                                     </div>
                                 </div>
@@ -238,6 +237,7 @@
                 counter++;
             });
         });
+        $(".competition_select").select2();
         /* Load positions into postion <selec> */
         $("#competition_id").change(function () {
             $.getJSON("/teams/competitions_select/" + $(this).val(), function (jsonData) {
@@ -246,6 +246,7 @@
                 $('#start_date').val(jsonData.start_date);
             });
         });
+
     </script>
 
 @endsection

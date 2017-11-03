@@ -1,15 +1,17 @@
-@import url("http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,400italic");
-@import url("//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css");
+::-moz-selection {
 
+    background: #337ab7;
+    color: #fff;
 
+}
 .event-list {
     list-style: none;
-    font-family: 'Lato', sans-serif;
+    font-family: 'Cairo', sans-serif;
     margin: 0px;
     padding: 0px;
 }
 .event-list > li {
-    background-color: #5b5ca4;
+    /*background-color: #5b5ca4;*/
     box-shadow: 0px 0px 5px rgb(51, 51, 51);
     box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.7);
     padding: 0px;
@@ -19,36 +21,30 @@
 .event-list > li > time {
     display: inline-block;
     width: 100%;
-    /*background-color: #999;*/
     text-align: left;
     text-transform: uppercase;
-    padding: 10px 5px 5px 5px;
-    color: #ffffff;
+    padding: 10px 5px 5px 15px;
 }
-.event-list > li:nth-child(even) > time {
-    /*background-color: #a45b6d;*/
-    color: #ffffff;
-}
-.event-list > li > time > span {
-    /*display: none;*/
-}
+
 .event-list > li > time > .day {
     display: block;
     font-size: 25px;
-    font-weight: 101;
+    font-weight: 200;
     line-height: 1;
+    padding-bottom:5px;
 }
 .event-list > li > time > .year {
     display: block;
     font-size: 25px;
-    font-weight: 101;
+    font-weight: 200;
     line-height: 1;
 }
 .event-list > li time > .month {
     display: block;
     font-size: 24px;
-    font-weight: 900;
+    font-weight: 400;
     line-height: 1;
+    padding-bottom:5px;
 }
 .event-list > li > img {
     width: 100%;
@@ -58,16 +54,19 @@
     text-align: center;
 }
 .event-list > li > .info > .title {
-    font-size: 17px;
-    font-weight: 700;
-    margin: 0px;
+    font-size: 24px;
+    margin: 0;
+    padding-bottom: 10px;
 }
 .event-list > li > .info > .desc {
     font-size: 14px;
     margin: 0px;
+}.event-list .desc_type {
+
+     font-weight: 600;
+
 }
-.event-list > li > .info > ul,
-.event-list > li > .social > ul {
+.event-list > li > .info > ul{
     display: table;
     list-style: none;
     margin: 10px 0px 0px;
@@ -75,11 +74,8 @@
     width: 100%;
     text-align: center;
 }
-.event-list > li > .social > ul {
-    margin: 0px;
-}
-.event-list > li > .info > ul > li,
-.event-list > li > .social > ul > li {
+
+.event-list > li > .info > ul > li{
     display: table-cell;
     cursor: pointer;
     color: rgb(30, 30, 30);
@@ -93,16 +89,11 @@
     color: rgb(30, 30, 30);
     text-decoration: none;
 }
-.event-list > li > .social > ul > li {
-    padding: 0px;
-}
-.event-list > li > .social > ul > li > a {
-    padding: 3px 0px;
-}
+
 .event-list > li > .info > ul > li:hover,
 .event-list > li > .social > ul > li:hover {
     color: rgb(30, 30, 30);
-    background-color: rgb(200, 200, 200);
+    /*background-color: rgb(200, 200, 200);*/
 }
  
 
@@ -124,7 +115,7 @@
         float: left;
     }
     .event-list > li > .info {
-        background-color: rgb(245, 245, 245);
+        /*background-color: rgb(245, 245, 245);*/
         overflow: hidden;
     }
     .event-list > li > time,
@@ -137,34 +128,20 @@
         position: relative;
         min-height: 100px;
         text-align: left;
-        padding-right: 40px;
+        padding:  10px 5px 5px 5px;
+
     }
     .event-list > li > .info > .title,
     .event-list > li > .info > .desc {
-        padding: 0px 10px;
+        padding: 0 10px;
+    }
+    .event-list > li > .info > .title{
+        padding-bottom:10px;
     }
     .event-list > li > .info > ul {
         position: absolute;
         left: 0px;
         bottom: 0px;
     }
-    .event-list > li > .social {
-        position: absolute;
-        top: 0px;
-        right: 0px;
-        display: block;
-        width: 40px;
-    }
-    .event-list > li > .social > ul {
-        border-left: 1px solid rgb(230, 230, 230);
-    }
-    .event-list > li > .social > ul > li {
-        display: block;
-        padding: 0px;
-    }
-    .event-list > li > .social > ul > li > a {
-        display: block;
-        width: 40px;
-        padding: 10px 0px 9px;
-    }
+
 }

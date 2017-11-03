@@ -16,8 +16,8 @@ $(document).ready(function () {
         retrieve: true,
         dom: 'lBfrtip<"actions">',
         columnDefs: [],
-        "iDisplayLength": 200,
-        "aLengthMenu": [[250, 500, 750, -1], [250, 500, 750, "All"]],
+        "iDisplayLength": 400,
+        "aLengthMenu": [[250, 500, 750, -1], [25, 50, 75, "All"]],
         "aaSorting": [],
         buttons: []
     };
@@ -149,7 +149,9 @@ $(document).ready(function () {
         }
     });
 
-    $('.select2').select2();
+    $('.select2').select2({
+        width: '80%'
+    });
 
     $('.datepicker').datepicker({
         autoclose: true,
@@ -160,7 +162,7 @@ $(document).ready(function () {
         mode: "textareas",
         themes: "modern",
         skin: "custom",
-        content_css : '/adminlte/css/tinymce_custom.css',
+        content_css: '/adminlte/css/tinymce_custom.css',
         plugins: [
             "advlist autolink lists link image charmap anchor searchreplace visualblocks code fullscreen insertdatetime media table contextmenu paste codesample"
         ],
@@ -188,9 +190,11 @@ $(document).ready(function () {
     Dropzone.options.participator = {
         maxFilesize: 10, // Mb
         paramName: "file",
-        sending : function(file, xhr, formData) {},
-        success : function(file, response) {},
-        error : function(file, error) {
+        sending: function (file, xhr, formData) {
+        },
+        success: function (file, response) {
+        },
+        error: function (file, error) {
             console.error(error);
         },
         accept: function (file, done) {
@@ -202,9 +206,11 @@ $(document).ready(function () {
     Dropzone.options.resultsets = {
         maxFilesize: 10, // Mb
         paramName: "resultsets",
-        sending : function(file, xhr, formData) {},
-        success : function(file, response) {},
-        error : function(file, error) {
+        sending: function (file, xhr, formData) {
+        },
+        success: function (file, response) {
+        },
+        error: function (file, error) {
             console.error(error);
         },
         accept: function (file, done) {
@@ -223,7 +229,7 @@ $(document).ready(function () {
 
     function formDataTable(response) {
         var $th = '';
-        var firstColumn = response.data[0]; 
+        var firstColumn = response.data[0];
         response.data.shift();
         var $table = $('<table class="table table-hover">');
         var $thead = $('<thead class="thead-inverse">').appendTo($table);
@@ -231,7 +237,7 @@ $(document).ready(function () {
         $(firstColumn).each(function (i) {
             $th = $('<th>', {'html': firstColumn[i]}).appendTo($tr);
         });
- 
+
         var allData = response.data;
         var $tbody = $('<tbody>').appendTo($table);
 
@@ -280,31 +286,56 @@ $(document).ready(function () {
             lines.push(tarr);
         }
         parsedData(table);
-        let headerline = lines[1][0].split(',');
-        setHeader(headerline[0]);
-        setStartDate(headerline[1]);
+        let headerAndDateline = lines[1][0].split(',');
+        setHeader(headerAndDateline[0]);
+        //ist der Header mit dem Datum in der ersten Zeile??
+        if (false === setStartDate(headerAndDateline[1])) {
+            let headerline = lines[0][0].split(',');
+            setHeader(headerline[0]);
+            setStartDate(headerline[1]);
+        }
         return true;
     }
 });
+
+function setRadioSeason(headerline) {
+    let season = headerline.indexOf("Halle");
+    if (season > 0) {
+        $('input:radio[name="season"][value=halle]').click();
+    }
+    season = headerline.indexOf("Stadion");
+    if (season > 0) {
+        $('input:radio[name="season"][value=stadion]').click();
+    }
+}
+
 function setHeader(headerline) {
     let headerlineArr = headerline.split(' am');
+    setRadioSeason(headerlineArr[0]);
     $('#competition-headline').val(headerlineArr[0]);
 }
+
 function setStartDate(data) {
     let startStr = data.toString();
-    var germanDate = moment(startStr, ['DD.MMMM YYYY', 'DD.MM.YYYY']);
+    startStr = startStr.replace("den ", "");
+    if (!moment($.trim(startStr), ['DD. MMMM YYYY', 'DD.MMMM YYYY', 'DD.MM.YYYY'], true).isValid()) {
+        return false;
+    }
+    var germanDate = moment(startStr, ['DD. MMMM YYYY', 'DD.MMMM YYYY', 'DD.MM.YYYY']);
     $('#competition-start_date').val(germanDate.format('DD.MM.YYYY'));
 }
+
 function setMeldeschluss(data) {
     let meldeschluss = data.split(':');
-    let meldeschlussStr = meldeschluss[1].replace(/\s/g,'');
+    let meldeschlussStr = meldeschluss[1].replace(/\s/g, '');
     var germanDate = moment(meldeschlussStr, ['DD.MMMM YYYY', 'DD.MM.YYYY']);
     $('#competition-submit_date').val(germanDate.format('DD.MM.YYYY'));
 }
+
 function setClasses(allTextLines) {
     let classes = allTextLines.split(';');
     let classStr = classes.join();
-    classStr = classStr.replace(/[Zeit]/g, "");
+    classStr = classStr.replace(/Zeit/g, "");
     classStr = classStr.replace(/[*]/g, "");
     classStr = classStr.replace(/[,]/g, ", ");
     if (classStr.substring(0, 1) == ',') {
@@ -322,6 +353,7 @@ function setMeldungReceiver(data) {
         $(this).change();
     });
 }
+
 function setAward(data) {
     let ausszeichnung = data.split(':');
     $('#competition-award').val($.trim(ausszeichnung[1]));

@@ -4,8 +4,8 @@
 <head>
     @include('partials.head')
     <link href="{{ url('css/basic.css') }}" rel="stylesheet">
-    @include('partials.javascripts')
     <link href="{{ url('css/dropzone.css') }}" rel="stylesheet">
+    @include('partials.admin.javascripts')
 
 </head>
 

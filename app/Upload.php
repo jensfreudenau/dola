@@ -2,11 +2,15 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Upload extends Model
+class Upload extends BaseModel
 {
     protected $fillable = ['competition_id', 'filename', 'type'];
+
+
+    public static function boot()
+    {
+        parent::boot();
+    }
 
     public function competition()
     {

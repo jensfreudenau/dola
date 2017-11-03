@@ -18,7 +18,7 @@
         <i class="fa fa-arrow-up"></i>
     </div>
 
-    @include('partials.javascripts')
+    @include('partials.admin.javascripts')
 
 </body>
 </html>

@@ -11,11 +11,16 @@ use App\Game;
  * @package App
  * @property string $name
 */
-class Team extends Model
+class Team extends BaseModel
 {
     use SoftDeletes;
 
     protected $fillable = ['name', 'addresses_id', 'leader', 'homepage'];
+
+    public static function boot()
+    {
+        parent::boot();
+    }
 
     public function players()
     {

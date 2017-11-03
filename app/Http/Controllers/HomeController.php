@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Competition;
 use App\Http\Requests;
+use App\Participator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
 class HomeController extends Controller
 {
@@ -16,10 +18,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $count = Competition::count();
-        $competitions = Competition::orderBy('start_date', 'asc')->skip($count-5)->take(5)->get();
-        $results = Competition::where('results_1', '!=', '')->orderBy('start_date', 'desc')->take(5)->get();
+        $competitions = Competition::orderBy('start_date', 'asc')
+            ->whereDate('start_date', '>', date('Y-m-d'))->take(5)->get();
 
-        return view('home', compact('competitions', 'results'));
+        return view('home', compact('competitions'));
     }
 }
