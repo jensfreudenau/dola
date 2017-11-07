@@ -1,0 +1,58 @@
+/* Your custom styles */
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-weight: normal;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    font-size: 14px;
+}
+.navbar {
+    background-color: #243a51;
+}
+p {
+    margin-bottom:0;
+}
+.desc_type {
+    font-weight:400;
+}
+.red_font {
+    font-weight:400;
+    color:red;
+}
+.nav-item{
+    padding-right: 70px;
+}
+.navbar .dropdown-menu a {
+    font-size: 14px;
+}
+.navbar-toggler>.close {
+    display:inline;
+}
+.navbar-toggler.collapsed>.close, .navbar-toggler:not(.collapsed)>.navbar-toggler-icon {
+    display:none;
+}
+li {
+    list-style: none;
+}
+.navbar-nav > li > a {
+   color: #ffffff;
+}
+.nav > li > a:focus, .nav > li > a:hover {
+    text-decoration: none;
+    background-color: #85adb9;
+}
+.navbar .dropdown-menu a:hover {
+    color: #000 !important;
+}
+table.table th, table.table td {
+font-size:14px;
+
+}
+table.table th {
+    font-weight: 400;
+}
+.btn, .form-control {
+    font-size: 14px;
+}

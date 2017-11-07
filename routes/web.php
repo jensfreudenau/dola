@@ -16,7 +16,10 @@ Route::get('teams/list_participator/{participator_team_id}', 'TeamsController@li
 Route::get('/teams/create/{competition_id?}', 'TeamsController@create');
 Route::post('teams/store', 'TeamsController@store')->name('teams/store');
 
-
+Route::get('/records/record', 'RecordsController@index')->name('records.record');
+Route::get('/records/{id}', 'RecordsController@record');
+Route::get('/records/best/{sex}', 'RecordsController@best');
+Route::get('/pages/{mnemonic}', 'PagesController@show');
 
 // Authentication Routes...
 $this->get('login', 'Auth\LoginController@showLoginForm')->name('auth.login');
@@ -54,4 +57,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], 
     Route::resource('competitions', 'Admin\CompetitionController');
     Route::post('competitions_mass_destroy', ['uses' => 'Admin\CompetitionController@massDestroy', 'as' => 'competitions.mass_destroy']);
     Route::resource('records', 'Admin\RecordController');
+    Route::resource('pages', 'Admin\PagesController');
+    Route::post('pages_mass_destroy', ['uses' => 'Admin\PagesController@massDestroy', 'as' => 'pages.mass_destroy']);
 });
+
+

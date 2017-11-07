@@ -20,12 +20,13 @@ class TeamsController extends Controller
      * @param $id
      * @return \Illuminate\View\View
      */
-    public function create($id)
+    public function create($id='')
     {
         $competition = '';
         if (!empty($id)) {
             $competition = Competition::findOrFail($id);
         }
+
         $competitionselect = Competition::where('submit_date', '>=', date('Y-m-d'))->get()->pluck('header', 'id');
         return view('front.teams.create', compact('competition', 'competitionselect'));
     }

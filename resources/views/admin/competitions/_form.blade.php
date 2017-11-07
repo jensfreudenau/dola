@@ -36,8 +36,7 @@
     <div class="btn-group" data-toggle="buttons">
         <label class="btn btn-primary ">
             {{ Form::radio('register', 1, 0) }} @lang('quickadmin.competitions.external_register')
-        </label>
-        <label class="btn btn-primary active">
+        </label> <label class="btn btn-primary active">
             {{ Form::radio('register', 0, 1) }} @lang('quickadmin.competitions.intern_register')
         </label>
     </div>
@@ -48,11 +47,9 @@
     <div class="btn-group" data-toggle="buttons">
         <label class="btn btn-primary {{$track}}">
             {{ Form::radio('season', 'bahn',0,['required']) }} @lang('quickadmin.competitions.track')
-        </label>
-        <label class="btn btn-primary {{$indoor}}">
+        </label> <label class="btn btn-primary {{$indoor}}">
             {{ Form::radio('season', 'halle') }} @lang('quickadmin.competitions.indoor')
-        </label>
-        <label class="btn btn-primary {{$cross}}">
+        </label> <label class="btn btn-primary {{$cross}}">
             {{ Form::radio('season', 'cross') }} @lang('quickadmin.competitions.cross')
         </label>
     </div>

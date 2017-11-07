@@ -15,10 +15,11 @@
         </div>
 
         <div class="panel-body table-responsive">
-            <table class="table table-bordered table-striped">
+            <table class="table table-bordered table-striped datatable">
                 <thead>
                 <tr>
                     <th>@lang('quickadmin.records.fields.header')</th>
+                    <th>@lang('quickadmin.records.fields.sex')</th>
                     <th>@lang('quickadmin.records.fields.show')</th>
                     <th>@lang('quickadmin.records.fields.edit')</th>
 
@@ -31,6 +32,7 @@
                     @foreach ($records as $record)
                         <tr data-entry-id="{{ $record->id }}">
                             <td>{{ $record->header or '' }}</td>
+                            <td>{{ $record->sex or '' }}</td>
                             <td>
                                 @can('competition_view')
                                     <a href="{{ route('admin.records.show',[$record->id]) }}" class="btn btn-xs btn-primary">@lang('quickadmin.qa_view')</a>
@@ -41,6 +43,7 @@
                                     <a href="{{ route('admin.records.edit',[$record->id]) }}" class="btn btn-xs btn-info">@lang('quickadmin.qa_edit')</a>
                                 @endcan
                             </td>
+                            <td></td>
                         </tr>
                     @endforeach
                 @else

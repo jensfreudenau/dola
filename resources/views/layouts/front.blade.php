@@ -13,7 +13,7 @@
     <!-- Styles -->
 
 @include('partials.front.styles')
-@include('partials.front.javascripts')
+
 
 <!-- Scripts -->
     <script>
@@ -26,7 +26,7 @@
 
 <body>
 <div id="app">
-    @include('partials.navbar')
+    @include('partials.front.navbar')
     <div class="col-md-1"></div>
     <div class="col-md-10">
         <div class="page  ng-scope">
@@ -36,12 +36,19 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <a class="navbar-brand" href="{{ url('/') }}">
-                                    <p class="size-h1"> {{ config('app.name', 'DoLa') }}
-                                    </p></a>
-
+                                    <h1> {{ config('app.name', 'DoLa') }}
+                                    </h1>
+                                </a>
                             </div>
                         </div>
-                    @yield('content')
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-10">
+                                @yield('content')
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
                 </div>
                 </div>
             </section>
@@ -53,5 +60,6 @@
 <!-- Scripts -->
 
 @include('partials.footer')
+@include('partials.front.javascripts')
 </body>
 </html>

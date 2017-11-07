@@ -1,13 +1,10 @@
 @extends('layouts.front')
-
-
 @section('content')
 
-
-    <hr>
     <div class="row">
         <div class="col-xs-12">
-            <p class="size-h3">{{ $competition->header }}</p>
+            <h3>{{ $competition->header }}</h3>
+            <hr>
             <dl class="dl-horizontal">
                 <dt>Datum:</dt>
                 <dd>{{ $competition->start_date}}</dd>
@@ -35,14 +32,16 @@
                     <dd><a href="{{ $competition->team->homepage }}">{{ $competition->team->homepage }}</a></dd>
                 @endif
                 @if (trim($competition->info))
-                    <dt><span class="red">Info:</dt></dt>
+                    <dt><span class="red_font">Info:</dt></dt>
                     <dd>{{ $competition->info }}</dd>
                 @endif
                 <dt>Haftung:</dt>
                 <dd>Veranstalter und Ausrichter &uuml;bernehmen keinerlei Haftung für Sch&auml;den jeglicher Art.</dd>
                 @if($competition->register == 0)
                     <dt></dt>
-                    <dd><a ui-wave="" href="/teams/create/{{ $competition->id }}" class="btn btn-behance btn-raised btn-sm btn-w-lg ui-wave"><i class="fa fa-pencil"></i> anmelden</a></dd>
+                    <dd>
+                        <a class="btn btn-primary" href="/teams/create/{{ $competition->id }}" role="button"><i class="fa fa-pencil"></i> anmelden</a>
+                    </dd>
                 @endif
             </dl>
             <div class="divider divider-lg"></div>
@@ -61,6 +60,7 @@
                 </dd>
             </dl>
             <div class="divider divider-lg"></div>
+            <hr>
             {!! $competition->timetable_1 !!}
         </div>
     </div>

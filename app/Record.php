@@ -3,7 +3,7 @@
 namespace App;
 class Record extends BaseModel
 {
-    protected $fillable = ['header', 'records_table'];
+    protected $fillable = ['header', 'records_table', 'sex'];
 
     public static function boot()
     {

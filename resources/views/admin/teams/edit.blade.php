@@ -2,7 +2,7 @@
 
 @section('content')
     <h3 class="page-title">@lang('quickadmin.teams.title')</h3>
-    
+
     {!! Form::model($team, ['method' => 'PUT', 'route' => ['admin.teams.update', $team->id]]) !!}
 
     <div class="panel panel-default">
@@ -15,14 +15,14 @@
                 <div class="col-xs-12 form-group">
                     @include('admin.teams._form')
                     <p class="help-block"></p>
-                @if($errors->has('name'))
+                    @if($errors->has('name'))
                         <p class="help-block">
                             {{ $errors->first('name') }}
                         </p>
                     @endif
                 </div>
             </div>
-            
+
         </div>
     </div>
 
