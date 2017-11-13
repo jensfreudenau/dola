@@ -22,7 +22,7 @@
                             <th style="text-align:center;"><input type="checkbox" id="select-all" /></th>
                         @endcan
 
-                        <th>@lang('quickadmin.participators.fields.team')</th>
+                        <th>@lang('quickadmin.participators.fields.organizer')</th>
                         <th>@lang('quickadmin.participators.fields.name')</th>
                         <th>@lang('quickadmin.participators.fields.surname')</th>
                         <th>@lang('quickadmin.participators.fields.birth-date')</th>
@@ -32,29 +32,29 @@
                 
                 <tbody>
                     @if (count($participators) > 0)
-                        @foreach ($participators as $player)
-                            <tr data-entry-id="{{ $player->id }}">
+                        @foreach ($participators as $participator)
+                            <tr data-entry-id="{{ $participator->id }}">
                                 @can('player_delete')
                                     <td></td>
                                 @endcan
 
-                                <td>{{ $player->participator_teams->name or '' }}</td>
-                                <td>{{ $player->name }}</td>
-                                <td>{{ $player->surname }}</td>
-                                <td>{{ $player->birth_date }}</td>
+                                <td>{{ $participator->announciators->name or '' }}</td>
+                                <td>{{ $participator->name }}</td>
+                                <td>{{ $participator->surname }}</td>
+                                <td>{{ $participator->birth_date }}</td>
                                 <td>
                                     @can('player_view')
-                                    <a href="{{ route('admin.participators.show',[$player->id]) }}" class="btn btn-xs btn-primary">@lang('quickadmin.qa_view')</a>
+                                    <a href="{{ route('admin.participators.show',[$participator->id]) }}" class="btn btn-xs btn-primary">@lang('quickadmin.qa_view')</a>
                                     @endcan
                                     @can('player_edit')
-                                    <a href="{{ route('admin.participators.edit',[$player->id]) }}" class="btn btn-xs btn-info">@lang('quickadmin.qa_edit')</a>
+                                    <a href="{{ route('admin.participators.edit',[$participator->id]) }}" class="btn btn-xs btn-info">@lang('quickadmin.qa_edit')</a>
                                     @endcan
                                     @can('player_delete')
                                     {!! Form::open(array(
                                         'style' => 'display: inline-block;',
                                         'method' => 'DELETE',
                                         'onsubmit' => "return confirm('".trans("quickadmin.qa_are_you_sure")."');",
-                                        'route' => ['admin.participators.destroy', $player->id])) !!}
+                                        'route' => ['admin.participators.destroy', $participator->id])) !!}
                                     {!! Form::submit(trans('quickadmin.qa_delete'), array('class' => 'btn btn-xs btn-danger')) !!}
                                     {!! Form::close() !!}
                                     @endcan

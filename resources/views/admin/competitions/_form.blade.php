@@ -10,9 +10,9 @@
     {!! Form::label('submit_date', Lang::get('quickadmin.competitions.fields.submit_date')) !!}
     {!! Form::text('submit_date', ( $competition ? $competition->getGermanDate($competition->submit_date) : null) , ['id'=> 'competition-submit_date', 'class'=>'form-control datepicker']) !!}
 </div>
-{!! Form::label('team_id', Lang::get('quickadmin.teams.title'), ['class' => 'control-label']) !!}
+{!! Form::label('organizer_id', Lang::get('quickadmin.organizers.title'), ['class' => 'control-label']) !!}
 <div class="form-group">
-    {!! Form::select('team_id', $teams, ( $competition ? $competition->team_id: null), ['class' => 'form-control select2', 'required' ]) !!}
+    {!! Form::select('organizer_id', $organizers, ( $competition ? $competition->organizer_id: null), ['class' => 'form-control select2', 'required' ]) !!}
 </div>
 {!! Form::label('addresses_id', Lang::get('quickadmin.addresses.title'), ['class' => 'control-label']) !!}
 <div class="form-group">

@@ -1,72 +1,75 @@
 @extends('layouts.front')
 @section('content')
+<div class="col-md-12">
 
-    <div class="row">
-        <div class="col-xs-12">
-            <h3>{{ $competition->header }}</h3>
-            <hr>
-            <dl class="dl-horizontal">
-                <dt>Datum:</dt>
-                <dd>{{ $competition->start_date}}</dd>
-                <dt>Meldeschluss:</dt>
-                <dd>{{ $competition->submit_date }}</dd>
-                <dt>Auszeichnungen:</dt>
-                <dd>{{ $competition->award }}</dd>
-                <dt>Klassen:</dt>
-                <dd>{{ $competition->reduceClasses() }}</dd>
-                <dt>sportl. Leitung:</dt>
-                <dd>{{ $competition->team->leader }}</dd>
-                <dt>Meldeanschrift:</dt>
-                <dd>
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            {{ $competition->team->address->name }}<br>
-                            {{ $competition->team->address->street }}<br>
-                            {{ $competition->team->address->zip }}
-                            {{ $competition->team->address->city }}<br> <a href="mailto:{{ $competition->team->address->email }}">{{ $competition->team->address->email }}</a>
-                        </div>
+
+        <h3>{{ $competition->header }}</h3>
+        <hr>
+        <dl class="row">
+            <dt class="col-sm-3">Datum:</dt>
+            <dd class="col-sm-9">{{ $competition->start_date}}</dd>
+            <dt class="col-sm-3">Meldeschluss:</dt>
+            <dd class="col-sm-9">{{ $competition->submit_date }}</dd>
+            <dt class="col-sm-3">Auszeichnungen:</dt>
+            <dd class="col-sm-9">{{ $competition->award }}</dd>
+            <dt class="col-sm-3">Klassen:</dt>
+            <dd class="col-sm-9">{{ $competition->reduceClasses() }}</dd>
+            <dt class="col-sm-3">sportl. Leitung:</dt>
+            <dd class="col-sm-9">{{ $competition->organizer->leader }}</dd>
+            <dt class="col-sm-3">Meldeanschrift:</dt>
+            <dd class="col-sm-9">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        {{ $competition->organizer->address->name }}<br>
+                        {{ $competition->organizer->address->street }}<br>
+                        {{ $competition->organizer->address->zip }}
+                        {{ $competition->organizer->address->city }}<br> <a href="mailto:{{ $competition->organizer->address->email }}">{{ $competition->organizer->address->email }}</a>
                     </div>
+                </div>
+            </dd>
+            @if ($competition->organizer->homepage)
+                <dt class="col-sm-3">Webseite:</dt>
+                <dd class="col-sm-9"><a href="{{ $competition->organizer->homepage }}">{{ $competition->organizer->homepage }}</a></dd>
+            @endif
+            @if (trim($competition->info))
+                <dt class="col-sm-3"><span class="red_font">Info:</span></dt></dt>
+                <dd class="col-sm-9">{{ $competition->info }}</dd>
+            @endif
+            <dt class="col-sm-3">Haftung:</dt>
+            <dd class="col-sm-9">Veranstalter und Ausrichter &uuml;bernehmen keinerlei Haftung für Sch&auml;den jeglicher Art.</dd>
+            @if($competition->register == 0)
+                <dt class="col-sm-3"></dt>
+                <dd class="col-sm-9">
+                    <a class="btn btn-primary" href="/announciators/create/{{ $competition->id }}" role="button"><i class="fa fa-pencil"></i> anmelden</a>
                 </dd>
-                @if ($competition->team->homepage)
-                    <dt>Webseite:</dt>
-                    <dd><a href="{{ $competition->team->homepage }}">{{ $competition->team->homepage }}</a></dd>
-                @endif
-                @if (trim($competition->info))
-                    <dt><span class="red_font">Info:</dt></dt>
-                    <dd>{{ $competition->info }}</dd>
-                @endif
-                <dt>Haftung:</dt>
-                <dd>Veranstalter und Ausrichter &uuml;bernehmen keinerlei Haftung für Sch&auml;den jeglicher Art.</dd>
-                @if($competition->register == 0)
-                    <dt></dt>
-                    <dd>
-                        <a class="btn btn-primary" href="/teams/create/{{ $competition->id }}" role="button"><i class="fa fa-pencil"></i> anmelden</a>
-                    </dd>
-                @endif
-            </dl>
-            <div class="divider divider-lg"></div>
-            <dl class="dl-horizontal">
-                <dt></dt>
-                <dd>
-                    @foreach($competition->Uploads as $upload)
-                        @if($upload->type == config('constants.Participators'))
-                            <p class="desc"><a href="upload/{{$upload->type}}/{{$upload->filename}}" target="_blank">Teilnehmer</a></p>
-                        @endif
-                        @if($upload->type == config('constants.Results'))
-                            <p class="desc"><a href="upload/{{$upload->type}}/{{$upload->filename}}" target="_blank">Ergebnisliste</a></p>
-                        @endif
+            @endif
+            <dt class="col-sm-3">
+                <hr></dt>
+            <dd class="col-sm-9">
+                <hr></dd>
+            <dt class="col-sm-3"></dt>
+            <dd class="col-sm-9">
+                @foreach($competition->Uploads as $upload)
+                    @if($upload->type == config('constants.Participators'))
+                        <p class="desc"><a href="upload/{{$upload->type}}/{{$upload->filename}}" target="_blank">Teilnehmer</a></p>
+                    @endif
+                    @if($upload->type == config('constants.Results'))
+                        <p class="desc"><a href="upload/{{$upload->type}}/{{$upload->filename}}" target="_blank">Ergebnisliste</a></p>
+                    @endif
 
-                    @endforeach
-                </dd>
-            </dl>
-            <div class="divider divider-lg"></div>
-            <hr>
-            {!! $competition->timetable_1 !!}
-        </div>
-    </div>
+                @endforeach
+            </dd>
+        </dl>
+
+        <hr>
+
+        {!! $competition->timetable_1 !!}
+
+
     <div class="callout callout-success">
                         <span>Elektronische Zeitnahme. &Auml;nderungen vorbehalten! Ohne Gew&auml;hr.
                         Die Wettk&auml;mpfe werden nach den g&uuml;ltigen Wettkampfbestimmungen ausgetragen und stehen unter amtlicher Aufsicht.
                         Wir w&uuml;nschen allen Teilnehmern eine gute Anreise und viel Erfolg.</span><br>
     </div>
+      </div>
 @endsection

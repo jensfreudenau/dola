@@ -1,12 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 
 <head>
     @include('partials.head')
-    <link href="{{ url('css/basic.css') }}" rel="stylesheet">
-    <link href="{{ url('css/dropzone.css') }}" rel="stylesheet">
     @include('partials.admin.javascripts')
-
 </head>
 
 

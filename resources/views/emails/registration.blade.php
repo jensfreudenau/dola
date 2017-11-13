@@ -4,19 +4,19 @@
     <dt>Veranstaltung:</dt>
     <dd>{{ $competition->header }}</dd>
     <dt>Melder:</dt>
-    <dd>{{ $team->annunciator }}</dd>
+    <dd>{{ $announciator->annunciator }}</dd>
     <dt>Telefon Nr.:</dt>
-    <dd>{{ $team->telephone }}</dd>
+    <dd>{{ $announciator->telephone }}</dd>
     <dt>Email:</dt>
-    <dd>{{ $team->email }}</dd>
+    <dd>{{ $announciator->email }}</dd>
     <dt>Verein:</dt>
-    <dd>{{ $team->clubname }}</dd>
-    @if($team->resultlist)
+    <dd>{{ $announciator->clubname }}</dd>
+    @if($announciator->resultlist)
         <dt>es ist eine Ergebnisliste angefordert worden:</dt><dd></dd>
         <dt>Strasse:</dt>
-        <dd>{{ $team->street }}</dd>
+        <dd>{{ $announciator->street }}</dd>
         <dt>Ort:</dt>
-        <dd>{{ $team->city }}</dd>
+        <dd>{{ $announciator->city }}</dd>
     @endif
 </dl>
 
@@ -33,7 +33,7 @@
     </thead>
     <tbody>
 
-    @foreach($team->Participator as $participator)
+    @foreach($announciator->Participator as $participator)
         <tr>
             <td>{{$participator->prename}}</td>
             <td>{{$participator['lastname'] }}</td>

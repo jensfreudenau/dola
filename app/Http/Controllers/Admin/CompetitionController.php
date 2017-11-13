@@ -7,7 +7,7 @@ use App\Address;
 use App\Http\Controllers\Traits\FileUploadTrait;
 use App\Http\Requests\Admin\StoreCompetitionsRequest;
 use App\Http\Requests\Admin\UpdateCompetitionsRequest;
-use App\Team;
+use App\Organizer;
 use App\Upload;
 
 use Illuminate\Http\Request;
@@ -44,7 +44,7 @@ class CompetitionController extends Controller
         }
         $competition = Competition::findOrFail($id);
         $addresses   = Address::get()->pluck('name', 'id');
-        $teams       = Team::get()->pluck('name', 'id')->prepend('Please select', '');
+        $organizers  = Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
         $track       = '';
         $cross       = '';
         $indoor      = '';
@@ -60,7 +60,7 @@ class CompetitionController extends Controller
         if ($competition->season == 'halle') {
             $indoor = 'active';
         }
-        return view('admin.competitions.update', compact('addresses', 'competition', 'teams', 'indoor', 'cross', 'track'));
+        return view('admin.competitions.update', compact('addresses', 'competition', 'organizers', 'indoor', 'cross', 'track'));
     }
 
     /**
@@ -114,12 +114,12 @@ class CompetitionController extends Controller
             return abort(401);
         }
         $addresses   = Address::get()->pluck('name', 'id')->prepend('Please select', '');
-        $teams       = Team::get()->pluck('name', 'id')->prepend('Please select', '');
+        $organizers       = Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
         $competition = '';
         $track       = '';
         $cross       = '';
         $indoor      = '';
-        return view('admin.competitions.create', compact('addresses', 'teams', 'competition', 'indoor', 'cross', 'track'));
+        return view('admin.competitions.create', compact('addresses', 'organizers', 'competition', 'indoor', 'cross', 'track'));
     }
 
     public function store(StoreCompetitionsRequest $request)

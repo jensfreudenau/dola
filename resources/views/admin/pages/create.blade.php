@@ -14,7 +14,7 @@
                     <!-- Display Validation Errors -->
                     @include('common.errors')
                     {{ Form::open(['url'=>'admin/pages', 'id' => 'recorduploader']) }}
-                        <form method="POST" action="{{ url('/admin/pages') }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
+
                             {{ csrf_field() }}
 
                             @include ('admin.pages.form')

@@ -12,7 +12,8 @@
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.3",
-        "league/csv": "^8.0"
+        "league/csv": "^8.0",
+        "unisharp/laravel-filemanager": "~1.8"
     },
     "require-dev": {
         "appzcoder/crud-generator": "^3.0",

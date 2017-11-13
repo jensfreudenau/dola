@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link href="https://fonts.googleapis.com/css?family=Miriam+Libre:400,700|Source+Sans+Pro:200,400,700,600,400italic,700italic" rel="stylesheet" type="text/css">
+     
 
     <title>{{ config('app.name', 'Dortmunder Leichtathletik') }}</title>
 
@@ -25,38 +27,23 @@
 </head>
 
 <body>
-<div id="app">
-    @include('partials.front.navbar')
-    <div class="col-md-1"></div>
-    <div class="col-md-10">
-        <div class="page  ng-scope">
-            <section class="panel panel-default">
-                <div class="invoice-inner">
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <a class="navbar-brand" href="{{ url('/') }}">
-                                    <h1> {{ config('app.name', 'DoLa') }}
-                                    </h1>
-                                </a>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-md-1"></div>
-                            <div class="col-md-10">
-                                @yield('content')
-                            </div>
-                            <div class="col-md-1"></div>
-                        </div>
-                </div>
+<div class="container">
+    @include('partials.front.navtest')
+    <main role="main" class="container-fluid">
+        <div class="col-md-12">
+            <section>
+                <div class="container">
+                    <div class="row">
+
+                        @yield('content')
+
+                    </div>
                 </div>
             </section>
-        </div>
-    </div>
-    <div class="col-md-1"></div>
-</div>
 
+        </div>
+    </main>
+</div>
 <!-- Scripts -->
 
 @include('partials.footer')

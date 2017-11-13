@@ -1,10 +1,10 @@
 @extends('layouts.front')
 @section('content')
     <hr>
-    <div class="row">
-        <div class="col-xs-12">
-            <p class="size-h2">Rekorde</p>
-            <p class="size-h3">Frauen</p>
+     
+        <div class="col-sm-12">
+            <h2>Rekorde</h2>
+            <h3>Frauen</h3>
             <div class="list-group">
             @forelse($females as $female)
                     <a href="{{$female->id}}" class="list-group-item">{{$female->header}}</a>
@@ -12,7 +12,7 @@
                     <p class="desc">keine Rekorde.</p>
                 @endforelse
             </div>
-            <p class="size-h3">M&auml;nner</p>
+            <h3>M&auml;nner</h3>
             <div class="list-group">
                 @forelse($males as $male)
                     <a href="{{$male->id}}" class="list-group-item">{{$male->header}}</a>
@@ -20,7 +20,7 @@
                     <p class="desc">keine Rekorde.</p>
                 @endforelse
             </div>
-        </div>
+        
     </div>
 @endsection
 

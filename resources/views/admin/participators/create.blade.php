@@ -12,12 +12,12 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-xs-12 form-group">
-                    {!! Form::label('team_id', 'Team', ['class' => 'control-label']) !!}
-                    {!! Form::select('team_id', $teams, old('team_id'), ['class' => 'form-control select2']) !!}
+                    {!! Form::label('organizer_id', 'Organizer', ['class' => 'control-label']) !!}
+                    {!! Form::select('organizer_id', $organizers, old('organizer_id'), ['class' => 'form-control select2']) !!}
                     <p class="help-block"></p>
-                    @if($errors->has('team_id'))
+                    @if($errors->has('organizer_id'))
                         <p class="help-block">
-                            {{ $errors->first('team_id') }}
+                            {{ $errors->first('organizer_id') }}
                         </p>
                     @endif
                 </div>

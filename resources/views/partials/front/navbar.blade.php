@@ -20,7 +20,7 @@
                             <li><a href="/cross">Strasse</a></li>
                             <li class="divider"></li>
                             <li><a href="/archive">Ergebnisarchiv</a></li>
-                            <li><a href="/teams/create">Anmeldeformular</a></li>
+                            <li><a href="/organizers/create">Anmeldeformular</a></li>
                             <li class="divider"></li>
                             <li><a href="/pages/conditions_track">Bedingnungen Bahn</a></li>
                             <li><a href="/pages/conditions_indoor">Bedingnungen Halle</a></li>

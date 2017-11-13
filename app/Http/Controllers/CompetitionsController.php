@@ -6,7 +6,7 @@ use App\Competition;
 use App\Address;
 use App\Http\Requests;
 use App\Participator;
-use App\ParticipatorTeam;
+use App\Announciator;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 

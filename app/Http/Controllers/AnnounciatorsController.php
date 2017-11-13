@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Announciator;
 use App\Competition;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Mail\EnrolReceived;
-use App\ParticipatorTeam;
+use App\Annunciator;
 use App\Participator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Session;
 
-class TeamsController extends Controller
+class AnnounciatorsController extends Controller
 {
     /**
      * Show the form for creating a new resource.
@@ -28,7 +29,7 @@ class TeamsController extends Controller
         }
 
         $competitionselect = Competition::where('submit_date', '>=', date('Y-m-d'))->get()->pluck('header', 'id');
-        return view('front.teams.create', compact('competition', 'competitionselect'));
+        return view('front.announciators.create', compact('competition', 'competitionselect'));
     }
 
     /**
@@ -60,23 +61,23 @@ class TeamsController extends Controller
         }
 
 
-        $participatorTeam = ParticipatorTeam::create($request->all());
+        $announciator = Announciator::create($request->all());
         foreach ($participators as $participator) {
-            $participator['participator_team_id'] = $participatorTeam->id;
+            $participator['announciator_id'] = $announciator->id;
             Participator::create($participator);
         }
         $competition = Competition::findOrFail($request->competition_id);
    
      
-        return redirect('teams/list_participator/'.$participatorTeam->id);
+        return redirect('announciators/list_participator/'.$announciator->id);
     }
 
     public function listParticipator($id)
     {
-        $participatorTeam = ParticipatorTeam::findOrFail($id);
-        $competition = Competition::findOrFail($participatorTeam->competition_id);
-        Mail::to('jens@freude-now.de')->send(new EnrolReceived($participatorTeam, $competition));
-        return view('front.teams.list', compact('participatorTeam', 'competition'));
+        $announciator = Announciator::findOrFail($id);
+        $competition = Competition::findOrFail($announciator->competition_id);
+        Mail::to('jens@freude-now.de')->send(new EnrolReceived($announciator, $competition));
+        return view('front.announciators.list', compact('announciator', 'competition'));
     }
     /**
      * Display the specified resource.
@@ -87,7 +88,7 @@ class TeamsController extends Controller
      */
     public function show($id)
     {
-        $team = ParticipatorTeam::findOrFail($id);
+        $team = Announciator::findOrFail($id);
         return view('teams.show', compact('team'));
     }
 
@@ -100,8 +101,8 @@ class TeamsController extends Controller
      */
     public function edit($id)
     {
-        $team = ParticipatorTeam::findOrFail($id);
-        return view('teams.edit', compact('team'));
+        $team = Announciator::findOrFail($id);
+        return view('announciators.edit', compact('team'));
     }
 
     /**
@@ -116,10 +117,10 @@ class TeamsController extends Controller
     {
 
         $requestData = $request->all();
-        $team = ParticipatorTeam::findOrFail($id);
+        $team = Announciator::findOrFail($id);
         $team->update($requestData);
-        Session::flash('flash_message', 'ParticipatorTeams updated!');
-        return redirect('teams');
+        Session::flash('flash_message', 'Announciators updated!');
+        return redirect('announciators');
     }
 
     /**
@@ -131,15 +132,15 @@ class TeamsController extends Controller
      */
     public function destroy($id)
     {
-        ParticipatorTeam::destroy($id);
-        Session::flash('flash_message', 'ParticipatorTeams deleted!');
-        return redirect('teams');
+        Annunciator::destroy($id);
+        Session::flash('flash_message', 'Announciators deleted!');
+        return redirect('announciators');
     }
 
     public function competitions_select($id, Request $request)
     {
         $competitions = Competition::findOrFail($id);
-        $competitions->team->name;
+        $competitions->organizer->name;
         return $competitions;
     }
 }

@@ -192,7 +192,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Appzcoder\CrudGenerator\CrudGeneratorServiceProvider::class,
-        Collective\Html\HtmlServiceProvider::class,
+         
     ],
 
     /*
@@ -247,6 +247,8 @@ return [
         'Image'        => Intervention\Image\Facades\Image::class,
         'Form'         => Collective\Html\FormFacade::class,
         'Html'         => Collective\Html\HtmlFacade::class,
+
+
 
     ],
 

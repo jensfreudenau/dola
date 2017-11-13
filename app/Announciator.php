@@ -3,12 +3,16 @@
 namespace App;
 use Illuminate\Database\Eloquent\Model;
 
-class ParticipatorTeam extends Model
+/**
+ * @property mixed $participator
+ * @property mixed $competition
+ */
+class Announciator extends Model
 {
     protected $fillable = ['competition_id', 'annunciator', 'clubname', 'street', 'city', 'email', 'telephone', 'resultlist'];
 
 
-    public function competition()
+    public function Competition()
     {
         return $this->belongsTo(Competition::class, 'competition_id');
     }

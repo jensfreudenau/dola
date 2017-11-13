@@ -32,12 +32,12 @@
                             <td>
                                 <div class="panel panel-default">
                                     <div class="panel-body">
-                                        {{ $competition->team->address->name }}<br>
-                                        {{ $competition->team->address->street }}<br>
-                                        {{ $competition->team->address->zip }}
-                                        {{ $competition->team->address->city }}<br>
-                                        {{ $competition->team->address->email }}<br>
-                                        {{ $competition->team->homepage }}
+                                        {{ $competition->organizer->address->name }}<br>
+                                        {{ $competition->organizer->address->street }}<br>
+                                        {{ $competition->organizer->address->zip }}
+                                        {{ $competition->organizer->address->city }}<br>
+                                        {{ $competition->organizer->address->email }}<br>
+                                        {{ $competition->organizer->homepage }}
                                     </div>
                                 </div>
                             </td>
@@ -63,8 +63,8 @@
                         <table class="table table-bordered table-striped datatable">
                             <thead>
                             <tr>
-                                <th>@lang('quickadmin.participator_team.fields.clubname')</th>
-                                <th>@lang('quickadmin.participator_team.fields.annunciator')</th>
+                                <th>@lang('quickadmin.announciator.fields.clubname')</th>
+                                <th>@lang('quickadmin.announciator.fields.annunciator')</th>
                                 <th>@lang('quickadmin.participator.fields.name')</th>
                                 <th>@lang('quickadmin.participator.fields.discipline')</th>
                                 <th>@lang('quickadmin.participator.fields.age_group')</th>
@@ -75,8 +75,8 @@
                             <tbody>
                             @foreach($competition->Participators as $participator)
                                 <tr>
-                                    <td>{{$participator->ParticipatorTeam->clubname}}</td>
-                                    <td>{{$participator->ParticipatorTeam->annunciator}}</td>
+                                    <td>{{$participator->Announciator->clubname}}</td>
+                                    <td>{{$participator->Announciator->name}}</td>
                                     <td>{{$participator->prename}} &nbsp; {{$participator->lastname}}</td>
                                     <td>{{$participator->discipline}}</td>
                                     <td>{{$participator->age_group}}</td>

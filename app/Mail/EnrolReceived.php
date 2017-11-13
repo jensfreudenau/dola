@@ -3,7 +3,7 @@
 namespace App\Mail;
 
 use App\Competition;
-use App\ParticipatorTeam;
+use App\Announciator;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -12,18 +12,18 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class EnrolReceived extends Mailable
 {
     use Queueable, SerializesModels;
-    protected $participatorTeam;
+    protected $announciator;
     protected $competition;
 
     /**
      * Create a new message instance.
      *
-     * @param $participatorTeam
+     * @param $announciator
      * @param $competition
      */
-    public function __construct($participatorTeam, $competition)
+    public function __construct($announciator, $competition)
     {
-        $this->participatorTeam = $participatorTeam;
+        $this->announciator = $announciator;
         $this->competition = $competition;
     }
 
@@ -34,13 +34,13 @@ class EnrolReceived extends Mailable
      */
     public function build()
     {
-        $team = $this->participatorTeam;
+        $announciator = $this->announciator;
         $competition = $this->competition;
 
-        return $this->from($this->participatorTeam->email)
-            ->to($this->competition->team->address->email)
-            ->cc($this->participatorTeam->email)
+        return $this->from($this->announciator->email)
+            ->to($this->competition->organizer->address->email)
+            ->cc($this->announciator->email)
             ->subject('Meldungen für '.$this->competition->header)
-            ->view('emails.registration', compact('team', 'competition'));
+            ->view('emails.registration', compact('announciator', 'competition'));
     }
 }

@@ -3,9 +3,6 @@
 @section('javascript')
     @parent
 
-    <script>
-
-    </script>
 
 @stop
 @section('content')

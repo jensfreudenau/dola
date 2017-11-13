@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Address;
+use App\Competition;
+use App\Organizer;
 use App\Team;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -10,21 +12,19 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreTeamsRequest;
 use App\Http\Requests\Admin\UpdateTeamsRequest;
 
-class TeamsController extends Controller
+class OrganizersController extends Controller
 {
     /**
-     * Display a listing of Team.
+     * Display a listing of Organizer.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        if (! Gate::allows('team_access')) {
+        if (!Gate::allows('organizer_access')) {
             return abort(401);
         }
-
-        $teams = Team::all();
-
+        $teams = Organizer::all();
         return view('admin.teams.index', compact('teams'));
     }
 
@@ -35,7 +35,7 @@ class TeamsController extends Controller
      */
     public function create()
     {
-        if (! Gate::allows('team_create')) {
+        if (!Gate::allows('team_create')) {
             return abort(401);
         }
         $addresses = Address::get()->pluck('name', 'id')->prepend('Please select', '');
@@ -45,40 +45,35 @@ class TeamsController extends Controller
     /**
      * Store a newly created Team in storage.
      *
-     * @param StoreTeamsRequest|\App\Http\Requests\StoreTeamsRequest $request
+     * @param StoreTeamsRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreTeamsRequest $request)
     {
-        if (! Gate::allows('team_create')) {
+        if (!Gate::allows('team_create')) {
             return abort(401);
         }
-
-        $team = Team::create([
-            'name'    => $request->name,
-            'leader'    => $request->leader,
-            'addresses_id'    => $request->address_id,
-            'homepage'    => $request->homepage,
+        $team = Organizer::create([
+            'name' => $request->name,
+            'leader' => $request->leader,
+            'addresses_id' => $request->address_id,
+            'homepage' => $request->homepage,
         ]);
-
-
-
         return redirect()->route('admin.teams.index');
     }
-
 
     /**
      * Show the form for editing Team.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        if (! Gate::allows('team_edit')) {
+        if (!Gate::allows('team_edit')) {
             return abort(401);
         }
-        $team = Team::findOrFail($id);
+        $team      = Organizer::findOrFail($id);
         $addresses = Address::get()->pluck('name', 'id');
         return view('admin.teams.edit', compact('team', 'addresses'));
     }
@@ -86,59 +81,51 @@ class TeamsController extends Controller
     /**
      * Update Team in storage.
      *
-     * @param UpdateTeamsRequest|\App\Http\Requests\UpdateTeamsRequest $request
+     * @param UpdateTeamsRequest $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateTeamsRequest $request, $id)
     {
-        if (! Gate::allows('team_edit')) {
+        if (!Gate::allows('team_edit')) {
             return abort(401);
         }
-        $team = Team::findOrFail($id);
+        $team = Organizer::findOrFail($id);
         $team->update($request->all());
-
-
-
         return redirect()->route('admin.teams.index');
     }
-
 
     /**
      * Display Team.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        if (! Gate::allows('team_view')) {
+        if (!Gate::allows('team_view')) {
             return abort(401);
         }
-        $tracks = \App\Competition::where('team_id', $id)->where('season', 'bahn')->get();
-        $indoors = \App\Competition::where('team_id', $id)->where('season', 'halle')->get();
-        $crosses = \App\Competition::where('team_id', $id)->where('season', 'cross')->get();
-
-        $team = Team::findOrFail($id);
-
+        $tracks  = Competition::where('team_id', $id)->where('season', 'bahn')->get();
+        $indoors = Competition::where('team_id', $id)->where('season', 'halle')->get();
+        $crosses = Competition::where('team_id', $id)->where('season', 'cross')->get();
+        $team    = Organizer::findOrFail($id);
         return view('admin.teams.show', compact('team', 'tracks', 'indoors', 'crosses'));
     }
-
 
     /**
      * Remove Team from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        if (! Gate::allows('team_delete')) {
+        if (!Gate::allows('team_delete')) {
             return abort(401);
         }
-        $team = Team::findOrFail($id);
+        $team = Organizer::findOrFail($id);
         $team->delete();
-
         return redirect()->route('admin.teams.index');
     }
 
@@ -149,16 +136,14 @@ class TeamsController extends Controller
      */
     public function massDestroy(Request $request)
     {
-        if (! Gate::allows('team_delete')) {
+        if (!Gate::allows('team_delete')) {
             return abort(401);
         }
         if ($request->input('ids')) {
-            $entries = Team::whereIn('id', $request->input('ids'))->get();
-
+            $entries = Organizer::whereIn('id', $request->input('ids'))->get();
             foreach ($entries as $entry) {
                 $entry->delete();
             }
         }
     }
-
 }

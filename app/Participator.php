@@ -3,12 +3,18 @@
 namespace App;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property mixed $announciator
+ * @property \Carbon\Carbon $created_at
+ * @property int $id
+ * @property \Carbon\Carbon $updated_at
+ */
 class Participator extends Model
 {
-    protected $fillable = ['prename', 'lastname', 'birthyear', 'age_group', 'discipline', 'best_time', 'participator_team_id'];
+    protected $fillable = ['prename', 'lastname', 'birthyear', 'age_group', 'discipline', 'best_time', 'announciator_id'];
 
-    public function ParticipatorTeam()
+    public function Announciator()
     {
-        return $this->belongsTo(ParticipatorTeam::class, 'participator_team_id');
+        return $this->belongsTo(Announciator::class, 'announciator_id');
     }
 }

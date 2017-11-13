@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Organizer;
 use App\Participator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -37,7 +38,7 @@ class ParticipatorsController extends Controller
         if (! Gate::allows('participator_create')) {
             return abort(401);
         }
-        $teams = \App\Team::get()->pluck('name', 'id')->prepend('Please select', '');
+        $teams = Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
 
         return view('admin.participators.create', compact('teams'));
     }
@@ -72,7 +73,7 @@ class ParticipatorsController extends Controller
         if (! Gate::allows('participator_edit')) {
             return abort(401);
         }
-        $teams = \App\Team::get()->pluck('name', 'id')->prepend('Please select', '');
+        $teams = Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
 
         $participator = Participator::findOrFail($id);
 

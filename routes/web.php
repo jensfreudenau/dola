@@ -11,10 +11,10 @@ Route::get('/cross', 'CompetitionsController@cross');
 Route::get('/details/{competition_id}', 'CompetitionsController@details');
 Route::get('/players/{team_id}', 'TeamsOldController@players');
 Route::get('/table', 'TableController@index');
-Route::get('teams/competitions_select/{competition_id}', 'TeamsController@competitions_select');
-Route::get('teams/list_participator/{participator_team_id}', 'TeamsController@listParticipator');
-Route::get('/teams/create/{competition_id?}', 'TeamsController@create');
-Route::post('teams/store', 'TeamsController@store')->name('teams/store');
+Route::get('/announciators/competitions_select/{competition_id}', 'AnnounciatorsController@competitions_select');
+Route::get('/announciators/list_participator/{announciator_id}', 'AnnounciatorsController@listParticipator');
+Route::get('/announciators/create/{competition_id?}', 'AnnounciatorsController@create');
+Route::post('/announciators/store', 'AnnounciatorsController@store')->name('announciators/store');
 
 Route::get('/records/record', 'RecordsController@index')->name('records.record');
 Route::get('/records/{id}', 'RecordsController@record');

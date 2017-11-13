@@ -1,3 +1,15 @@
 .edit_part {
-    float:right
+    float:right;
+}
+.card-block {
+    padding:20px;
+}
+.card{
+    margin-bottom: 20px;
+}
+h3.card-title {
+    font-size: 16px;
+}
+h4.card-title {
+    font-size: 14px;
 }

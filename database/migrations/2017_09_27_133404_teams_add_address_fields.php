@@ -14,7 +14,7 @@ class TeamsAddAddressFields extends Migration
     public function up()
     {
         Schema::table('teams', function (Blueprint $table) {
-            $table->integer('addresses_id');
+            $table->integer('address_id');
         });
     }
 

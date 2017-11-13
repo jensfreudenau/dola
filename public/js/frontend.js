@@ -39,8 +39,8 @@ $(document).ready(function () {
 $(".competition_select").select2();
 /* Load positions into postion <selec> */
 $("#competition_id").change(function () {
-    $.getJSON("/teams/competitions_select/" + $(this).val(), function (jsonData) {
-        $('#team_name').val(jsonData.team.name);
+    $.getJSON("/announciators/competitions_select/" + $(this).val(), function (jsonData) {
+        $('#organizer_name').val(jsonData.organizer.name);
         $('#header').val(jsonData.header);
         $('#start_date').val(jsonData.start_date);
     });

@@ -1,0 +1,76 @@
+body {
+    padding-top: 20px;
+    font-family: "Source Sans Pro",sans-serif;
+    background: #ccc url('../../images/32mKB.jpg') no-repeat fixed top center;
+    background-size: cover;
+}
+
+h3{
+    padding: 20px 0 20px 0;
+}
+.container-fluid{
+    background: #fff;
+    padding: 15px;
+}
+.footer {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    margin-top: 40px;
+    border-top: 1px solid #eee;
+}
+a.nav-link{
+    color: #fff;
+}
+a {
+    color: rgb(2, 150, 98);
+}
+a:hover {
+    color: rgb(2, 150, 98);
+}
+header {
+    border-bottom: 1px solid grey;
+}
+/* Main marketing message and sign up button */
+.jumbotron {
+    text-align: center;
+    background-color: transparent;
+}
+
+.jumbotron .btn {
+    padding: 14px 24px;
+    font-size: 21px;
+}
+
+.navbar {
+    background-image: linear-gradient(to bottom, #f7f7f7 0%, #eee 100%);
+    border: 1px solid #e5e5e5;
+}
+h1, h2, h3,h4{
+    font-weight:200;
+}
+h1 a.navbar-brand {
+    font-size: 2.5rem;
+}
+@media (min-width: 768px) {
+    .navbar-nav {
+        display: -ms-flexbox;
+        display: flex;
+    }
+
+    .navbar-nav .nav-item {
+        -ms-flex: 1 0 auto;
+        flex: 1 0 auto;
+    }
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+    /* Remove the padding we set earlier */
+    .masthead,
+    .marketing,
+    .footer {
+        padding-right: 0;
+        padding-left: 0;
+    }
+}
+

@@ -7,10 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 use Collective\Html\Eloquent\FormAccessible;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * @property string $submit_date
+ * @property mixed $organizer
+ * @property mixed $uploads
+ * @property mixed $announciator
+ * @property mixed $participators
+ * @property string $start_date
+ */
 class Competition extends BaseModel
 {
     use FormAccessible;
-    protected $fillable = ['team_id', 'start_date', 'timetable_1',  'submit_date', 'header', 'info', 'season', 'classes', 'award', 'register'];
+    protected $fillable       = ['organizer_id', 'start_date', 'timetable_1', 'submit_date', 'header', 'info', 'season', 'classes', 'award', 'register'];
+    protected $tableStyle     = '<table class="table table-sm table-hover table-responsive">';
+    protected $tableHeadStyle = '<thead class="thead-inverse">';
 
     public function __construct(array $attributes = [])
     {
@@ -25,9 +35,9 @@ class Competition extends BaseModel
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function team()
+    public function organizer()
     {
-        return $this->belongsTo(Team::class, 'team_id');
+        return $this->belongsTo(Organizer::class, 'organizer_id');
     }
 
     /**
@@ -41,9 +51,9 @@ class Competition extends BaseModel
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function ParticipatorTeam()
+    public function Announciator()
     {
-        return $this->hasMany(ParticipatorTeam::class);
+        return $this->hasMany(Announciator::class);
     }
 
     /**
@@ -51,27 +61,39 @@ class Competition extends BaseModel
      */
     public function Participators()
     {
-        return $this->hasManyThrough(Participator::class, ParticipatorTeam::class);
+        return $this->hasManyThrough(Participator::class, Announciator::class);
     }
 
     public function save(array $options = [])
     {
         $this->replaceTableTag();
+        $this->trimClasses();
         parent::save();
     }
 
-    public function reduceClasses() {
-
-        //WK U10, WK U12, WJ U14, WJ U16, WJ U18/U20, MK U10, MK U12, MJ U14, MJ U16, MJ U18/U20
-        $sex = ['WK', 'WJ', 'MK', 'MJ'];
-        $class = str_replace($sex, '', $this->classes);
-        $class = explode(',', $class);
-        $result = array_unique($class);
-        return implode(',', $result);
+    protected function trimClasses()
+    {
+        $this->classes = str_replace(',', '|', $this->classes);
+        $this->classes = str_replace(' ', '', $this->classes);
+        $this->classes = str_replace('|', ', ', $this->classes);
     }
     protected function replaceTableTag()
     {
         $this->timetable_1 = str_replace('Uhr', '', $this->timetable_1);
+        $this->timetable_1 = str_replace('<table>', $this->tableStyle, $this->timetable_1);
+        $this->timetable_1 = str_replace('<thead>', $this->tableHeadStyle, $this->timetable_1);
+    }
+
+    public function reduceClasses()
+    {
+        //WKU12, W10/W11, WJU14, W12/W13, WJU16, W14/W15, MKU12, M10/11, MJU14, M12/13, MJU16, M14/15,
+        //WK U10, WK U12, WJ U14, WJ U16, WJ U18/U20, MK U10, MK U12, MJ U14, MJ U16, MJ U18/U20
+        $sex    = ['WK', 'WJ', 'MK', 'MJ', 'W10/W11', 'W12/W13', 'W14/W15', 'M10/11', 'M12/13', 'M14/15'];
+        $class  = str_replace($sex, '', $this->classes);
+        $class  = str_replace(' ', '', $class);
+        $class  = explode(',', $class);
+        $class = array_unique($class);
+        return implode(', ', $class);
     }
 
     /**

@@ -8,86 +8,41 @@
             <a href="{{ route('admin.competitions.create') }}" class="btn btn-success">@lang('quickadmin.qa_add_new')</a>
         </p>
     @endcan
+    <div class="row">
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            @lang('quickadmin.qa_dashboard')
-        </div>
-        <div class="panel-body table-responsive">
-            <div class="col-md-6">
-                <div class="box box-info">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ $competitions[0]->Participators->count() }} Anmeldungen </h3>
-                        <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+        @if (count($competitions) > 0)
+            @foreach($competitions as $key => $competition)
+
+                @if(($key % 2) == 0)
+                    <div class="col-md-6">
+                        @endif
+                        <div class="card">
+                            <div class="card-block">
+                                <h3 class="card-title">{{ $competitions[$key]->Participators->count() }} Anmeldungen für</h3>
+                                <h4 class="card-title">{{ $competitions[$key]->header }} am {{ $competitions[$key]->start_date }}</h4>
+                                <div class="chart">
+                                    <canvas id="lineChart_{{$key}}" width="400" height="250"></canvas>
+                                </div>
+                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="box-body">
-                        <div class="chart">
-                            <canvas id="lineChart_0" width="400" height="250"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="box box-info">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ $competitions[1]->Participators->count() }} Anmeldungen</h3>
-                        <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                        </div>
-                    </div>
-                    <div class="box-body">
-                        <div class="chart">
-                            <canvas id="lineChart_1"width="400" height="250"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="box box-info">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ $competitions[2]->Participators->count() }} Anmeldungen</h3>
-                        <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                        </div>
-                    </div>
-                    <div class="box-body">
-                        <div class="chart">
-                            <canvas id="lineChart_2" width="400" height="250"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="box box-info">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ $competitions[3]->Participators->count() }} Anmeldungen</h3>
-                        <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                        </div>
-                    </div>
-                    <div class="box-body">
-                        <div class="chart">
-                            <canvas id="lineChart_3" width="400" height="250"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                        @if(($key % 2) == 1) </div> @endif
+            @endforeach
+        @endif
+
     </div>
-@stop
 
+
+@stop
 
 
 @section('javascript')
 
     <script>
+
+
         $(document).ready(function () {
+                    @if (count($announces) > 0)
             let anz = 0;
             let areaChartCanvas = '';
             let areaChartData = {};
@@ -97,7 +52,7 @@
             @foreach ($announces as $key => $announce)
 
                 areaChartCanvas = $('#lineChart_{{$key}}').get(0).getContext('2d');
-                areaChartData = {
+            areaChartData = {
                 labels: [
                     @foreach ($announce as $group => $result)
                         '{!! Carbon\Carbon::parse($result->created_at)->format('d.m.Y') !!}',
@@ -121,8 +76,8 @@
                     display: false,
                 },
                 title: {
-                    display: true,
-                    text: '{{$competitions[$key]->header}}'
+                    display: false
+
                 },
                 scales: {
                     yAxes: [{
@@ -139,5 +94,6 @@
             });
             @endforeach
         });
+        @endif
     </script>
 @endsection

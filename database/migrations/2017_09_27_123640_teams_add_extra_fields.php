@@ -16,7 +16,7 @@ class TeamsAddExtraFields extends Migration
         Schema::table('teams', function (Blueprint $table) {
         $table->string('homepage');
         $table->string('leader');
-        $table->integer('modified_by');
+        $table->integer('updated_by');
         $table->integer('created_by');
     });
     }

@@ -4,9 +4,9 @@ namespace App;
 
 class Address extends BaseModel
 {
-    public function teams()
+    public function organizers()
     {
-        return $this->hasMany(Team::class);
+        return $this->hasMany(Organizer::class);
     }
 
     public static function boot()

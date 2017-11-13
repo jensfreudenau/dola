@@ -231,8 +231,8 @@ $(document).ready(function () {
         var $th = '';
         var firstColumn = response.data[0];
         response.data.shift();
-        var $table = $('<table class="table table-hover">');
-        var $thead = $('<thead class="thead-inverse">').appendTo($table);
+        var $table = $('<table>');
+        var $thead = $('<thead>').appendTo($table);
         $tr = $('<tr>').appendTo($thead);
         $(firstColumn).each(function (i) {
             $th = $('<th>', {'html': firstColumn[i]}).appendTo($tr);
@@ -278,22 +278,36 @@ $(document).ready(function () {
                 if (data[j].search("eldeschl") > 0) {
                     setMeldeschluss(data[j]);
                 }
-                if (data[j].search("eldung") > 0) {
+                if (data[j].includes("eldung")) {
                     setMeldungReceiver(data);
+                }
+
+                if (data[j].includes(' den ') || data[j].includes(' am ') ) {
+                    let headerline = data[j].split(',');
+                    setHeader(headerline[0]);
+                    setRadioSeason(headerline[0]);
+                    setStartDate(headerline[1]);
                 }
                 tarr.push(data[j]);
             }
             lines.push(tarr);
         }
         parsedData(table);
-        let headerAndDateline = lines[1][0].split(',');
-        setHeader(headerAndDateline[0]);
-        //ist der Header mit dem Datum in der ersten Zeile??
-        if (false === setStartDate(headerAndDateline[1])) {
-            let headerline = lines[0][0].split(',');
-            setHeader(headerline[0]);
-            setStartDate(headerline[1]);
-        }
+
+        // if (headerline.search("am") > 0) {
+        //
+        // }
+        // let headerAndDateline = lines[1][0].split(',');
+        //
+        // //ist der Header mit dem Datum in der ersten Zeile??
+        // if (false === setStartDate(headerAndDateline[1])) {
+        //     let headerline = lines[0][0].split(',');
+        //     setHeader(headerline[0]);
+        //     setStartDate(headerline[1]);
+        // }
+        // else {
+        //     setHeader(headerAndDateline[0]);
+        // }
         return true;
     }
 });
@@ -310,14 +324,14 @@ function setRadioSeason(headerline) {
 }
 
 function setHeader(headerline) {
-    let headerlineArr = headerline.split(' am');
-    setRadioSeason(headerlineArr[0]);
-    $('#competition-headline').val(headerlineArr[0]);
+    $('#competition-headline').val(headerline);
 }
 
 function setStartDate(data) {
     let startStr = data.toString();
-    startStr = startStr.replace("den ", "");
+    startStr = startStr.replace(/am/g, "");
+    startStr = startStr.replace(/den/g, "");
+    console.log(startStr);
     if (!moment($.trim(startStr), ['DD. MMMM YYYY', 'DD.MMMM YYYY', 'DD.MM.YYYY'], true).isValid()) {
         return false;
     }
