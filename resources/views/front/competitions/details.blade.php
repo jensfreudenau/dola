@@ -1,6 +1,5 @@
 @extends('layouts.front')
 @section('content')
-<div class="col-md-12">
 
 
         <h3>{{ $competition->header }}</h3>
@@ -44,9 +43,11 @@
                 </dd>
             @endif
             <dt class="col-sm-3">
-                <hr></dt>
+                <hr>
+            </dt>
             <dd class="col-sm-9">
-                <hr></dd>
+                <hr>
+            </dd>
             <dt class="col-sm-3"></dt>
             <dd class="col-sm-9">
                 @foreach($competition->Uploads as $upload)
@@ -63,13 +64,19 @@
 
         <hr>
 
-        {!! $competition->timetable_1 !!}
+
+                    {!! $competition->timetable_1 !!}
 
 
-    <div class="callout callout-success">
+
+
+
+
+        <div class="callout callout-success">
                         <span>Elektronische Zeitnahme. &Auml;nderungen vorbehalten! Ohne Gew&auml;hr.
                         Die Wettk&auml;mpfe werden nach den g&uuml;ltigen Wettkampfbestimmungen ausgetragen und stehen unter amtlicher Aufsicht.
                         Wir w&uuml;nschen allen Teilnehmern eine gute Anreise und viel Erfolg.</span><br>
+        </div>
     </div>
-      </div>
+
 @endsection

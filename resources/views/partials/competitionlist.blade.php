@@ -5,7 +5,7 @@
         <span class="year">{{ Carbon\Carbon::parse($competition->start_date)->format('Y') }}</span>
     </time>
     <div class="info">
-        <h3 class="title"><a href="details/{{ $competition->id }}">{{ $competition->header }}</a></h3>
+        <h4 class="title"><a href="details/{{ $competition->id }}">{{ $competition->header }}</a></h4>
         <p class="desc"><span class="desc_type">Altersklassen: </span>{{ $competition->reduceClasses() }}</p>
         <p class="desc"><span class="desc_type">Meldeschlu&szlig;: </span>{{ $competition->submit_date}}</p>
         @if(!empty(trim($competition->info)))

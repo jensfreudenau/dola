@@ -1,6 +1,8 @@
 @extends('layouts.front')
 @section('content')
-            <h2>Die nächsten Wettk&auml;mpfe</h2>
+
+            <h3>Die nächsten Wettk&auml;mpfe</h3>
+            <hr>
             <ul class="fa-ul">
                 @forelse($competitions as $competition)
                     @include('partials.competitionlist')

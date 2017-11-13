@@ -8,42 +8,33 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://fonts.googleapis.com/css?family=Miriam+Libre:400,700|Source+Sans+Pro:200,400,700,600,400italic,700italic" rel="stylesheet" type="text/css">
-     
-
     <title>{{ config('app.name', 'Dortmunder Leichtathletik') }}</title>
-
-    <!-- Styles -->
-
 @include('partials.front.styles')
-
-
 <!-- Scripts -->
     <script>
         window.Laravel = {!! json_encode([
             'csrfToken' => csrf_token(),
         ]) !!};
     </script>
-
 </head>
 
 <body>
 <div class="container">
-    @include('partials.front.navtest')
-    <main role="main" class="container-fluid">
-        <div class="col-md-12">
-            <section>
-                <div class="container">
-                    <div class="row">
+    <div class="row justify-content-center">
 
-                        @yield('content')
+        <div class="col-sm-9">
+            @include('partials.front.navtest')
 
-                    </div>
+            <div class="section">
+                <div class="col-sm">
+                @yield('content')
                 </div>
-            </section>
-
+            </div>
         </div>
-    </main>
+    </div>
 </div>
+
+
 <!-- Scripts -->
 
 @include('partials.footer')
