@@ -11,6 +11,9 @@ body {
 h3, h4{
     padding: 20px 0 20px 0;
 }
+i.fa-li {
+    padding-top:2px;
+}
 .footer {
     padding-top: 40px;
     padding-bottom: 40px;

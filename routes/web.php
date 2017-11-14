@@ -12,7 +12,7 @@ Route::get('/details/{competition_id}', 'CompetitionsController@details');
 Route::get('/players/{team_id}', 'TeamsOldController@players');
 Route::get('/table', 'TableController@index');
 Route::get('/announciators/competitions_select/{competition_id}', 'AnnounciatorsController@competitions_select');
-Route::get('/announciators/list_participator/{announciator_id}', 'AnnounciatorsController@listParticipator');
+Route::get('/announciators/list_participator', 'AnnounciatorsController@listParticipator');
 Route::get('/announciators/create/{competition_id?}', 'AnnounciatorsController@create');
 Route::post('/announciators/store', 'AnnounciatorsController@store')->name('announciators/store');
 

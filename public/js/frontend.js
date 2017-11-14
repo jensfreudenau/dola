@@ -23,7 +23,7 @@ $(document).ready(function () {
             '<div class="form-group">' +
             '<div class="input-group">' +
             '<span class="input-group-addon"><i class="fa fa-heart fa-fw"></i></span>' +
-            '<input class="form-control required" name="altersklasse[]" placeholder="Altersklasse" type="text" required></div></div>' +
+            '<input class="form-control required" name="altersklasse[]" placeholder="Altersklasse*" type="text" required></div></div>' +
             '<div class="form-group">' +
             '<div class="input-group">' +
             '<span class="input-group-addon"><i class="fa fa-sun-o fa-fw"></i></span>' +

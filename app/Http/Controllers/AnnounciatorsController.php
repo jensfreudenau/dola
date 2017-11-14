@@ -10,6 +10,7 @@ use App\Mail\EnrolReceived;
 use App\Annunciator;
 use App\Participator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Mail;
 use Session;
 
@@ -23,12 +24,13 @@ class AnnounciatorsController extends Controller
      */
     public function create($id='')
     {
-        $competition = '';
-        if (!empty($id)) {
-            $competition = Competition::findOrFail($id);
-        }
 
-        $competitionselect = Competition::where('submit_date', '>=', date('Y-m-d'))->get()->pluck('header', 'id');
+        if (empty($id)) {
+            $competition = Competition::where('submit_date', '>=', date('Y-m-d'))->where('register', '=', 0)->orderBy('start_date', 'asc')->limit(1)->get();
+            $id = $competition[0]->id;
+        }
+        $competition = Competition::findOrFail($id);
+        $competitionselect = Competition::where('submit_date', '>=', date('Y-m-d'))->where('register', '=', 0)->orderBy('start_date', 'asc')->get()->pluck('header', 'id');
         return view('front.announciators.create', compact('competition', 'competitionselect'));
     }
 
@@ -59,24 +61,26 @@ class AnnounciatorsController extends Controller
         foreach ($request->bestzeit as $key => $item) {
             $participators[$key]['best_time'] = $item;
         }
-
-
         $announciator = Announciator::create($request->all());
         foreach ($participators as $participator) {
             $participator['announciator_id'] = $announciator->id;
             Participator::create($participator);
         }
         $competition = Competition::findOrFail($request->competition_id);
-   
-     
-        return redirect('announciators/list_participator/'.$announciator->id);
+        Mail::to('jens@freude-now.de')->send(new EnrolReceived($announciator, $competition));
+        $cookie = Cookie::make('announciators_id', $announciator->id);
+        return redirect()->action('AnnounciatorsController@listParticipator')->withCookie($cookie);
     }
 
-    public function listParticipator($id)
+    public function listParticipator()
     {
-        $announciator = Announciator::findOrFail($id);
+        $announciators_id = Cookie::get('announciators_id', 0);
+        if(0 == $announciators_id) {
+            return redirect()->action('HomeController@index');
+        }
+        $announciator = Announciator::findOrFail($announciators_id);
         $competition = Competition::findOrFail($announciator->competition_id);
-        Mail::to('jens@freude-now.de')->send(new EnrolReceived($announciator, $competition));
+
         return view('front.announciators.list', compact('announciator', 'competition'));
     }
     /**

@@ -4,8 +4,8 @@
 @section('content')
     <div class="col-md-2"></div>
     <div class="col-md-8">
-        <div class="page  ng-scope">
-div schliessen!!!
+        <div class="page ng-scope">
+
 
             <section class="panel panel-default">
 

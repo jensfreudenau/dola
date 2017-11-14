@@ -1,4 +1,4 @@
-<li><i class="fa-li fa fa-check-square"></i>
+<li><i class="fa-li fa fa-circle-o"></i>
     <time date="{{ $competition->start_date }}">
         <span class="day">{{ Carbon\Carbon::parse($competition->start_date)->format('d') }}.</span>
         <span class="month">{{ Carbon\Carbon::createFromTimeStamp(strtotime($competition->start_date))->formatLocalized('%B') }}</span>

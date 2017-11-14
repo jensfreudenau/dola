@@ -1,19 +1,16 @@
 @extends('layouts.front')
 @section('content')
-    <hr>
-    <div class="row">
-        <div class="col-xs-12">
+
             <p class="size-h3">{{ $competition->header }}</p>
-        </div>
-        <div class="col-xs-8">
+
+
             <dl class="dl-horizontal">
                 <dt>Datum:</dt>
                 <dd>{{ $competition->start_date }}</dd>
                 <dt>Veranstalter:</dt>
                 <dd>{{ $competition->organizer->name }}</dd>
             </dl>
-            <hr>
-            <div class="row">
+
                 <table class="table table-hover">
                     <thead class="thead-inverse">
                     <tr>
@@ -39,10 +36,8 @@
                     @endforeach
                     </tbody>
                 </table>
-            </div>
-        </div>
-        <div class="col-xs-4"></div>
-    </div>
+
+
 
 
 @endsection

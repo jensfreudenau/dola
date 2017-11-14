@@ -20,10 +20,9 @@
                         <a class="dropdown-item" href="/track">Bahn</a>
                         <a class="dropdown-item" href="/indoor">Halle</a>
                         <a class="dropdown-item" href="/cross">Strasse</a>
-
+                        <a class="dropdown-item" href="/announciators/create">Anmeldeformular</a>
+                        <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="/archive">Ergebnisarchiv</a>
-                        <a class="dropdown-item" href="/organizers/create">Anmeldeformular</a>
-
                         <a class="dropdown-item" href="/pages/conditions_track">Bedingnungen Bahn</a>
                         <a class="dropdown-item" href="/pages/conditions_indoor">Bedingnungen Halle</a>
                     </div>

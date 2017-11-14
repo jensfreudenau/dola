@@ -17,14 +17,14 @@
             <dd class="col-sm-9">{{ $competition->organizer->leader }}</dd>
             <dt class="col-sm-3">Meldeanschrift:</dt>
             <dd class="col-sm-9">
-                <div class="panel panel-default">
-                    <div class="panel-body">
+
+                        <address>
                         {{ $competition->organizer->address->name }}<br>
                         {{ $competition->organizer->address->street }}<br>
                         {{ $competition->organizer->address->zip }}
                         {{ $competition->organizer->address->city }}<br> <a href="mailto:{{ $competition->organizer->address->email }}">{{ $competition->organizer->address->email }}</a>
-                    </div>
-                </div>
+                            </address>
+
             </dd>
             @if ($competition->organizer->homepage)
                 <dt class="col-sm-3">Webseite:</dt>
@@ -61,17 +61,8 @@
                 @endforeach
             </dd>
         </dl>
-
-        <hr>
-
-
-                    {!! $competition->timetable_1 !!}
-
-
-
-
-
-
+        <h5>Zeitplan</h5>
+        {!! $competition->timetable_1 !!}
         <div class="callout callout-success">
                         <span>Elektronische Zeitnahme. &Auml;nderungen vorbehalten! Ohne Gew&auml;hr.
                         Die Wettk&auml;mpfe werden nach den g&uuml;ltigen Wettkampfbestimmungen ausgetragen und stehen unter amtlicher Aufsicht.
