@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Additional;
 use App\Competition;
 use App\Address;
 use App\Http\Controllers\Traits\FileUploadTrait;
@@ -9,7 +10,6 @@ use App\Http\Requests\Admin\StoreCompetitionsRequest;
 use App\Http\Requests\Admin\UpdateCompetitionsRequest;
 use App\Organizer;
 use App\Upload;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
@@ -34,7 +34,8 @@ class CompetitionController extends Controller
             return abort(401);
         }
         $competition = Competition::findOrFail($id);
-        return view('admin.competitions.show', compact('competition'));
+        $additionals = Additional::where('external_id', '=', $competition->id)->get();
+        return view('admin.competitions.show', compact('competition', 'additionals'));
     }
 
     public function edit($id)
@@ -45,6 +46,7 @@ class CompetitionController extends Controller
         $competition = Competition::findOrFail($id);
         $addresses   = Address::get()->pluck('name', 'id');
         $organizers  = Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
+        $additionals = Additional::where('external_id', '=', $id)->get();
         $track       = '';
         $cross       = '';
         $indoor      = '';
@@ -60,7 +62,7 @@ class CompetitionController extends Controller
         if ($competition->season == 'halle') {
             $indoor = 'active';
         }
-        return view('admin.competitions.update', compact('addresses', 'competition', 'organizers', 'indoor', 'cross', 'track'));
+        return view('admin.competitions.update', compact('addresses', 'competition', 'organizers', 'indoor', 'cross', 'track', 'additionals'));
     }
 
     /**
@@ -71,15 +73,28 @@ class CompetitionController extends Controller
      */
     public function update(UpdateCompetitionsRequest $request, $id)
     {
+
         if (!Gate::allows('competition_edit')) {
             return abort(401);
         }
         $competition = Competition::findOrFail($id);
         $competition->update($request->all());
+        $data = $request->all();
+        foreach ($data['keyvalue'] as $key => $keyVal) {
+            Additional::updateOrCreate(
+                ['id' => $key,
+                 'external_id' => $competition->id],
+                ['key' => $keyVal['key'],
+                 'value' => $keyVal['value'],
+                 'mnemonic' => $competition->season,
+                ]
+            );
+        }
         return redirect('/admin/competitions');
     }
 
     use FileUploadTrait;
+
     public function participator(Request $request, $id)
     {
 //        if (!Gate::allows('competition_participator')) {
@@ -114,7 +129,7 @@ class CompetitionController extends Controller
             return abort(401);
         }
         $addresses   = Address::get()->pluck('name', 'id')->prepend('Please select', '');
-        $organizers       = Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
+        $organizers  = Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
         $competition = '';
         $track       = '';
         $cross       = '';
@@ -127,8 +142,17 @@ class CompetitionController extends Controller
         if (!Gate::allows('competition_create')) {
             return abort(401);
         }
-        $id = Competition::create($request->all())->id;
-        return redirect('/admin/competitions/'.$id);
+        $data = $request->all();
+        $id   = Competition::create($data)->id;
+
+        if(!empty($data['keyvalue'])) {
+            foreach ($data['keyvalue'] as $keyval) {
+                $keyval['external_id'] = $id;
+                $keyval['mnemonic']    = $request->season;
+                Additional::create($keyval);
+            }
+        }
+        return redirect('/admin/competitions/' . $id);
     }
 
     /**
@@ -150,8 +174,8 @@ class CompetitionController extends Controller
     public function delete_file($id, Request $request)
     {
         $requestAll = $request->all();
-        $filename = Upload::findOrFail($id);
-        File::delete('upload/'.$filename->type.'/'.$filename->filename);
+        $filename   = Upload::findOrFail($id);
+        File::delete('upload/' . $filename->type . '/' . $filename->filename);
         $filename->delete();
         return redirect()->route('admin.competitions.edit', $requestAll['competition_id']);
     }

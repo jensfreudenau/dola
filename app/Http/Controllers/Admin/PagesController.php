@@ -19,7 +19,7 @@ class PagesController extends Controller
      */
     public function index()
     {
-        if (! Gate::allows('address_access')) {
+        if (! Gate::allows('page_access')) {
             return abort(401);
         }
 
@@ -34,6 +34,9 @@ class PagesController extends Controller
      */
     public function create()
     {
+        if (! Gate::allows('page_edit')) {
+            return abort(401);
+        }
         return view('admin.pages.create');
     }
 
@@ -46,6 +49,9 @@ class PagesController extends Controller
      */
     public function store(Request $request)
     {
+        if (! Gate::allows('page_edit')) {
+            return abort(401);
+        }
         $requestData = $request->all();
         
         Page::create($requestData);
@@ -64,6 +70,9 @@ class PagesController extends Controller
      */
     public function show($id)
     {
+        if (! Gate::allows('page_access')) {
+            return abort(401);
+        }
         $page = Page::findOrFail($id);
 
         return view('admin.pages.show', compact('page'));
@@ -78,6 +87,9 @@ class PagesController extends Controller
      */
     public function edit($id)
     {
+        if (! Gate::allows('page_edit')) {
+            return abort(401);
+        }
         $page = Page::findOrFail($id);
 
         return view('admin.pages.edit', compact('page'));
@@ -93,7 +105,9 @@ class PagesController extends Controller
      */
     public function update($id, Request $request)
     {
-        
+        if (! Gate::allows('page_edit')) {
+            return abort(401);
+        }
         $requestData = $request->all();
         
         $page = Page::findOrFail($id);
@@ -113,6 +127,9 @@ class PagesController extends Controller
      */
     public function destroy($id)
     {
+        if (! Gate::allows('page_edit')) {
+            return abort(401);
+        }
         Page::destroy($id);
 
         Session::flash('flash_message', 'Page deleted!');

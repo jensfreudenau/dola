@@ -31,8 +31,14 @@
                 <dd class="col-sm-9"><a href="{{ $competition->organizer->homepage }}">{{ $competition->organizer->homepage }}</a></dd>
             @endif
             @if (trim($competition->info))
-                <dt class="col-sm-3"><span class="red_font">Info:</span></dt></dt>
+                <dt class="col-sm-3"><span class="red_font">Info:</span></dt>
                 <dd class="col-sm-9">{{ $competition->info }}</dd>
+            @endif
+            @if($additionals)
+                @foreach($additionals as $additional)
+                    <dt class="col-sm-3">{{$additional->key}}</dt>
+                    <dd class="col-sm-9">{{$additional->value}}</dd>
+                @endforeach
             @endif
             <dt class="col-sm-3">Haftung:</dt>
             <dd class="col-sm-9">Veranstalter und Ausrichter &uuml;bernehmen keinerlei Haftung für Sch&auml;den jeglicher Art.</dd>
@@ -42,6 +48,7 @@
                     <a class="btn btn-primary" href="/announciators/create/{{ $competition->id }}" role="button"><i class="fa fa-pencil"></i> anmelden</a>
                 </dd>
             @endif
+
             <dt class="col-sm-3">
                 <hr>
             </dt>

@@ -6,7 +6,7 @@
         <hr>
         <ul class="fa-ul">
             @forelse($competitions as $competition)
-                @include('partials.competitionlist')
+                @include('partials.front.competitionlist')
             @empty
                 <li>
                     <p class="desc">keine Wettk&auml;mpfe.</p>

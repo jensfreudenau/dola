@@ -14,10 +14,7 @@
 <div class="form-group">
     {!! Form::select('organizer_id', $organizers, ( $competition ? $competition->organizer_id: null), ['class' => 'form-control select2', 'required' ]) !!}
 </div>
-{!! Form::label('addresses_id', Lang::get('quickadmin.addresses.title'), ['class' => 'control-label']) !!}
-<div class="form-group">
-    {!! Form::select('addresses_id', $addresses, ( $competition ? $competition->addresses_id: null), ['class' => 'form-control select2', 'required']) !!}
-</div>
+
 <div class="form-group">
     {!! Form::label('info', Lang::get('quickadmin.competitions.fields.info')) !!}
     {!! Form::text('info', null, ['id'=> 'competition-info', 'class'=>'form-control']) !!}
@@ -29,7 +26,6 @@
 <div class="form-group">
     {!! Form::label('classes', Lang::get('quickadmin.competitions.fields.classes')) !!}
     {!! Form::text('classes', null, ['id'=> 'competition-classes', 'class'=>'form-control']) !!}
-
 </div>
 <div class="form-group">
     {!! Form::label('register', Lang::get('quickadmin.competitions.register')) !!}<br>

@@ -2,7 +2,7 @@
 <html lang="de">
 
 <head>
-    @include('partials.head')
+    @include('partials.admin.head')
     @include('partials.admin.javascripts')
 </head>
 
@@ -11,8 +11,8 @@
 
 <div id="wrapper">
 
-@include('partials.topbar')
-@include('partials.sidebar')
+@include('partials.admin.topbar')
+@include('partials.admin.sidebar')
 
 <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">

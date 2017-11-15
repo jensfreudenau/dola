@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Additional;
 use App\Competition;
 use App\Address;
 use App\Http\Requests;
@@ -51,7 +52,8 @@ class CompetitionsController extends Controller
     public function details($id)
     {
         $competition = Competition::findOrFail($id);
-        return view('front.competitions.details', compact('competition'));
+        $additionals = Additional::where('external_id', '=', $competition->id)->get();
+        return view('front.competitions.details', compact('competition', 'additionals'));
     }
 
 }

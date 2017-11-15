@@ -24,7 +24,6 @@ class AnnounciatorsController extends Controller
      */
     public function create($id='')
     {
-
         if (empty($id)) {
             $competition = Competition::where('submit_date', '>=', date('Y-m-d'))->where('register', '=', 0)->orderBy('start_date', 'asc')->limit(1)->get();
             $id = $competition[0]->id;

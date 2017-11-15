@@ -35,12 +35,12 @@
                             <td>{{ $record->sex or '' }}</td>
                             <td>
                                 @can('competition_view')
-                                    <a href="{{ route('admin.records.show',[$record->id]) }}" class="btn btn-xs btn-primary">@lang('quickadmin.qa_view')</a>
+                                    <a href="{{ route('admin.records.show',[$record->id]) }}" class="btn btn-sm btn-primary">@lang('quickadmin.qa_view')</a>
                                 @endcan
                             </td>
                             <td>
                                 @can('competition_edit')
-                                    <a href="{{ route('admin.records.edit',[$record->id]) }}" class="btn btn-xs btn-info">@lang('quickadmin.qa_edit')</a>
+                                    <a href="{{ route('admin.records.edit',[$record->id]) }}" class="btn btn-sm btn-info">@lang('quickadmin.qa_edit')</a>
                                 @endcan
                             </td>
                             <td></td>

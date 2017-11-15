@@ -9,9 +9,7 @@
         </div>
         <div class="panel-body">
             <div class="row">
-                <p>&nbsp;</p>
-                <a href="{{ route('admin.competitions.index') }}"
-                class="btn btn-default">@lang('quickadmin.qa_back_to_list')</a>
+
                 <div class="col-md-10">
                     <table class="table table-hover">
                         <tr>
@@ -50,6 +48,15 @@
                             <th>@lang('quickadmin.competitions.fields.submit_date')</th>
                             <td>{{ Carbon\Carbon::parse($competition->submit_date)->format('d.m.Y') }}</td>
                         </tr>
+                        @if($additionals)
+                            @foreach($additionals as $additional)
+                                <tr>
+                                    <th>{{$additional->key}}</th>
+                                    <td>{{$additional->value}}</td>
+                                </tr>
+                            @endforeach
+                        @endif
+
                         <tr>
                             <td colspan="2">{!!  $competition->timetable_1 !!}</td>
                         </tr>
@@ -85,6 +92,11 @@
                             <tbody>
                         </table>
                     </div>
+                </div>
+                <div class="col-md-2">
+                    <p>&nbsp;</p>
+                    <a href="{{ route('admin.competitions.index') }}"
+                       class="btn btn-default">@lang('quickadmin.qa_back_to_list')</a>
                 </div>
             </div>
         </div>

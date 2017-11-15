@@ -38,10 +38,10 @@
                                 <td>{{ $organizer->name }}</td>
                                 <td>
                                     @can('organizer_view')
-                                    <a href="{{ route('admin.organizers.show',[$organizer->id]) }}" class="btn btn-xs btn-primary">@lang('quickadmin.qa_view')</a>
+                                    <a href="{{ route('admin.organizers.show',[$organizer->id]) }}" class="btn btn-sm btn-primary">@lang('quickadmin.qa_view')</a>
                                     @endcan
                                     @can('organizer_edit')
-                                    <a href="{{ route('admin.organizers.edit',[$organizer->id]) }}" class="btn btn-xs btn-info">@lang('quickadmin.qa_edit')</a>
+                                    <a href="{{ route('admin.organizers.edit',[$organizer->id]) }}" class="btn btn-sm btn-info">@lang('quickadmin.qa_edit')</a>
                                     @endcan
                                     @can('organizer_delete')
                                     {!! Form::open(array(
@@ -49,7 +49,7 @@
                                         'method' => 'DELETE',
                                         'onsubmit' => "return confirm('".trans("quickadmin.qa_are_you_sure")."');",
                                         'route' => ['admin.organizers.destroy', $organizer->id])) !!}
-                                    {!! Form::submit(trans('quickadmin.qa_delete'), array('class' => 'btn btn-xs btn-danger')) !!}
+                                    {!! Form::submit(trans('quickadmin.qa_delete'), array('class' => 'btn btn-sm btn-danger')) !!}
                                     {!! Form::close() !!}
                                     @endcan
                                 </td>

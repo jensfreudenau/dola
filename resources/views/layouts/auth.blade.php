@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    @include('partials.head')
+    @include('partials.admin.head')
 </head>
 
 <body class="page-header-fixed">

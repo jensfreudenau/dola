@@ -24,22 +24,22 @@ class OrganizersController extends Controller
         if (!Gate::allows('organizer_access')) {
             return abort(401);
         }
-        $teams = Organizer::all();
-        return view('admin.teams.index', compact('teams'));
+        $organizers = Organizer::all();
+        return view('admin.organizers.index', compact('organizers'));
     }
 
     /**
-     * Show the form for creating new Team.
+     * Show the form for creating new organizer.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        if (!Gate::allows('team_create')) {
+        if (!Gate::allows('organizer_create')) {
             return abort(401);
         }
         $addresses = Address::get()->pluck('name', 'id')->prepend('Please select', '');
-        return view('admin.teams.create', compact('addresses'));
+        return view('admin.organizers.create', compact('addresses'));
     }
 
     /**
@@ -50,16 +50,16 @@ class OrganizersController extends Controller
      */
     public function store(StoreTeamsRequest $request)
     {
-        if (!Gate::allows('team_create')) {
+        if (!Gate::allows('organizer_create')) {
             return abort(401);
         }
-        $team = Organizer::create([
-            'name' => $request->name,
-            'leader' => $request->leader,
-            'addresses_id' => $request->address_id,
-            'homepage' => $request->homepage,
-        ]);
-        return redirect()->route('admin.teams.index');
+        $organizer = Organizer::create([
+                                           'name' => $request->name,
+                                           'leader' => $request->leader,
+                                           'addresses_id' => $request->address_id,
+                                           'homepage' => $request->homepage,
+                                       ]);
+        return redirect()->route('admin.organizers.index');
     }
 
     /**
@@ -70,12 +70,12 @@ class OrganizersController extends Controller
      */
     public function edit($id)
     {
-        if (!Gate::allows('team_edit')) {
+        if (!Gate::allows('organizer_edit')) {
             return abort(401);
         }
-        $team      = Organizer::findOrFail($id);
+        $organizer = Organizer::findOrFail($id);
         $addresses = Address::get()->pluck('name', 'id');
-        return view('admin.teams.edit', compact('team', 'addresses'));
+        return view('admin.organizers.edit', compact('organizer', 'addresses'));
     }
 
     /**
@@ -87,12 +87,12 @@ class OrganizersController extends Controller
      */
     public function update(UpdateTeamsRequest $request, $id)
     {
-        if (!Gate::allows('team_edit')) {
+        if (!Gate::allows('organizer_edit')) {
             return abort(401);
         }
-        $team = Organizer::findOrFail($id);
-        $team->update($request->all());
-        return redirect()->route('admin.teams.index');
+        $organizer = Organizer::findOrFail($id);
+        $organizer->update($request->all());
+        return redirect()->route('admin.organizers.index');
     }
 
     /**
@@ -103,14 +103,14 @@ class OrganizersController extends Controller
      */
     public function show($id)
     {
-        if (!Gate::allows('team_view')) {
+        if (!Gate::allows('organizer_view')) {
             return abort(401);
         }
-        $tracks  = Competition::where('team_id', $id)->where('season', 'bahn')->get();
-        $indoors = Competition::where('team_id', $id)->where('season', 'halle')->get();
-        $crosses = Competition::where('team_id', $id)->where('season', 'cross')->get();
-        $team    = Organizer::findOrFail($id);
-        return view('admin.teams.show', compact('team', 'tracks', 'indoors', 'crosses'));
+        $tracks    = Competition::where('organizer_id', $id)->where('season', 'bahn')->get();
+        $indoors   = Competition::where('organizer_id', $id)->where('season', 'halle')->get();
+        $crosses   = Competition::where('organizer_id', $id)->where('season', 'cross')->get();
+        $organizer = Organizer::findOrFail($id);
+        return view('admin.organizers.show', compact('organizer', 'tracks', 'indoors', 'crosses'));
     }
 
     /**
@@ -121,22 +121,22 @@ class OrganizersController extends Controller
      */
     public function destroy($id)
     {
-        if (!Gate::allows('team_delete')) {
+        if (!Gate::allows('organizer_delete')) {
             return abort(401);
         }
-        $team = Organizer::findOrFail($id);
-        $team->delete();
-        return redirect()->route('admin.teams.index');
+        $organizer = Organizer::findOrFail($id);
+        $organizer->delete();
+        return redirect()->route('admin.organizers.index');
     }
 
     /**
-     * Delete all selected Team at once.
+     * Delete all selected organizer at once.
      *
      * @param Request $request
      */
     public function massDestroy(Request $request)
     {
-        if (!Gate::allows('team_delete')) {
+        if (!Gate::allows('organizer_delete')) {
             return abort(401);
         }
         if ($request->input('ids')) {

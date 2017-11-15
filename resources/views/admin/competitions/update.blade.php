@@ -16,6 +16,28 @@
 
                     {!! Form::model($competition, ['method' => 'PUT', 'route' => ['admin.competitions.update', $competition->id]]) !!}
                     @include('admin.competitions._form')
+                    @if($additionals)
+                        @foreach($additionals as $key => $additional)
+
+                            <div class="form-group">
+                                {!! Form::label('keyvalue['.$additional->id. '][key]', Lang::get('quickadmin.competitions.fields.key')) !!}
+                                {!! Form::text('keyvalue['.$additional->id. '][key]', $additional->key, ['id'=> 'additional-key_'.$additional->id, 'class'=>'form-control']) !!}
+
+                            </div>
+                            <div class="form-group">
+                                {!! Form::label('keyvalue['.$additional->id. '][value]', Lang::get('quickadmin.competitions.fields.value')) !!}
+                                {!! Form::text('keyvalue['.$additional->id. '][value]', $additional->value, ['id'=> 'additional-value_'.$additional->id, 'class'=>'form-control']) !!}
+                            </div>
+                        @endforeach
+                    @endif
+                    <div id="additionalGroup">
+
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            {!! Form::button('<i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Werte hinzufügen', array('id'=> 'addValues', 'class' => 'btn btn-outline-dark')) !!}
+                        </div>
+                    </div>
                     <div class="form-group">
                         <div class="col-lg-10 col-lg-offset-2">
                             {!! Form::submit('Speichern', ['class' => 'btn btn-lg btn-info pull-right'] ) !!}
@@ -24,9 +46,7 @@
                     {!! Form::close() !!}
                 </div>
             </div>
-            <div class="page-header">
 
-            </div>
             @include('partials.admin.modal')
             <div class="row">
                 <div class="col-sm-10">
@@ -60,9 +80,7 @@
                     {!! Form::close() !!}
                 </div>
             </div>
-            <div class="page-header">
 
-            </div>
             <div class="row">
                 <div class="col-sm-10">
                     <div class="box box-default">
@@ -123,6 +141,25 @@
                     .on('click', '#delete-btn', function () {
                         $form.submit();
                     });
+            });
+
+
+            var counter = 0;
+
+            $("#addValues").click(function () {
+                $(this).removeAttr("href");
+                let newTextBoxDiv = $(document.createElement('div'));
+                newTextBoxDiv.after().html(
+                    '<div class="form-group">' +
+                    '<label for="additional-key_'+counter+'">Key</label>' +
+                    '<input id="additional-key_'+counter+'" class="form-control" name="keyvalue['+counter+'][key]" type="text">' +
+                    '</div><div class="form-group">' +
+                    '<label for="additional-value_'+counter+'">Value</label>' +
+                    '<input id="additional-value_'+counter+'" class="form-control" name="keyvalue['+counter+'][value]" type="text">' +
+                    '</div>'
+                );
+                newTextBoxDiv.appendTo("#additionalGroup");
+                counter++;
             });
         });
     </script>

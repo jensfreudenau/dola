@@ -47,11 +47,11 @@
                 </ul>
             </li>
             @endcan
-            @can('team_access')
-            <li class="{{ $request->segment(2) == 'teams' ? 'active' : '' }}">
-                <a href="{{ route('admin.teams.index') }}">
+            @can('organizer_access')
+            <li class="{{ $request->segment(2) == 'organizers' ? 'active' : '' }}">
+                <a href="{{ route('admin.organizers.index') }}">
                     <i class="fa fa-gears"></i>
-                    <span class="title">@lang('quickadmin.teams.title')</span>
+                    <span class="title">@lang('quickadmin.organizer.title')</span>
                 </a>
             </li>
             @endcan
