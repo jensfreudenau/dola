@@ -81,15 +81,17 @@ class CompetitionController extends Controller
         $competition = Competition::findOrFail($id);
         $competition->update($request->all());
         $data = $request->all();
-        foreach ($data['keyvalue'] as $key => $keyVal) {
-            Additional::updateOrCreate(
-                ['id' => $key,
-                 'external_id' => $competition->id],
-                ['key' => $keyVal['key'],
-                 'value' => $keyVal['value'],
-                 'mnemonic' => $competition->season,
-                ]
-            );
+        if(!empty($data['keyvalue'])){
+            foreach ($data['keyvalue'] as $key => $keyVal) {
+                Additional::updateOrCreate(
+                    ['id' => $key,
+                     'external_id' => $competition->id],
+                    ['key' => $keyVal['key'],
+                     'value' => $keyVal['value'],
+                     'mnemonic' => $competition->season,
+                    ]
+                );
+            }
         }
         return redirect('/admin/competitions');
     }
