@@ -181,15 +181,17 @@ $(document).ready(function () {
             reader.addEventListener("loadend", function (event) {
                 event.preventDefault();
                 processData(event.target.result);
-                done();
+
             });
             reader.readAsText(file);
+            done();
         }
     };
 
-    Dropzone.options.participator = {
+    Dropzone.options.participators = {
         maxFilesize: 10, // Mb
-        paramName: "file",
+        params:{"type":"participators"},
+        paramName: "uploader",
         sending: function (file, xhr, formData) {
         },
         success: function (file, response) {
@@ -205,7 +207,25 @@ $(document).ready(function () {
 
     Dropzone.options.resultsets = {
         maxFilesize: 10, // Mb
-        paramName: "resultsets",
+        params:{"type":"resultsets"},
+        paramName: "uploader",
+        sending: function (file, xhr, formData) {
+        },
+        success: function (file, response) {
+        },
+        error: function (file, error) {
+            console.error(error);
+        },
+        accept: function (file, done) {
+            location.reload();
+            done();
+        }
+    };
+
+    Dropzone.options.additionals = {
+        maxFilesize: 10, // Mb
+        params:{"type":"additionals"},
+        paramName: "uploader",
         sending: function (file, xhr, formData) {
         },
         success: function (file, response) {
@@ -294,20 +314,6 @@ $(document).ready(function () {
         }
         parsedData(table);
 
-        // if (headerline.search("am") > 0) {
-        //
-        // }
-        // let headerAndDateline = lines[1][0].split(',');
-        //
-        // //ist der Header mit dem Datum in der ersten Zeile??
-        // if (false === setStartDate(headerAndDateline[1])) {
-        //     let headerline = lines[0][0].split(',');
-        //     setHeader(headerline[0]);
-        //     setStartDate(headerline[1]);
-        // }
-        // else {
-        //     setHeader(headerAndDateline[0]);
-        // }
         return true;
     }
 });

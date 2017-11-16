@@ -7,6 +7,7 @@ Route::get('competitions/comps/{competition_id}', 'CompetitionsController@comps'
 Route::get('/track', 'CompetitionsController@track')->name('bahn');
 Route::get('/indoor', 'CompetitionsController@indoor')->name('halle');
 Route::get('/cross', 'CompetitionsController@cross');
+Route::get('/archive', 'CompetitionsController@archive');
 
 Route::get('/details/{competition_id}', 'CompetitionsController@details');
 Route::get('/players/{team_id}', 'TeamsOldController@players');
@@ -51,8 +52,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], 
     Route::post('games_mass_destroy', ['uses' => 'Admin\GamesController@massDestroy', 'as' => 'games.mass_destroy']);
     Route::resource('addresses', 'Admin\AddressesController');
     Route::post('addresses_mass_destroy', ['uses' => 'Admin\AddressesController@massDestroy', 'as' => 'addresses.mass_destroy']);
-    Route::post('competitions/resultsets/{competition_id}', 'Admin\CompetitionController@resultsets')->name('competitions.resultsets');
-    Route::post('competitions/participator/{competition_id}', 'Admin\CompetitionController@participator')->name('competitions.participator');
+    Route::post('competitions/uploader/{competition_id}', 'Admin\CompetitionController@uploader')->name('competitions.uploader');
+    Route::post('competitions/participators/{competition_id}', 'Admin\CompetitionController@participators')->name('competitions.participators');
     Route::delete('competitions/delete_file/{upload_id}', 'Admin\CompetitionController@delete_file')->name('competitions.delete_file');
     Route::resource('competitions', 'Admin\CompetitionController');
     Route::post('competitions_mass_destroy', ['uses' => 'Admin\CompetitionController@massDestroy', 'as' => 'competitions.mass_destroy']);

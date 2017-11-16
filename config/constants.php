@@ -1,6 +1,8 @@
 <?php
 
 return [
-    'Participators' => 'participator',
+    'Participators' => 'participators',
+    'Additionals' => 'additionals',
     'Results' => 'resultsets',
+    'UploadDir' => 'upload'
 ];

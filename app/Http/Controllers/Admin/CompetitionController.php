@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class CompetitionController extends Controller
 {
@@ -95,30 +96,19 @@ class CompetitionController extends Controller
 
     use FileUploadTrait;
 
-    public function participator(Request $request, $id)
+    public function uploader(Request $request, $id)
     {
-//        if (!Gate::allows('competition_participator')) {
-//            return abort(401);
-//        }
-        $uploads                    = $this->saveFiles($request);
+        if (!Gate::allows('competition_access')) {
+            return abort(401);
+        }
+        Log::info($request);
+        $competition                = Competition::findOrFail($id);
+        $path                       = 'public/' . $request->type . '/' . $competition->season;
+        $uploads                    = $this->saveFiles($request, $path);
         $requests                   = $request->all();
         $requests['competition_id'] = $id;
-        $requests['type']           = Config::get('constants.Participators');
-        $requests['filename']       = $uploads->file;
-        Upload::create($requests);
-        return 'done';
-    }
-
-    public function resultsets(Request $request, $id)
-    {
-//        if (!Gate::allows('competition_resultlists')) {
-//            return abort(401);
-//        }
-        $request['type']            = Config::get('constants.Results');
-        $uploads                    = $this->saveFiles($request);
-        $requests                   = $request->all();
-        $requests['competition_id'] = $id;
-        $requests['filename']       = $uploads->resultsets;
+        $requests['type']           = $request->type;
+        $requests['filename']       = $uploads->uploader;
         Upload::create($requests);
         return 'done';
     }
@@ -144,8 +134,7 @@ class CompetitionController extends Controller
         }
         $data = $request->all();
         $id   = Competition::create($data)->id;
-
-        if(!empty($data['keyvalue'])) {
+        if (!empty($data['keyvalue'])) {
             foreach ($data['keyvalue'] as $keyval) {
                 $keyval['external_id'] = $id;
                 $keyval['mnemonic']    = $request->season;
@@ -171,13 +160,16 @@ class CompetitionController extends Controller
         return redirect()->route('admin.competitions.index');
     }
 
-    public function delete_file($id, Request $request)
+    public function delete_file($id)
     {
-        $requestAll = $request->all();
-        $filename   = Upload::findOrFail($id);
-        File::delete('upload/' . $filename->type . '/' . $filename->filename);
-        $filename->delete();
-        return redirect()->route('admin.competitions.edit', $requestAll['competition_id']);
+        if (!Gate::allows('competition_delete_file')) {
+            return abort(401);
+        }
+        $uploadedFile = Upload::findOrFail($id);
+        $competition  = Competition::findOrFail($uploadedFile->competition_id);
+        Storage::delete('public/' . $uploadedFile->type . '/' . $competition->season . '/' . $uploadedFile->filename);
+        $uploadedFile->delete();
+        return redirect()->route('admin.competitions.edit', $competition->id);
     }
 
     /**

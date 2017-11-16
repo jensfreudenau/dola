@@ -2,34 +2,34 @@
 
 @section('javascript')
     @parent
-
-
 @stop
 @section('content')
     <div class="container">
-        <div class="col-sm-10">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    Create Competition
-                </div>
-                <div class="panel-body">
-                    <!-- Display Validation Errors -->
-                @include('common.errors')
-                {{ Form::open(['url'=>'admin/competitions', 'enctype'=>'multipart/form-data', 'class'=>'dropzone', 'id' => 'csvuploader']) }}
-                    @include('admin.competitions._form')
-                     <div id="additionalGroup">
-
-                     </div>
-
-                    <div class="form-group">
-                        <div class="input-group">
-                            {!! Form::button('<i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Werte hinzufügen', array('id'=> 'addValues', 'class' => 'btn btn-outline-dark')) !!}
-                        </div>
+        <div class="row">
+            <div class="col-sm-10">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Create Competition
                     </div>
+                    <div class="panel-body">
+                        <!-- Display Validation Errors -->
+                        @include('common.errors')
+                        {{ Form::open(['url'=>'admin/competitions', 'enctype'=>'multipart/form-data', 'class'=>'dropzone', 'id' => 'csvuploader']) }}
+                        @include('admin.competitions._form')
+                        <div id="additionalGroup">
 
-                    {{ Form::submit('Speichern', ["class"=>"btn btn-primary pull-right"]) }}
-                    {!! Form::close() !!}
+                        </div>
 
+                        <div class="form-group">
+                            <div class="input-group">
+                                {!! Form::button('<i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Werte hinzufügen', array('id'=> 'addValues', 'class' => 'btn btn-outline-dark')) !!}
+                            </div>
+                        </div>
+
+                        {{ Form::submit('Speichern', ["class"=>"btn btn-primary pull-right"]) }}
+                        {!! Form::close() !!}
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -44,13 +44,13 @@
                 let newTextBoxDiv = $(document.createElement('div'));
                 newTextBoxDiv.after().html(
                     '<div class="form-group">' +
-                    '<label for="additional-key_'+counter+'">Key</label>' +
-                    '<input id="additional-key_'+counter+'" class="form-control" name="keyvalue['+counter+'][key]" type="text">' +
+                    '<label for="additional-key_' + counter + '">Key</label>' +
+                    '<input id="additional-key_' + counter + '" class="form-control" name="keyvalue[' + counter + '][key]" type="text">' +
                     '</div><div class="form-group">' +
-                    '<label for="additional-value_'+counter+'">Value</label>' +
-                    '<input id="additional-value_'+counter+'" class="form-control" name="keyvalue['+counter+'][value]" type="text">' +
+                    '<label for="additional-value_' + counter + '">Value</label>' +
+                    '<input id="additional-value_' + counter + '" class="form-control" name="keyvalue[' + counter + '][value]" type="text">' +
                     '</div>'
-                    );
+                );
                 newTextBoxDiv.appendTo("#additionalGroup");
                 counter++;
             });

@@ -58,11 +58,14 @@
             <dt class="col-sm-3"></dt>
             <dd class="col-sm-9">
                 @foreach($competition->Uploads as $upload)
+                    @if($upload->type == config('constants.Additionals'))
+                        <p class="desc"><a href="{{Storage::url($upload->type . '/'. $competition->season . '/' . $upload->filename )}}" target="_blank">Zusatzinfos</a></p>
+                    @endif
                     @if($upload->type == config('constants.Participators'))
-                        <p class="desc"><a href="upload/{{$upload->type}}/{{$upload->filename}}" target="_blank">Teilnehmer</a></p>
+                        <p class="desc"><a href="{{Storage::url($upload->type . '/'. $competition->season . '/' . $upload->filename )}}" target="_blank">Teilnehmer</a></p>
                     @endif
                     @if($upload->type == config('constants.Results'))
-                        <p class="desc"><a href="upload/{{$upload->type}}/{{$upload->filename}}" target="_blank">Ergebnisliste</a></p>
+                        <p class="desc"><a href="{{Storage::url($upload->type . '/'. $competition->season . '/' . $upload->filename )}}" target="_blank">Ergebnisliste</a></p>
                     @endif
 
                 @endforeach

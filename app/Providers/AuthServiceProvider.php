@@ -151,15 +151,18 @@ class AuthServiceProvider extends ServiceProvider
             return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
         });
         Gate::define('competition_create', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN]);
         });
         Gate::define('competition_edit', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN]);
         });
         Gate::define('competition_view', function ($user) {
             return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
         });
         Gate::define('competition_delete', function ($user) {
+            return in_array($user->role_id, [self::SUPERADMIN]);
+        });
+        Gate::define('competition_delete_file', function ($user) {
             return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
         });
 
