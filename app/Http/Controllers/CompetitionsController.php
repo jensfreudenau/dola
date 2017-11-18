@@ -7,6 +7,7 @@ use App\Competition;
 use App\Http\Requests;
 use DateTime;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Storage;
 
 class CompetitionsController extends Controller
 {
@@ -55,58 +56,43 @@ class CompetitionsController extends Controller
 
     public function archive()
     {
-        $seasons = Competition::select('season')->distinct()->get();
+        $seasons = ['bahn', 'halle', 'cross'];
         foreach ($seasons as $season) {
-            $path = Config::get('constants.UploadDir')  . '/' . Config::get('constants.Results') . '/' . $season->season;
-            $list = $this->listdir_by_date($path);
-            foreach ($list as $key => $year) {
-
-                echo '<h4>'.$key.'</h4>';
-                foreach ($year as $file) {
-
-                    if ($file['file'] != "." || $file['file'] != ".." || $file['file'] != "index.html" || $file['file'] != "*.xls" || $file['file'] != "styles.css" || $file['file'][0] != "t") {
-                        echo '<span style="padding-left:20px;"><a href="bahn/ergebnisse/'.$file['file'].'" target="_blank">'.$file['date'].'</a></span><br />';
-                    }
-
-                }
-            }
+            $path  = 'public/' . Config::get('constants.Results') . '/' . $season->season;
+            $files = Storage::files($path);
+            $archives[$season->season] = $this->listdir_by_date($files);
         }
+        return view('front.competitions.archive', compact('archives'));
     }
 
-    protected function listdir_by_date($path){
-        $dir = opendir($path);
-        $list = array();
-        $i = 0;
-        while($file = readdir($dir)){
-
-            if ($file != '.' and $file != '..'){
-                if($file[0] == 't') continue;
-                if($file == 'styles.css') continue;
-                if($file == 'index.html') continue;
-                // add the filename, to be sure not to
-                // overwrite a array key
-
-                list($filebase, $ending) = explode(".",$file);
-                if($ending != 'html') continue;
-
-                preg_match_all( '/[0-9]/', $filebase, $match);
-                if (count($match[0]) < 6) continue;
-                $six = false;
-                if (count($match[0]) == 6) { $six = true;}
-                if (count($match[0]) > 8) { $match[0][8] = ''; }
-                $v = implode($match[0]);
-                if ($six) {
-                    $v = '20'.$v;
-                }
-                $date = new DateTime($v);
-
-                $list[$date->format('Y')][$i]['file'] = $file;
-                $list[$date->format('Y')][$i]['date'] = $date->format('d.m.Y');
-                $i++;
+    protected function listdir_by_date($files)
+    {
+        $list = [];
+        foreach ($files as $key => $file) {
+            if (basename($file) == 'styles.css') continue;
+            if (basename($file) == 'index.html') continue;
+            // add the filename, to be sure not to
+            // overwrite a array key
+            list($filebase, $ending) = explode(".", $file);
+            if ($ending != 'html') continue;
+//
+            preg_match_all('/[0-9]/', $filebase, $match);
+            if (count($match[0]) < 6) continue;
+            $six = false;
+            if (count($match[0]) == 6) {
+                $six = true;
             }
+            if (count($match[0]) > 8) {
+                $match[0][8] = '';
+            }
+            $v = implode($match[0]);
+            if ($six) {
+                $v = '20' . $v;
+            }
+            $date                               = new DateTime($v);
+            $list[$date->format('Y')][$key]['file'] = $file;
+            $list[$date->format('Y')][$key]['date'] = $date->format('d.m.Y');
         }
-        closedir($dir);
-        krsort($list);
         return $list;
     }
 }
