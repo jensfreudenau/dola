@@ -58,9 +58,9 @@ class CompetitionsController extends Controller
     {
         $seasons = ['bahn', 'halle', 'cross'];
         foreach ($seasons as $season) {
-            $path  = 'public/' . Config::get('constants.Results') . '/' . $season->season;
+            $path  = 'public/' . Config::get('constants.Results') . '/' . $season;
             $files = Storage::files($path);
-            $archives[$season->season] = $this->listdir_by_date($files);
+            $archives[$season] = $this->listdir_by_date($files);
         }
         return view('front.competitions.archive', compact('archives'));
     }
