@@ -1,6 +1,6 @@
 <?php
 Route::get('/', 'HomeController@index');
-
+Route::get('/home', 'HomeController@index');
 Route::post('competitions', 'CompetitionsController@create');
 Route::get('competitions/comps/{competition_id}', 'CompetitionsController@comps');
 
@@ -10,7 +10,7 @@ Route::get('/cross', 'CompetitionsController@cross');
 Route::get('/archive', 'CompetitionsController@archive');
 
 Route::get('/details/{competition_id}', 'CompetitionsController@details');
-Route::get('/players/{team_id}', 'TeamsOldController@players');
+
 Route::get('/table', 'TableController@index');
 Route::get('/announciators/competitions_select/{competition_id}', 'AnnounciatorsController@competitions_select');
 Route::get('/announciators/list_participator', 'AnnounciatorsController@listParticipator');
