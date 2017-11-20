@@ -1,6 +1,6 @@
 <?php
 Route::get('/', 'HomeController@index');
-
+Route::get('/home', 'HomeController@index');
 Route::post('competitions', 'CompetitionsController@create');
 Route::get('competitions/comps/{competition_id}', 'CompetitionsController@comps');
 
