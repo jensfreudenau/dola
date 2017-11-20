@@ -8,7 +8,7 @@ use App\Record;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Session;
-
+use Illuminate\Support\Facades\Log;
 class RecordController extends Controller
 {
     /**
@@ -65,6 +65,10 @@ class RecordController extends Controller
         return view('admin.records.show', compact('record'));
     }
 
+public function sort(Request $request)
+{
+    Log::info($request);
+}
     /**
      * Show the form for editing the specified resource.
      *

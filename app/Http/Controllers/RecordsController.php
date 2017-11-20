@@ -6,6 +6,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Record;
+use App\Best;
 use Illuminate\Http\Request;
 use Session;
 
@@ -18,9 +19,11 @@ class RecordsController extends Controller
      */
     public function index()
     {
-        $females = Record::orderBy('header')->where('sex', '=', 'f')->get();
-        $males = Record::orderBy('header')->where('sex', '=', 'm')->get();
-        return view('front.records.index', compact('females', 'males'));
+        $kreisFemales = Record::where('sex', '=', 'f')->where('type', '=', 'kreis')->orderBy('sort')->orderBy('header')->get();
+        $kreisMales =   Record::where('sex', '=', 'm')->where('type', '=', 'kreis')->orderBy('sort')->orderBy('header')->get();
+        $females = Record::where('sex', '=', 'f')->where('type', '<>', 'kreis')->orderBy('sort')->orderBy('header')->get();
+        $males =   Record::where('sex', '=', 'm')->where('type', '<>', 'kreis')->orderBy('sort')->orderBy('header')->get();
+        return view('front.records.index', compact('kreisFemales', 'kreisMales', 'females', 'males'));
     }
     /**
      * Display a listing of the resource.
@@ -40,15 +43,17 @@ class RecordsController extends Controller
      */
     public function best(Request $request)
     {
-        $keyword = $request->get('search');
-        $perPage = 25;
 
-        if (!empty($keyword)) {
-            $statistic = Record::paginate($perPage);
-        } else {
-            $statistic = Record::paginate($perPage);
-        }
-
-        return view('front.records.best', compact('statistic'));
+        if($request->sex == 'female') {
+            $bests = Best::where('sex', '=', 'f')->orderBy('year', 'desc')->get();
+            $header = 'Frauen';
+            $file = 'Frauen';
+        }       
+        if($request->sex == 'male') {
+            $bests = Best::where('sex', '=', 'm')->orderBy('year', 'desc')->get();
+            $header = 'M&auml;nner';
+            $file = 'Maenner';
+        } 
+        return view('front.records.best', compact('bests', 'header', 'file'));
     }
 }
