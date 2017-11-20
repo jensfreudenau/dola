@@ -48,8 +48,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], 
     Route::post('organizers_mass_destroy', ['uses' => 'Admin\OrganizersController@massDestroy', 'as' => 'organizers.mass_destroy']);
     Route::resource('participators', 'Admin\ParticipatorsController');
     Route::post('participators_mass_destroy', ['uses' => 'Admin\ParticipatorsController@massDestroy', 'as' => 'participators.mass_destroy']);
-    Route::resource('games', 'Admin\GamesController');
-    Route::post('games_mass_destroy', ['uses' => 'Admin\GamesController@massDestroy', 'as' => 'games.mass_destroy']);
+
     Route::resource('addresses', 'Admin\AddressesController');
     Route::post('addresses_mass_destroy', ['uses' => 'Admin\AddressesController@massDestroy', 'as' => 'addresses.mass_destroy']);
     Route::post('competitions/uploader/{competition_id}', 'Admin\CompetitionController@uploader')->name('competitions.uploader');
@@ -57,7 +56,9 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], 
     Route::delete('competitions/delete_file/{upload_id}', 'Admin\CompetitionController@delete_file')->name('competitions.delete_file');
     Route::resource('competitions', 'Admin\CompetitionController');
     Route::post('competitions_mass_destroy', ['uses' => 'Admin\CompetitionController@massDestroy', 'as' => 'competitions.mass_destroy']);
+    Route::post('records/store/{competition_id}', 'Admin\RecordController@store')->name('records.store');
     Route::resource('records', 'Admin\RecordController');
+    
     Route::resource('pages', 'Admin\PagesController');
     Route::post('pages_mass_destroy', ['uses' => 'Admin\PagesController@massDestroy', 'as' => 'pages.mass_destroy']);
 });

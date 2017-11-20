@@ -1,5 +1,12 @@
 @extends('layouts.front')
 @section('content')
+    <style type="text/css" media="screen">
+        
+
+.table.no-border tr td, .table.no-border tr th {
+  border-width: 0;
+}
+    </style>
     <h2>Archiv</h2>
     <hr>
     @foreach ($archives as $season => $archive)
@@ -12,12 +19,13 @@
                     <h4 class="card-title pb-0">{{ $year }}</h4>
                 </div>
                 <div class="card-body">
-                    <table class="table">
+                    <table class="table no-border">
                         @foreach($results as $key => $day)
                             @if ($i % 4 == 0) <tr> @endif
                             @php $i ++ @endphp
                             <td>
-                                <a href="{{ $day['file'] }}" class="card-link"> {{$day['date'] }}</a>
+                                <a href="{{ asset('resultsets/'.$season.'/'.basename($day['file'])) }}" taget="_blank">{{$day['date'] }}</a>
+                                
                         @endforeach
                     </table>
                 </div>
