@@ -78,6 +78,6 @@
                         Die Wettk&auml;mpfe werden nach den g&uuml;ltigen Wettkampfbestimmungen ausgetragen und stehen unter amtlicher Aufsicht.
                         Wir w&uuml;nschen allen Teilnehmern eine gute Anreise und viel Erfolg.</span><br>
         </div>
-    </div>
+
 
 @endsection

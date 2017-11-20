@@ -17,7 +17,7 @@
                     <h4 class="card-title pb-0">{{ $year }}</h4>
                 </div>
                 <div class="card-body">
-                    <table class="table no-border">
+                    <table class="table no-border table-sm table-hover table-responsive">
                         @foreach($results as $key => $day)
                             @if ($i % 4 == 0) <tr> @endif
                             @php $i ++ @endphp
