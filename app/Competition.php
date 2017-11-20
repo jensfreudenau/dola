@@ -3,6 +3,7 @@
 namespace App;
 
 use Carbon\Carbon;
+use DOMDocument;
 use Illuminate\Database\Eloquent\Model;
 use Collective\Html\Eloquent\FormAccessible;
 use Illuminate\Support\Facades\Log;
@@ -66,9 +67,45 @@ class Competition extends BaseModel
 
     public function save(array $options = [])
     {
+        $this->parsingTable();
         $this->replaceTableTag();
         $this->trimClasses();
         parent::save();
+    }
+
+    public function parsingTable()
+    {
+        $dom = new DOMDocument();
+        $dom->loadHTML($this->timetable_1);
+        $dom->preserveWhiteSpace = false;
+        $tables                  = $dom->getElementsByTagName('table');
+        $rows                    = $tables->item(0)->getElementsByTagName('tr');
+        $first                   = '<thead><tr>';
+        $tableData               = '<tbody><tr>';
+        foreach ($rows as $key => $row) {
+            if ($key == 0) {
+                $cols = $row->getElementsByTagName('td');
+                foreach ($cols as $col) {
+                    $first .= '<th>' . trim($col->nodeValue) . '</th>';
+                }
+            } else {
+                $cols = $row->getElementsByTagName('td');
+                foreach ($cols as $col) {
+                    $tableData .= '<td>' . trim($col->nodeValue) . '</td>';
+                }
+                $tableData .= '</tr>';
+            }
+        }
+        $first             .= '</tr></thead>';
+        $this->timetable_1 = '<table>' . $first . $tableData . '</tbody></table>';
+    }
+
+    protected function replaceTableTag()
+    {
+        $tt                = preg_replace("/<([a-z][a-z0-9]*)[^>]*?(\/?)>/i", '<$1$2>', $this->timetable_1);
+        $tt                = str_replace(['<span>', '</span>', '<p>', '</p>', "Uhr", "\n"], '', $tt);
+        $tt                = str_replace('<table>', $this->tableStyle, $tt);
+        $this->timetable_1 = str_replace('<thead>', $this->tableHeadStyle, $tt);
     }
 
     protected function trimClasses()
@@ -77,21 +114,15 @@ class Competition extends BaseModel
         $this->classes = str_replace(' ', '', $this->classes);
         $this->classes = str_replace('|', ', ', $this->classes);
     }
-    protected function replaceTableTag()
-    {
-        $this->timetable_1 = str_replace('Uhr', '', $this->timetable_1);
-        $this->timetable_1 = str_replace('<table>', $this->tableStyle, $this->timetable_1);
-        $this->timetable_1 = str_replace('<thead>', $this->tableHeadStyle, $this->timetable_1);
-    }
 
     public function reduceClasses()
     {
         //WKU12, W10/W11, WJU14, W12/W13, WJU16, W14/W15, MKU12, M10/11, MJU14, M12/13, MJU16, M14/15,
         //WK U10, WK U12, WJ U14, WJ U16, WJ U18/U20, MK U10, MK U12, MJ U14, MJ U16, MJ U18/U20
-        $sex    = ['WK', 'WJ', 'MK', 'MJ', 'W10/W11', 'W12/W13', 'W14/W15', 'M10/11', 'M12/13', 'M14/15'];
-        $class  = str_replace($sex, '', $this->classes);
-        $class  = str_replace(' ', '', $class);
-        $class  = explode(',', $class);
+        $sex   = ['WK', 'WJ', 'MK', 'MJ', 'W10/W11', 'W12/W13', 'W14/W15', 'M10/11', 'M12/13', 'M14/15'];
+        $class = str_replace($sex, '', $this->classes);
+        $class = str_replace(' ', '', $class);
+        $class = explode(',', $class);
         $class = array_unique($class);
         return implode(', ', $class);
     }

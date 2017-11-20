@@ -4,7 +4,7 @@
 </div>
 <div class="form-group">
     {!! Form::label('start_date', Lang::get('quickadmin.date')) !!}
-    {!! Form::text('start_date', ( $competition ? $competition->getGermanDate($competition->start_date) : null) , ['id'=> 'competition-start_date', 'class'=>'form-control datepicker']) !!}
+    {!! Form::text('start_date', ( $competition ? $competition->getGermanDate($competition->start_date) : null) , ['id'=> 'competition-start_date', 'class'=>'form-control']) !!}
 </div>
 <div class="form-group">
     {!! Form::label('submit_date', Lang::get('quickadmin.competitions.fields.submit_date')) !!}
