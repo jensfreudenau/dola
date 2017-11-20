@@ -82,7 +82,7 @@
             </div>
             <div class="form-group">
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-book fa-fw"></i></span> {!! Form::text('nachname[]', $value = null, ['id'=> '', 'class' => 'form-control', 'placeholder' => 'Nachname']) !!}
+                    <span class="input-group-addon"><i class="fa fa-book fa-fw"></i></span> {!! Form::text('nachname[]', $value = null, ['id'=> '', 'class' => 'form-control', 'placeholder' => 'Nachname*', 'required']) !!}
                 </div>
             </div>
             <div class="form-group">
