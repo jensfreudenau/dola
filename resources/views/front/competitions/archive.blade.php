@@ -22,7 +22,7 @@
                             @if ($i % 4 == 0) <tr> @endif
                             @php $i ++ @endphp
                             <td>
-                                <a href="{{ asset('resultsets/'.$season.'/'.basename($day['file'])) }}" target="_blank">{{$day['date'] }}</a>
+                                <a href="{{ asset('storage/resultsets/'.$season.'/'.basename($day['file'])) }}" target="_blank">{{$day['date'] }}</a>
                         @endforeach
                     </table>
                 </div>
