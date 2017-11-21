@@ -9,12 +9,11 @@
 
     <div style="margin-top: 10%;"></div>
 
-    <div class="container-fluid">
+    <div class="container">
         @yield('content')
     </div>
 
-    <div class="scroll-to-top"
-         style="display: none;">
+    <div class="scroll-to-top" style="display: none;">
         <i class="fa fa-arrow-up"></i>
     </div>
 
