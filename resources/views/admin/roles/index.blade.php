@@ -9,12 +9,12 @@
     </p>
     @endcan
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card card-default">
+        <div class="card-heading">
             @lang('quickadmin.qa_list')
         </div>
 
-        <div class="panel-body table-responsive">
+        <div class="card-body table-responsive">
             <table class="table table-bordered table-striped {{ count($roles) > 0 ? 'datatable' : '' }} @can('role_delete') dt-select @endcan">
                 <thead>
                     <tr>

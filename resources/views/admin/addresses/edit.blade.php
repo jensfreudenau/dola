@@ -8,16 +8,16 @@
         <div class="col-sm-10">
             <div class="card card-default">
                 <div class="card-heading">
-                    Create Page
+                    Adresse bearbeiten
                 </div>
                 <div class="card-body">
-                    <!-- Display Validation Errors -->
                     @include('common.errors')
-                    {{ Form::open(['url'=>'admin/pages', 'id' => 'recorduploader']) }}
 
-                            {{ csrf_field() }}
+                    {!! Form::model($address, ['method' => 'PUT', 'route' => ['admin.addresses.edit', $address->id]]) !!}
 
-                            @include ('admin.pages.form')
+                    {{ method_field('PATCH') }}
+
+                    @include ('admin.addresses._form')
                     {{ Form::submit('Speichern', ["class"=>"btn btn-primary pull-right"]) }}
                     {!! Form::close() !!}
                 </div>

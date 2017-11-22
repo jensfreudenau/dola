@@ -5,14 +5,14 @@
 
 
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card card-default">
+        <div class="card-heading">
             @lang('quickadmin.qa_edit')
         </div>
 
-        <div class="panel-body">
+        <div class="card-body">
             <div class="row">
-                <div class="col-xs-12 form-group">
+                <div class="col-sm-12 form-group">
                     <!-- Display Validation Errors -->
                     @include('common.errors')
                     {!! Form::model($page, ['method' => 'PUT', 'route' => ['admin.pages.update', $page->id]]) !!}

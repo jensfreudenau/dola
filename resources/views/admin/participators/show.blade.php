@@ -3,12 +3,12 @@
 @section('content')
     <h3 class="page-title">@lang('quickadmin.players.title')</h3>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card card-default">
+        <div class="card-heading">
             @lang('quickadmin.qa_view')
         </div>
 
-        <div class="panel-body">
+        <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
                     <table class="table table-bordered table-striped">

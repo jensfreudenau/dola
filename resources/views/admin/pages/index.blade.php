@@ -9,21 +9,20 @@
         </p>
     @endcan
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card card-default">
+        <div class="card-heading">
             @lang('quickadmin.qa_list')
         </div>
 
-        <div class="panel-body table-responsive">
+        <div class="card-body table-responsive">
             <table class="table table-bordered table-striped {{ count($pages) > 0 ? 'datatable' : '' }} @can('address_delete') dt-select @endcan">
                 <thead>
                 <tr>
                     @can('address_delete')
                         <th style="text-align:center;"><input type="checkbox" id="select-all" /></th>
                     @endcan
-
-                    <th>@lang('quickadmin.pages.fields.name')</th>
                     <th>@lang('quickadmin.pages.fields.header')</th>
+                    <th>@lang('quickadmin.pages.fields.mnemonic')</th>
                     <th>&nbsp;</th>
                 </tr>
                 </thead>

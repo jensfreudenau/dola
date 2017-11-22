@@ -7,11 +7,11 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-10">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="card card-default">
+                    <div class="card-heading">
                         Create Competition
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         <!-- Display Validation Errors -->
                         @include('common.errors')
                         {{ Form::open(['url'=>'admin/competitions', 'enctype'=>'multipart/form-data', 'class'=>'dropzone', 'id' => 'csvuploader']) }}

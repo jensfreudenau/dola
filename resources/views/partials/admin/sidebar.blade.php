@@ -51,7 +51,7 @@
             <li class="{{ $request->segment(2) == 'organizers' ? 'active' : '' }}">
                 <a href="{{ route('admin.organizers.index') }}">
                     <i class="fa fa-gears"></i>
-                    <span class="title">@lang('quickadmin.organizer.title')</span>
+                    <span class="title">@lang('quickadmin.organizers.title')</span>
                 </a>
             </li>
             @endcan

@@ -5,14 +5,14 @@
     
     {!! Form::model($player, ['method' => 'PUT', 'route' => ['admin.participators.update', $player->id]]) !!}
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card card-default">
+        <div class="card-heading">
             @lang('quickadmin.qa_edit')
         </div>
 
-        <div class="panel-body">
+        <div class="card-body">
             <div class="row">
-                <div class="col-xs-12 form-group">
+                <div class="col-sm-12 form-group">
                     {!! Form::label('organizer_id', 'Organizer', ['class' => 'control-label']) !!}
                     {!! Form::select('organizer_id', $organizers, old('organizer_id'), ['class' => 'form-control select2']) !!}
                     <p class="help-block"></p>
@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-12 form-group">
+                <div class="col-sm-12 form-group">
                     {!! Form::label('name', 'Name', ['class' => 'control-label']) !!}
                     {!! Form::text('name', old('name'), ['class' => 'form-control', 'placeholder' => '']) !!}
                     <p class="help-block"></p>
@@ -36,7 +36,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-12 form-group">
+                <div class="col-sm-12 form-group">
                     {!! Form::label('surname', 'Surname', ['class' => 'control-label']) !!}
                     {!! Form::text('surname', old('surname'), ['class' => 'form-control', 'placeholder' => '']) !!}
                     <p class="help-block"></p>
@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-12 form-group">
+                <div class="col-sm-12 form-group">
                     {!! Form::label('birth_date', 'Birth date', ['class' => 'control-label']) !!}
                     {!! Form::text('birth_date', old('birth_date'), ['class' => 'form-control date', 'placeholder' => '']) !!}
                     <p class="help-block"></p>

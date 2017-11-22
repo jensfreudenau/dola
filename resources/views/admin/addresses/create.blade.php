@@ -8,16 +8,13 @@
         <div class="col-sm-10">
             <div class="card card-default">
                 <div class="card-heading">
-                    Create Page
+                    Adresse anlegen
                 </div>
                 <div class="card-body">
-                    <!-- Display Validation Errors -->
                     @include('common.errors')
-                    {{ Form::open(['url'=>'admin/pages', 'id' => 'recorduploader']) }}
+                    {{ Form::open(['url'=>'admin/addresses', 'id' => 'addresses']) }}
 
-                            {{ csrf_field() }}
-
-                            @include ('admin.pages.form')
+                    @include ('admin.addresses._form')
                     {{ Form::submit('Speichern', ["class"=>"btn btn-primary pull-right"]) }}
                     {!! Form::close() !!}
                 </div>

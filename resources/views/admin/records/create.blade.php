@@ -6,11 +6,11 @@
 @section('content')
 <div class="container">
     <div class="col-sm-10">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="card card-default">
+            <div class="card-heading">
                 Create Records
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <!-- Display Validation Errors -->
                 @include('common.errors')
                 {{ Form::open(['url'=>'admin/records', 'enctype'=>'multipart/form-data', 'id' => 'recorduploader']) }}

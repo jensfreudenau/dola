@@ -3,11 +3,11 @@
 @section('content')
     <h3 class="page-title">@lang('quickadmin.pages.title')</h3>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card card-default">
+        <div class="card-heading">
             {{ $page->header }}
         </div>
-        <div class="panel-body">
+        <div class="card-body">
             <div class="row">
                 <p>&nbsp;</p>
                 <a href="{{ route('admin.pages.index') }}"
@@ -20,7 +20,7 @@
                             <td>{{ $page->header }}</td>
                         </tr>
                         <tr>
-                            <th>@lang('quickadmin.pages.fields.header')</th>
+                            <th>@lang('quickadmin.pages.fields.mnemonic')</th>
                             <td>{{ $page->mnemonic }}</td>
                         </tr>
 

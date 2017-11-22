@@ -9,12 +9,12 @@
         </p>
     @endcan
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card card-default">
+        <div class="card-heading">
             @lang('quickadmin.records.title')
         </div>
 
-        <div class="panel-body table-responsive">
+        <div class="card-body table-responsive">
             <table class="table table-bordered table-striped datatable">
                 <thead>
                 <tr>

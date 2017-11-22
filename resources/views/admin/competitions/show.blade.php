@@ -3,11 +3,11 @@
 @section('content')
     <h3 class="page-title">@lang('quickadmin.competitions.title')</h3>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card card-default">
+        <div class="card-heading">
             {{ $competition->header }}
         </div>
-        <div class="panel-body">
+        <div class="card-body">
             <div class="row">
 
                 <div class="col-md-10">
@@ -28,8 +28,8 @@
                         <tr>
                             <th>@lang('quickadmin.addresses.title')</th>
                             <td>
-                                <div class="panel panel-default">
-                                    <div class="panel-body">
+                                <div class="card card-default">
+                                    <div class="card-body">
                                         {{ $competition->organizer->address->name }}<br>
                                         {{ $competition->organizer->address->street }}<br>
                                         {{ $competition->organizer->address->zip }}
@@ -66,7 +66,7 @@
                     </table>
 
                     <h3 class="text-green">Anzahl Teilnehmer: {{$competition->Participators->count()}}</h3>
-                    <div class="panel-body table-responsive">
+                    <div class="card-body table-responsive">
                         <table class="table table-bordered table-striped datatable">
                             <thead>
                             <tr>

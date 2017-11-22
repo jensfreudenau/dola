@@ -3,11 +3,11 @@
 @section('content')
     <h3 class="page-title">@lang('quickadmin.records.title')</h3>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card card-default">
+        <div class="card-heading">
             {{ $record->header }}
         </div>
-        <div class="panel-body">
+        <div class="card-body">
             <div class="row">
                 <p>&nbsp;</p>
                 <a href="{{ route('admin.records.index') }}"

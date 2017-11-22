@@ -3,12 +3,12 @@
 @section('content')
     <h3 class="page-title">@lang('quickadmin.competitions.title')</h3>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card card-default">
+        <div class="card-heading">
             <h4>@lang('quickadmin.competitions.update') :: {{$competition->header}}</h4>
         </div>
 
-        <div class="panel-body">
+        <div class="card-body">
             <div class="row">
                 <div class="col-sm-10">
                     <!-- Display Validation Errors -->

@@ -3,12 +3,12 @@
 @section('content')
     <h3 class="page-title">@lang('quickadmin.teams.title')</h3>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card card-default">
+        <div class="card-heading">
             @lang('quickadmin.qa_view')
         </div>
 
-        <div class="panel-body">
+        <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
                     <table class="table table-bordered table-striped">
@@ -29,7 +29,7 @@
 <!-- Tab panes -->
 <div class="tab-content">
     
-<div role="tabpanel" class="tab-pane active" id="track">
+<div role="tabcard" class="tab-pane active" id="track">
 <table class="table table-bordered table-striped {{ count($tracks) > 0 ? 'datatable' : '' }}">
     <thead>
     <tr>
@@ -76,7 +76,7 @@
     </tbody>
 </table>
 </div>
-<div role="tabpanel" class="tab-pane " id="indoor">
+<div role="tabcard" class="tab-pane " id="indoor">
 <table class="table table-bordered table-striped {{ count($indoors) > 0 ? 'datatable' : '' }}">
     <thead>
         <tr>
@@ -123,7 +123,7 @@
     </tbody>
 </table>
 </div>
-<div role="tabpanel" class="tab-pane " id="cross">
+<div role="tabcard" class="tab-pane " id="cross">
 <table class="table table-bordered table-striped {{ count($crosses) > 0 ? 'datatable' : '' }}">
     <thead>
     <tr>
