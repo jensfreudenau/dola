@@ -61,6 +61,10 @@ a.header   {
 .navbar-light .navbar-nav .nav-link{
     color:white;
 }
+li.nav-item
+{
+    margin-right: 30px;
+}
 .background {
    background: #2c9c78;
 }

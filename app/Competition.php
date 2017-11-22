@@ -25,6 +25,7 @@ class Competition extends BaseModel
 
     public function __construct(array $attributes = [])
     {
+        setlocale(LC_TIME, 'de_DE.utf8');
         parent::__construct($attributes);
     }
 
