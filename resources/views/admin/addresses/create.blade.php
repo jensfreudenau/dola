@@ -13,7 +13,6 @@
                 <div class="card-body">
                     @include('common.errors')
                     {{ Form::open(['url'=>'admin/addresses', 'id' => 'addresses']) }}
-
                     @include ('admin.addresses._form')
                     {{ Form::submit('Speichern', ["class"=>"btn btn-primary pull-right"]) }}
                     {!! Form::close() !!}

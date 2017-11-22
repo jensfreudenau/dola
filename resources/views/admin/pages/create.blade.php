@@ -14,9 +14,7 @@
                     <!-- Display Validation Errors -->
                     @include('common.errors')
                     {{ Form::open(['url'=>'admin/pages', 'id' => 'recorduploader']) }}
-
                             {{ csrf_field() }}
-
                             @include ('admin.pages.form')
                     {{ Form::submit('Speichern', ["class"=>"btn btn-primary pull-right"]) }}
                     {!! Form::close() !!}

@@ -26,7 +26,7 @@ class AddressesController extends Controller
      */
     public function create()
     {
-        if (! Gate::allows('page_edit')) {
+        if (! Gate::allows('address_edit')) {
             return abort(401);
         }
         return view('admin.addresses.create');
@@ -91,8 +91,27 @@ class AddressesController extends Controller
             return abort(401);
         }
         $requestData = $request->all();
-        $page = Page::findOrFail($id);
-        $page->update($requestData);
+        $address = Address::findOrFail($id);
+        $address->update($requestData);
         return redirect('admin/addresses');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function destroy($id)
+    {
+        if (! Gate::allows('page_edit')) {
+            return abort(401);
+        }
+        Address::destroy($id);
+
+        Session::flash('flash_message', 'Page deleted!');
+
+        return redirect('admin/pages');
     }
 }
