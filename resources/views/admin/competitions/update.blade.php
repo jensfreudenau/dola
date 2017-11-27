@@ -28,6 +28,7 @@
                                 {!! Form::label('keyvalue['.$additional->id. '][value]', Lang::get('quickadmin.competitions.fields.value')) !!}
                                 {!! Form::text('keyvalue['.$additional->id. '][value]', $additional->value, ['id'=> 'additional-value_'.$additional->id, 'class'=>'form-control']) !!}
                             </div>
+                            <hr>
                         @endforeach
                     @endif
                     <div id="additionalGroup">

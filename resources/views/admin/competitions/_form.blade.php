@@ -30,15 +30,14 @@
 <div class="form-group">
     {!! Form::label('register', Lang::get('quickadmin.competitions.register')) !!}<br>
     <div class="btn-group" data-toggle="buttons">
-        <label class="btn btn-primary  {{$register['external']}}">
+        <label class="btn btn-primary {{$register['external']}}">
             {{ Form::radio('register', 1, 0) }} @lang('quickadmin.competitions.external_register')
         </label>
-        <label class="btn btn-primary  {{$register['internal']}}">
+        <label class="btn btn-primary {{$register['internal']}}">
             {{ Form::radio('register', 0, 0) }} @lang('quickadmin.competitions.intern_register')
 
         </label>
-        {{ Form::radio('sex', 'male') }}<br>
-        {{ Form::radio('sex', 'female', true) }}
+
     </div>
 </div>
 <div class="form-group">

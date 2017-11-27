@@ -51,15 +51,20 @@ class CompetitionController extends Controller
         $season['track']  = $competition->season == 'bahn' ? 'active' : '';
         $season['indoor'] = $competition->season == 'halle' ? 'active' : '';
         $season['cross']  = $competition->season == 'cross' ? 'active' : '';
+
         if ($competition->register) {
-            $register['internal'] = 'active';
-        } else {
             $register['external'] = 'active';
+            $register['internal'] = '';
+        } else {
+            $register['internal'] = 'active';
+            $register['external'] = '';
         }
         if ($competition->only_list) {
             $onlyList['list'] = 'active';
+            $onlyList['not_list'] = '';
         } else {
             $onlyList['not_list'] = 'active';
+            $onlyList['list'] = '';
         }
         return view('admin.competitions.update', compact('addresses', 'competition', 'organizers', 'season', 'additionals', 'register', 'onlyList'));
     }
