@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Log;
 class Competition extends BaseModel
 {
     use FormAccessible;
-    protected $fillable       = ['organizer_id', 'start_date', 'timetable_1', 'submit_date', 'header', 'info', 'season', 'classes', 'award', 'register'];
+    protected $fillable       = ['organizer_id', 'start_date', 'timetable_1', 'submit_date', 'header', 'info', 'season', 'classes', 'award', 'register', 'only_list'];
     protected $tableStyle     = '<table class="table table-sm table-hover table-responsive">';
     protected $tableHeadStyle = '<thead class="thead-inverse">';
 
@@ -68,41 +68,16 @@ class Competition extends BaseModel
 
     public function save(array $options = [])
     {
-        $this->parsingTable();
-        $this->replaceTableTag();
-        $this->trimClasses();
+        if($this->timetable_1){
+            $this->replaceTableTag();
+        }
+        if($this->classes){
+            $this->trimClasses();
+        }
         parent::save();
     }
 
-    public function parsingTable()
-    {
-        $dom = new DOMDocument();
-        $dom->loadHTML($this->timetable_1);
-        $dom->preserveWhiteSpace = false;
-        $tables                  = $dom->getElementsByTagName('table');
-        $rows                    = $tables->item(0)->getElementsByTagName('tr');
-        $first                   = '<thead>';
-        $tableData               = '<tbody>';
-        foreach ($rows as $key => $row) {
-            if ($key == 0) {
-                $cols = $row->getElementsByTagName('td');
-                $first .= '<tr>';
-                foreach ($cols as $col) {
-                    $first .= '<th>' . trim($col->nodeValue) . '</th>';
-                }
-                $first .= '</tr>';
-            } else {
-                $cols = $row->getElementsByTagName('td');
-                $tableData .= '<tr>';
-                foreach ($cols as $col) {
-                    $tableData .= '<td>' . trim($col->nodeValue) . '</td>';
-                }
-                $tableData .= '</tr>';
-            }
-        }
-        $first             .= '</thead>';
-        $this->timetable_1 = '<table>' . $first . $tableData . '</tbody></table>';
-    }
+
 
     protected function replaceTableTag()
     {
@@ -139,6 +114,7 @@ class Competition extends BaseModel
      */
     public function getGermanDate($value)
     {
+        Log::info($value);
         return Carbon::parse($value)->format('d.m.Y');
     }
 
@@ -197,7 +173,7 @@ class Competition extends BaseModel
      */
     public function setSubmitDateAttribute($input)
     {
-        if ($input != null && $input != '') {
+        if (!empty($input)) {
             $this->attributes['submit_date'] = Carbon::createFromFormat(config('app.date_format'), $input)->format('Y-m-d');
         } else {
             $this->attributes['submit_date'] = null;

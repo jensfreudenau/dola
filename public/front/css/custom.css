@@ -68,3 +68,14 @@ li.nav-item
 .background {
    background: #2c9c78;
 }
+.table thead td{
+    vertical-align: bottom;
+    border-bottom: 2px solid #e9ecef;
+    text-align: inherit;
+    display: table-cell;
+    font-weight: bold;
+    padding: 1px;
+}
+.pages_table table td, .pages_table table th{
+    border-top:none;
+}

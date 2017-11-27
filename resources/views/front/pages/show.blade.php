@@ -4,7 +4,9 @@
     <div class="row">        
         <div class="col-sm-12">
             <h2>{{ $page->header }}</h2>
-            {!! $page->content !!}
+            <span class="pages_table">
+                {!! $page->content !!}
+            </span>
         </div>
     </div>
 @endsection

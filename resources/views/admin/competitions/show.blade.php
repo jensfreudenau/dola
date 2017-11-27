@@ -1,8 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-    <h3 class="page-title">@lang('quickadmin.competitions.title')</h3>
-
+    <h3 class="page-title">@lang('quickadmin.competitions.title')
+        <span><a href="{{ route('admin.competitions.index') }}" class="btn btn-default">@lang('quickadmin.qa_back_to_list')</a></span>
+        <span>
+            @can('competition_edit')
+                <a href="{{ route('admin.competitions.edit',[$competition->id]) }}" class="btn btn-sm btn-info">@lang('quickadmin.qa_edit')</a>
+            @endcan
+        </span>
+    </h3>
     <div class="card card-default">
         <div class="card-heading">
             {{ $competition->header }}
@@ -94,9 +100,7 @@
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <p>&nbsp;</p>
-                    <a href="{{ route('admin.competitions.index') }}"
-                       class="btn btn-default">@lang('quickadmin.qa_back_to_list')</a>
+
                 </div>
             </div>
         </div>

@@ -5,7 +5,9 @@
     @can('competition_create')
         <p>
             <a href="{{ route('admin.competitions.create') }}" class="btn btn-success">@lang('quickadmin.qa_add_new')</a>
-
+        </p>
+        <p>
+            <a href="{{ route('admin.competitions.create_simple') }}" class="btn btn-success">@lang('quickadmin.qa_add_new_simple')</a>
         </p>
     @endcan
 

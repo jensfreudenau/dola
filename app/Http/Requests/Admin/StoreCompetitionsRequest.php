@@ -26,7 +26,9 @@ class StoreCompetitionsRequest extends FormRequest
     {
         $input = parent::all();
         $input['start_date'] = $this->dateConverter($input['start_date']);
-        $input['submit_date'] = $this->dateConverter($input['submit_date']);
+        if(!empty($input['submit_date'])){
+            $input['submit_date'] = $this->dateConverter($input['submit_date']);
+        }
 
         return $input;
     }
@@ -39,7 +41,7 @@ class StoreCompetitionsRequest extends FormRequest
     {
         return [
             'start_date' => 'date_format:'.config('app.date_format'),
-            'submit_date' => 'date_format:'.config('app.date_format'),
+
         ];
     }
 

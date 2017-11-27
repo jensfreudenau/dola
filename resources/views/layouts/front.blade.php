@@ -22,7 +22,7 @@
 <div class="container">
     <div class="row justify-content-center">
 
-        <div class="col-sm-12">
+        <div class="col-sm-10">
             @include('partials.front.navbar')
 
             <div class="section">

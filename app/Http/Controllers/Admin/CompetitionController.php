@@ -44,26 +44,24 @@ class CompetitionController extends Controller
         if (!Gate::allows('competition_edit')) {
             return abort(401);
         }
-        $competition = Competition::findOrFail($id);
-        $addresses   = Address::get()->pluck('name', 'id');
-        $organizers  = Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
-        $additionals = Additional::where('external_id', '=', $id)->get();
-        $track       = '';
-        $cross       = '';
-        $indoor      = '';
-        if ($competition->season == 'bahn') {
-            $track = 'active';
+        $competition      = Competition::findOrFail($id);
+        $addresses        = Address::get()->pluck('name', 'id');
+        $organizers       = Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
+        $additionals      = Additional::where('external_id', '=', $id)->get();
+        $season['track']  = $competition->season == 'bahn' ? 'active' : '';
+        $season['indoor'] = $competition->season == 'halle' ? 'active' : '';
+        $season['cross']  = $competition->season == 'cross' ? 'active' : '';
+        if ($competition->register) {
+            $register['internal'] = 'active';
+        } else {
+            $register['external'] = 'active';
         }
-        if ($competition->season == 'cross') {
-            $cross = 'active';
+        if ($competition->only_list) {
+            $onlyList['list'] = 'active';
+        } else {
+            $onlyList['not_list'] = 'active';
         }
-        if ($competition->season == 'halle') {
-            $indoor = 'active';
-        }
-        if ($competition->season == 'halle') {
-            $indoor = 'active';
-        }
-        return view('admin.competitions.update', compact('addresses', 'competition', 'organizers', 'indoor', 'cross', 'track', 'additionals'));
+        return view('admin.competitions.update', compact('addresses', 'competition', 'organizers', 'season', 'additionals', 'register', 'onlyList'));
     }
 
     /**
@@ -72,17 +70,19 @@ class CompetitionController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
+    use FileUploadTrait;
     public function update(UpdateCompetitionsRequest $request, $id)
     {
 
         if (!Gate::allows('competition_edit')) {
             return abort(401);
         }
-        $competition = Competition::findOrFail($id);
-        $competition->update($request->all());
-        $data = $request->all();
-        if(!empty($data['keyvalue'])){
-            foreach ($data['keyvalue'] as $key => $keyVal) {
+        $competition              = Competition::findOrFail($id);
+        $submitData                = $request->all();
+        $submitData['timetable_1'] = $this->parsingTable($submitData['timetable_1']);
+        $competition->update($submitData);
+        if (!empty($submitData['keyvalue'])) {
+            foreach ($submitData['keyvalue'] as $key => $keyVal) {
                 Additional::updateOrCreate(
                     ['id' => $key,
                      'external_id' => $competition->id],
@@ -97,13 +97,11 @@ class CompetitionController extends Controller
     }
 
     use FileUploadTrait;
-
     public function uploader(Request $request, $id)
     {
         if (!Gate::allows('competition_access')) {
             return abort(401);
         }
-        Log::info($request);
         $competition                = Competition::findOrFail($id);
         $path                       = 'public/' . $request->type . '/' . $competition->season;
         $uploads                    = $this->saveFiles($request, $path);
@@ -123,18 +121,23 @@ class CompetitionController extends Controller
         $addresses   = Address::get()->pluck('name', 'id')->prepend('Please select', '');
         $organizers  = Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
         $competition = '';
-        $track       = '';
-        $cross       = '';
-        $indoor      = '';
-        return view('admin.competitions.create', compact('addresses', 'organizers', 'competition', 'indoor', 'cross', 'track'));
+        $register['external']       = '';
+        $register['internal']       = '';
+        $onlyList['list']       = '';
+        $onlyList['not_list']       = '';
+        $season['track']     = '';
+        $season['indoor']     = '';
+        $season['cross']     = '';
+        return view('admin.competitions.create', compact('addresses', 'organizers', 'competition', 'season', 'additionals', 'register', 'onlyList'));
     }
-
+    use FileUploadTrait;
     public function store(StoreCompetitionsRequest $request)
     {
         if (!Gate::allows('competition_create')) {
             return abort(401);
         }
         $data = $request->all();
+        $data['timetable_1'] = $this->parsingTable($data['timetable_1']);
         $id   = Competition::create($data)->id;
         if (!empty($data['keyvalue'])) {
             foreach ($data['keyvalue'] as $keyval) {

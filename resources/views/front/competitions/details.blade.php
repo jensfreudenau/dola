@@ -1,7 +1,5 @@
 @extends('layouts.front')
 @section('content')
-
-
         <h3>{{ $competition->header }}</h3>
         <hr>
         <dl class="row">
@@ -72,7 +70,12 @@
             </dd>
         </dl>
         <h5>Zeitplan</h5>
-        {!! $competition->timetable_1 !!}
+        <div class="justify-content-center">
+            <div class="jumbotron my-auto">
+                {!! $competition->timetable_1 !!}
+            </div>
+        </div>
+
         <div class="callout callout-success">
                         <span>Elektronische Zeitnahme. &Auml;nderungen vorbehalten! Ohne Gew&auml;hr.
                         Die Wettk&auml;mpfe werden nach den g&uuml;ltigen Wettkampfbestimmungen ausgetragen und stehen unter amtlicher Aufsicht.
