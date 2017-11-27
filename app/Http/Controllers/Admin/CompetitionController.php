@@ -51,7 +51,6 @@ class CompetitionController extends Controller
         $season['track']  = $competition->season == 'bahn' ? 'active' : '';
         $season['indoor'] = $competition->season == 'halle' ? 'active' : '';
         $season['cross']  = $competition->season == 'cross' ? 'active' : '';
-
         if ($competition->register) {
             $register['external'] = 'active';
             $register['internal'] = '';
@@ -60,11 +59,11 @@ class CompetitionController extends Controller
             $register['external'] = '';
         }
         if ($competition->only_list) {
-            $onlyList['list'] = 'active';
+            $onlyList['list']     = 'active';
             $onlyList['not_list'] = '';
         } else {
             $onlyList['not_list'] = 'active';
-            $onlyList['list'] = '';
+            $onlyList['list']     = '';
         }
         return view('admin.competitions.update', compact('addresses', 'competition', 'organizers', 'season', 'additionals', 'register', 'onlyList'));
     }
@@ -76,15 +75,18 @@ class CompetitionController extends Controller
      * @return \Illuminate\Http\Response
      */
     use FileUploadTrait;
+
     public function update(UpdateCompetitionsRequest $request, $id)
     {
 
         if (!Gate::allows('competition_edit')) {
             return abort(401);
         }
-        $competition              = Competition::findOrFail($id);
-        $submitData                = $request->all();
-        $submitData['timetable_1'] = $this->parsingTable($submitData['timetable_1']);
+        $competition = Competition::findOrFail($id);
+        $submitData  = $request->all();
+        if (!empty($submitData['timetable_1'])) {
+            $submitData['timetable_1'] = $this->parsingTable($submitData['timetable_1']);
+        }
         $competition->update($submitData);
         if (!empty($submitData['keyvalue'])) {
             foreach ($submitData['keyvalue'] as $key => $keyVal) {
@@ -102,6 +104,7 @@ class CompetitionController extends Controller
     }
 
     use FileUploadTrait;
+
     public function uploader(Request $request, $id)
     {
         if (!Gate::allows('competition_access')) {
@@ -123,27 +126,31 @@ class CompetitionController extends Controller
         if (!Gate::allows('competition_create')) {
             return abort(401);
         }
-        $addresses   = Address::get()->pluck('name', 'id')->prepend('Please select', '');
-        $organizers  = Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
-        $competition = '';
-        $register['external']       = '';
-        $register['internal']       = '';
-        $onlyList['list']       = '';
-        $onlyList['not_list']       = '';
-        $season['track']     = '';
+        $addresses            = Address::get()->pluck('name', 'id')->prepend('Please select', '');
+        $organizers           = Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
+        $competition          = '';
+        $register['external'] = '';
+        $register['internal'] = '';
+        $onlyList['list']     = '';
+        $onlyList['not_list'] = '';
+        $season['track']      = '';
         $season['indoor']     = '';
-        $season['cross']     = '';
+        $season['cross']      = '';
         return view('admin.competitions.create', compact('addresses', 'organizers', 'competition', 'season', 'additionals', 'register', 'onlyList'));
     }
+
     use FileUploadTrait;
+
     public function store(StoreCompetitionsRequest $request)
     {
         if (!Gate::allows('competition_create')) {
             return abort(401);
         }
         $data = $request->all();
-        $data['timetable_1'] = $this->parsingTable($data['timetable_1']);
-        $id   = Competition::create($data)->id;
+        if (!empty($data['timetable_1'])) {
+            $data['timetable_1'] = $this->parsingTable($data['timetable_1']);
+        }
+        $id = Competition::create($data)->id;
         if (!empty($data['keyvalue'])) {
             foreach ($data['keyvalue'] as $keyval) {
                 $keyval['external_id'] = $id;
