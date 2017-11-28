@@ -37,6 +37,7 @@ $(document).ready(function () {
         $(this).dataTable(window.dtDefaultOptions);
     });
     if (typeof window.route_mass_crud_entries_destroy != 'undefined') {
+
         $('.datatable, .ajaxTable').siblings('.actions').html('<a href="' + window.route_mass_crud_entries_destroy + '" class="btn btn-xs btn-danger js-delete-selected" style="margin-top:0.755em;margin-left: 20px;">Delete selected</a>');
     }
 
@@ -162,16 +163,17 @@ $(document).ready(function () {
         mode: "textareas",
         themes: "modern",
         skin: "custom",
+       
         content_css: '/adminlte/css/tinymce_custom.css',
         plugins: [
-            "advlist autolink lists link image charmap anchor searchreplace visualblocks code fullscreen insertdatetime media table contextmenu paste codesample"
-        ],
+            "advlist autolink lists link image charmap anchor searchreplace visualblocks code fullscreen insertdatetime media table contextmenu"
+        ],        
         relative_urls: false,
         convert_urls: false,
         forced_root_block: "",
         remove_script_host: false,
 //            document_base_url: "http://",
-        toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media code codesample",
+        toolbar: "undo redo paste | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media code table",
     });
     Dropzone.options.csvuploader = {
         maxFilesize: 10, // Mb+
@@ -186,6 +188,35 @@ $(document).ready(function () {
             reader.readAsText(file);
             done();
         }
+    };
+    Dropzone.options.fileuploader = {
+        maxFilesize: 10, // Mb+
+        autoProcessQueue: false,
+        accept: function (file, done) {
+            done();
+        },
+        sending: function (file, xhr, formData) {
+            console.log('sending');
+        },
+        success: function (file, response) {
+            console.log('success');
+        },
+        error: function(file, response) {
+            console.log('acceerrorpte');
+            if($.type(response) === "string")
+                var message = response; //dropzone sends it's own error messages in string
+            else
+                var message = response.message;
+            file.previewElement.classList.add("dz-error");
+            _ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
+            _results = [];
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                node = _ref[_i];
+                _results.push(node.textContent = message);
+            }
+            console.log(message);
+            return _results;
+        },
     };
 
     Dropzone.options.participators = {
