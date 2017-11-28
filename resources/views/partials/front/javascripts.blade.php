@@ -7,7 +7,7 @@
 <script type="text/javascript" src="{{ url('quickadmin/js') }}/select2.full.min.js"></script>
 <!-- MDB core JavaScript -->
 
-<script src="{{ url('/js') }}/frontend.js"></script>
+<script type="text/javascript" src="{{ url('front/js') }}/frontend.js"></script>
 
 <script>
     window._token = '{{ csrf_token() }}';

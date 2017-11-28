@@ -76,14 +76,14 @@ trait FileUploadTrait
         $tableData               = '<tbody>';
         foreach ($rows as $key => $row) {
             if ($key == 0) {
-                $cols = $row->getElementsByTagName('td');
+                $cols  = $row->getElementsByTagName('td');
                 $first .= '<tr>';
                 foreach ($cols as $col) {
                     $first .= '<td>' . trim($col->nodeValue) . '</td>';
                 }
                 $first .= '</tr>';
             } else {
-                $cols = $row->getElementsByTagName('td');
+                $cols      = $row->getElementsByTagName('td');
                 $tableData .= '<tr>';
                 foreach ($cols as $col) {
                     $tableData .= '<td>' . trim($col->nodeValue) . '</td>';
@@ -91,7 +91,7 @@ trait FileUploadTrait
                 $tableData .= '</tr>';
             }
         }
-        $first             .= '</thead>';
+        $first .= '</thead>';
         return '<table>' . $first . $tableData . '</tbody></table>';
     }
     ####################################################################################

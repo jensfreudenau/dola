@@ -73,6 +73,11 @@
         </div>
     </div>
     <hr>
+    <style>
+        .fa-close {
+            color: darkred;
+        }
+    </style>
     <div id='participantGroup'>
         <div class="participant1">
             <div class="form-group">
