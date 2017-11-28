@@ -1,16 +1,21 @@
-
 $(document).ready(function () {
     $('.dropdown-toggle').dropdown();
     $('#cbxShowHide').is(':checked') ? $('#block').show() : $('#block').hide();
     $('#cbxShowHide').click(function () {
         this.checked ? $('#block').show(200) : $('#block').hide(200);
     });
+
     var counter = 2;
+    $('#participantGroup').on('click','.remove',function() {
+        $(this).parent().remove();
+    });
 
     $("#addParticipant").click(function () {
         $(this).removeAttr("href");
         let newTextBoxDiv = $(document.createElement('div')).attr("id", 'participant' + counter);
-        newTextBoxDiv.after().html('<hr><div class="form-group"><div class="input-group"><span class="input-group-addon"><i class="fa fa-book fa-fw"></i></span>' +
+        newTextBoxDiv.after().html('<hr><button type="button" id="remove_'+counter+'" class="remove close btn btn-outline-danger mb-2" aria-label="Close">' +
+            '                <i class="fa fa-close fa-fw"></i><span aria-hidden="true"></span></button>' +
+            '<div class="form-group"><div class="input-group"><span class="input-group-addon"><i class="fa fa-book fa-fw"></i></span>' +
             '<input class="form-control required" name="vorname[]" placeholder="Vorname*" type="text" required></div></div>' +
             '<div class="form-group">' +
             '<div class="input-group">' +

@@ -4,7 +4,7 @@
     <dt>Veranstaltung:</dt>
     <dd>{{ $competition->header }}</dd>
     <dt>Melder:</dt>
-    <dd>{{ $announciator->annunciator }}</dd>
+    <dd>{{ $announciator->name }}</dd>
     <dt>Telefon Nr.:</dt>
     <dd>{{ $announciator->telephone }}</dd>
     <dt>Email:</dt>
