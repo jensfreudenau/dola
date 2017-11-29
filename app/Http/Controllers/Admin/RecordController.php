@@ -22,7 +22,7 @@ class RecordController extends Controller
 //        if (!Gate::allows('records_access')) {
 //            return abort(401);
 //        }
-        $records = Record::orderBy('header')->get();
+        $records = Record::orderBy('sex')->orderBy('sort')->get();
         return view('admin.records.index', compact('records'));
     }
 

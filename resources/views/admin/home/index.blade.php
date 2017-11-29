@@ -23,7 +23,7 @@
                                 <div class="chart">
                                     <canvas id="lineChart_{{$key}}" width="400" height="250"></canvas>
                                 </div>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                                <a href="{{ route('admin.competitions.edit',[$competition->id]) }}" class="btn btn-primary">@lang('quickadmin.qa_edit')</a>
                             </div>
                         </div>
                         @if(($key % 2) == 1) </div> @endif
