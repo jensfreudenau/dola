@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Best;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Record;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use Session;
 use Illuminate\Support\Facades\Log;
 class RecordController extends Controller
@@ -110,6 +112,35 @@ public function sort(Request $request)
         return redirect('admin/records');
     }
 
+    public function beststore(Request $request)
+    {
+        foreach ($request->all() as $key => $value) {
+            if ($request->hasFile($key)) {
+                $filename = $request->file($key)->getClientOriginalName();
+                Storage::putFileAs('public/bestenliste', $request->file('file'), $filename);
+                $finalRequest = new Request(array_merge($request->all(), ['filename' => $filename]));
+                Best::create($finalRequest->all());
+            }
+        }
+    }
+
+    public function bestsindex()
+    {
+        $bests = Best::orderBy('year')->orderBy('filename')->get();
+        return view('admin.records.bestsindex', compact('bests'));
+    }
+
+    public function uploads()
+    {
+
+
+//        foreach ($bests as $best) {
+//            $bestMo =  Best::findOrFail($best->id);
+//            $bestMo->filename = 'KBL_'.$best->year.'_Maenner.pdf';
+//            $bestMo->update();
+//       }
+        return view('admin.records.uploads');
+    }
     /**
      * Remove the specified resource from storage.
      *

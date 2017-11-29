@@ -52,7 +52,11 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], 
     Route::post('competitions/participators/{competition_id}', 'Admin\CompetitionController@participators')->name('competitions.participators');
     Route::delete('competitions/delete_file/{upload_id}', 'Admin\CompetitionController@delete_file')->name('competitions.delete_file');
     Route::resource('competitions', 'Admin\CompetitionController');
+
     Route::post('competitions_mass_destroy', ['uses' => 'Admin\CompetitionController@massDestroy', 'as' => 'competitions.mass_destroy']);
+    Route::get('records/uploads', ['uses' => 'Admin\RecordController@uploads', 'as' => 'records.uploads']);
+    Route::get('records/bestsindex', ['uses' => 'Admin\RecordController@bestsindex', 'as' => 'records.bestsindex']);
+    Route::post('records/beststore', ['uses' => 'Admin\RecordController@beststore', 'as' => 'records.beststore']);
     Route::resource('records', 'Admin\RecordController');
     Route::post('records/store/{competition_id}', 'Admin\RecordController@store')->name('records.store');
     Route::resource('addresses', 'Admin\AddressesController');

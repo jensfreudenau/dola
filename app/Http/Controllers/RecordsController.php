@@ -43,17 +43,14 @@ class RecordsController extends Controller
      */
     public function best(Request $request)
     {
-
         if($request->sex == 'female') {
             $bests = Best::where('sex', '=', 'f')->orderBy('year', 'desc')->get();
             $header = 'Frauen';
-            $file = 'Frauen';
         }       
         if($request->sex == 'male') {
             $bests = Best::where('sex', '=', 'm')->orderBy('year', 'desc')->get();
             $header = 'M&auml;nner';
-            $file = 'Maenner';
         } 
-        return view('front.records.best', compact('bests', 'header', 'file'));
+        return view('front.records.best', compact('bests', 'header'));
     }
 }
