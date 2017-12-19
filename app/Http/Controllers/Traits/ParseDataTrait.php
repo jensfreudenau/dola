@@ -55,7 +55,8 @@ trait ParseDataTrait
         $class = str_replace('*', '', $class);
         $class = $this->prepareAgeclassData($class);
         if (false !== strpos($class, '/')) {
-            [$class, $secondClass] = explode('/', $class);
+            #[$class, $secondClass] = explode('/', $class); /PHP7
+            list($class, $secondClass) = explode('/', $class);
             if ($secondClass) {
                 $secondClass          = trim($secondClass);
                 $len                  = strlen(trim($secondClass));
