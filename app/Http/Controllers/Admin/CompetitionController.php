@@ -210,7 +210,8 @@ class CompetitionController extends Controller
             $this->proofDiscipline($discipline);
         }
         foreach ($this->disciplineCollectionError as $disciplineErr) {
-            [$discipline,] = explode(' ', $disciplineErr);
+            #[$discipline,] = explode(' ', $disciplineErr); //php7
+            list($discipline, $secondArg) = explode(' ', $disciplineErr);
             $this->proofDiscipline($discipline);
         }
         $submitData['timetable_1'] = $this->markFounded($submitData['timetable_1']);
