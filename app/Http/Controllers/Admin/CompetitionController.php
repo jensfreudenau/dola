@@ -130,7 +130,8 @@ class CompetitionController extends Controller
             $this->proofDiscipline($discipline);
         }
         foreach ($this->disciplineListError as $key => $disciplineError) {
-            [$discipline,] = explode(' ', $disciplineError);
+            #[$discipline,] = explode(' ', $disciplineError); //php7
+            list($discipline, $secondArg) = explode(' ', $disciplineError);
             if (true == $this->proofDiscipline($discipline)) {
                 unset($this->disciplineError[$key]);
             }
