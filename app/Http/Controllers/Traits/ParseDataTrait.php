@@ -55,7 +55,8 @@ trait ParseDataTrait
         $class = str_replace('*', '', $class);
         $class = $this->prepareAgeclassData($class);
         if (false !== strpos($class, '/')) {
-            [$class, $secondClass] = explode('/', $class);
+            #[$class, $secondClass] = explode('/', $class); /PHP7
+            list($class, $secondClass) = explode('/', $class);
             if ($secondClass) {
                 $secondClass          = trim($secondClass);
                 $len                  = strlen(trim($secondClass));
@@ -80,7 +81,8 @@ trait ParseDataTrait
     protected function fillDisciplineList($col)
     {
         if (strpos($col, '/')) {
-            [$firstArg, $secondArg] = explode('/', $col);
+            #[$firstArg, $secondArg] = explode('/', $col); //php7
+            list($firstArg, $secondArg) = explode('/', $col);
             $this->disciplineList[] = $this->prepareDisciplineData($firstArg);
             $this->disciplineList[] = $this->prepareDisciplineData($secondArg);
         } else {
