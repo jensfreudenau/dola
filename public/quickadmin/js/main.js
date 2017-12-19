@@ -163,7 +163,11 @@ $(document).ready(function () {
         mode: "textareas",
         themes: "modern",
         skin: "custom",
-       
+        removeformat: [
+            {selector: 'b,strong,em,i,font,u,strike', remove : 'all', split : true, expand : false, block_expand: true, deep : true},
+            {selector: 'span', attributes : ['style', 'class'], remove : 'empty', split : true, expand : false, deep : true},
+            {selector: '*', attributes : ['style', 'class'], split : false, expand : false, deep : true}
+        ],
         content_css: '/adminlte/css/tinymce_custom.css',
         plugins: [
             "advlist autolink lists link image charmap anchor searchreplace visualblocks code fullscreen insertdatetime media table contextmenu"

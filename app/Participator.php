@@ -17,4 +17,14 @@ class Participator extends Model
     {
         return $this->belongsTo(Announciator::class, 'announciator_id');
     }
+
+    public function Discipline()
+    {
+        return $this->belongsTo(Discipline::class, 'discipline_id');
+    }
+
+    public function Ageclass()
+    {
+        return $this->belongsTo(Ageclass::class, 'ageclass_id');
+    }
 }

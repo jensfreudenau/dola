@@ -36,4 +36,4 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.standalone.min.css"/>
 <link href="{{ url('adminlte/css/basic.css') }}" rel="stylesheet">
 <link href="{{ url('adminlte/css/dropzone.css') }}" rel="stylesheet">
-<link href="{{ url('adminlte/css/extend.css') }}" rel="stylesheet">
+<link href="{{ url('quickadmin/css/tagsinput.css') }}" rel="stylesheet">

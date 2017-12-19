@@ -7,11 +7,10 @@
             <a href="{{ route('admin.competitions.create') }}" class="btn btn-success">@lang('quickadmin.qa_add_new')</a>
         </p>
     @endcan
-
+    @if(Session::has('flash_message'))
+        <div class="alert alert-success"><em> {!! session('flash_message') !!}</em></div>
+    @endif
     <div class="card card-default">
-        <div class="card-heading">
-            @lang('quickadmin.qa_list')
-        </div>
 
         <div class="card-body table-responsive">
             <table class="table table-bordered table-striped {{ count($competitions) > 0 ? 'datatable' : '' }} @can('competition_delete') dt-select @endcan">

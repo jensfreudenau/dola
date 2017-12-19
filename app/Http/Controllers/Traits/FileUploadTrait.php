@@ -65,35 +65,7 @@ trait FileUploadTrait
         return $finalRequest;
     }
 
-    public function parsingTable($timetable)
-    {
-        $dom = new DOMDocument();
-        $dom->loadHTML($timetable);
-        $dom->preserveWhiteSpace = false;
-        $tables                  = $dom->getElementsByTagName('table');
-        $rows                    = $tables->item(0)->getElementsByTagName('tr');
-        $first                   = '<thead>';
-        $tableData               = '<tbody>';
-        foreach ($rows as $key => $row) {
-            if ($key == 0) {
-                $cols  = $row->getElementsByTagName('td');
-                $first .= '<tr>';
-                foreach ($cols as $col) {
-                    $first .= '<td>' . trim($col->nodeValue) . '</td>';
-                }
-                $first .= '</tr>';
-            } else {
-                $cols      = $row->getElementsByTagName('td');
-                $tableData .= '<tr>';
-                foreach ($cols as $col) {
-                    $tableData .= '<td>' . trim($col->nodeValue) . '</td>';
-                }
-                $tableData .= '</tr>';
-            }
-        }
-        $first .= '</thead>';
-        return '<table>' . $first . $tableData . '</tbody></table>';
-    }
+
     ####################################################################################
     ####################################################################################
     /**

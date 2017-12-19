@@ -15,8 +15,8 @@
 <script src="{{ url('adminlte/js/tinymce') }}/tinymce.min.js"></script>
 <script src="{{ url('adminlte/js/moment/min') }}/moment.min.js"></script>
 <script src="{{ url('adminlte/js/moment/locale') }}/de.js"></script>
-
 <script src="{{ url('adminlte/js/') }}/dropzone.js"></script>
+<script src="{{ url('quickadmin/js/') }}/tagsinput.js"></script>
 <script src="{{ url('quickadmin/js') }}/main.js"></script>
 
 

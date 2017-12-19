@@ -6,8 +6,12 @@ use Carbon\Carbon;
 use DOMDocument;
 use Illuminate\Database\Eloquent\Model;
 use Collective\Html\Eloquent\FormAccessible;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Facades\Log;
-
+use App\Http\Controllers\Traits\ParseDataTrait;
 /**
  * @property string $submit_date
  * @property mixed $organizer
@@ -15,6 +19,8 @@ use Illuminate\Support\Facades\Log;
  * @property mixed $announciator
  * @property mixed $participators
  * @property string $start_date
+ * @property mixed $ageclasses
+ * @property mixed $disciplines
  */
 class Competition extends BaseModel
 {
@@ -35,7 +41,7 @@ class Competition extends BaseModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function organizer()
     {
@@ -43,7 +49,7 @@ class Competition extends BaseModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function Uploads()
     {
@@ -51,7 +57,7 @@ class Competition extends BaseModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function Announciator()
     {
@@ -59,39 +65,44 @@ class Competition extends BaseModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     * @return HasManyThrough
      */
     public function Participators()
     {
         return $this->hasManyThrough(Participator::class, Announciator::class);
     }
 
+    /**
+     * @return BelongsToMany
+     */
+    public function ageclasses()
+    {
+       return $this->belongsToMany(Ageclass::class);
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function disciplines()
+    {
+        return $this->belongsToMany(Discipline::class);
+    }
+
+    public function getAgeclassListAttribute()
+    {
+        return $this->ageclasses->pluck('shortname', 'id')->toArray();
+    }
+
+    use  ParseDataTrait;
     public function save(array $options = [])
     {
         if($this->timetable_1){
-            $this->replaceTableTag();
+            $this->timetable_1 = $this->replaceTableTag($this->timetable_1, $this->tableStyle, $this->tableHeadStyle);
         }
         if($this->classes){
-            $this->trimClasses();
+            $this->classes = $this->trimClasses($this->classes);
         }
         parent::save();
-    }
-
-
-
-    protected function replaceTableTag()
-    {
-        $tt                = preg_replace("/<([a-z][a-z0-9]*)[^>]*?(\/?)>/i", '<$1$2>', $this->timetable_1);
-        $tt                = str_replace(['<span>', '</span>', '<p>', '</p>', "Uhr", "\n"], '', $tt);
-        $tt                = str_replace('<table>', $this->tableStyle, $tt);
-        $this->timetable_1 = str_replace('<thead>', $this->tableHeadStyle, $tt);
-    }
-
-    protected function trimClasses()
-    {
-        $this->classes = str_replace(',', '|', $this->classes);
-        $this->classes = str_replace(' ', '', $this->classes);
-        $this->classes = str_replace('|', ', ', $this->classes);
     }
 
     public function reduceClasses()
@@ -114,7 +125,6 @@ class Competition extends BaseModel
      */
     public function getGermanDate($value)
     {
-        Log::info($value);
         return Carbon::parse($value)->format('d.m.Y');
     }
 

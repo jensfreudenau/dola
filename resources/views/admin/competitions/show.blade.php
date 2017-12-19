@@ -2,8 +2,7 @@
 
 @section('content')
     <h3 class="page-title">@lang('quickadmin.competitions.title')
-        <span><a href="{{ route('admin.competitions.index') }}" class="btn btn-default">@lang('quickadmin.qa_back_to_list')</a></span>
-        <span>
+        <span><a href="{{ route('admin.competitions.index') }}" class="btn btn-default">@lang('quickadmin.qa_back_to_list')</a></span> <span>
             @can('competition_edit')
                 <a href="{{ route('admin.competitions.edit',[$competition->id]) }}" class="btn btn-sm btn-info">@lang('quickadmin.qa_edit')</a>
             @endcan
@@ -29,6 +28,22 @@
                         <tr>
                             <th>@lang('quickadmin.competitions.fields.award')</th>
                             <td>{{ $competition->award }}</td>
+                        </tr>
+                        <tr>
+                            <th>@lang('quickadmin.competitions.fields.classes')</th>
+                            <td>
+                                @foreach ($competition->ageclasses as $ageclass)
+                                    {{ $ageclass['shortname'] }},
+                                @endforeach
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>@lang('quickadmin.competitions.fields.diciplines')</th>
+                            <td>
+                                @foreach ($competition->disciplines as $discipline)
+                                    {{ $discipline['shortname'] }},
+                                @endforeach
+                            </td>
                         </tr>
 
                         <tr>
@@ -66,13 +81,15 @@
                         <tr>
                             <td colspan="2">{!!  $competition->timetable_1 !!}</td>
                         </tr>
-                        <tr>
-                            <td colspan="2">{!! $competition->timetable_2 or '' !!}</td>
-                        </tr>
+
                     </table>
 
                     <h3 class="text-green">Anzahl Teilnehmer: {{$competition->Participators->count()}}</h3>
+                    <span>
+                            <a href="{{ url('admin/participators/download',[$competition->id]) }}" class="btn btn-sm btn-info">@lang('quickadmin.qa_csv_download')</a>
+                        </span>
                     <div class="card-body table-responsive">
+
                         <table class="table table-bordered table-striped datatable">
                             <thead>
                             <tr>
@@ -91,8 +108,8 @@
                                     <td>{{$participator->Announciator->clubname}}</td>
                                     <td>{{$participator->Announciator->name}}</td>
                                     <td>{{$participator->prename}} &nbsp; {{$participator->lastname}}</td>
-                                    <td>{{$participator->discipline}}</td>
-                                    <td>{{$participator->age_group}}</td>
+                                    <td>{{$participator->discipline->shortname}}</td>
+                                    <td>{{$participator->ageclass->shortname}}</td>
                                 </tr>
                             @endforeach
                             <tbody>

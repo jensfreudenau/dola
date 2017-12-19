@@ -23,10 +23,16 @@
     {!! Form::label('award', Lang::get('quickadmin.competitions.fields.award')) !!}
     {!! Form::text('award', null, ['id'=> 'competition-award', 'class'=>'form-control']) !!}
 </div>
-<div class="form-group">
-    {!! Form::label('classes', Lang::get('quickadmin.competitions.fields.classes')) !!}
-    {!! Form::text('classes', null, ['id'=> 'competition-classes', 'class'=>'form-control']) !!}
-</div>
+@if (!$disabled)
+    <div class="form-group">
+        {!! Form::label('disciplines', Lang::get('quickadmin.competitions.fields.disciplines')) !!}
+        {{ Form::select('disciplines[]', $disciplines, array_pluck($competition->disciplines, 'id'), ['multiple', 'class'=>'form-control select2']) }}
+    </div>
+    <div class="form-group">
+        {!! Form::label('ageclasses', Lang::get('quickadmin.competitions.fields.classes')) !!}
+        {!! Form::select('ageclasses[]', $ageclasses, array_pluck($competition->ageclasses, 'id'), ['multiple', 'class'=>'form-control select2']) !!}
+    </div>
+@endif
 <div class="form-group">
     {!! Form::label('register', Lang::get('quickadmin.competitions.register')) !!}<br>
     <div class="btn-group" data-toggle="buttons">

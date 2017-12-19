@@ -46,8 +46,11 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], 
     Route::post('users_mass_destroy', ['uses' => 'Admin\UsersController@massDestroy', 'as' => 'users.mass_destroy']);
     Route::resource('organizers', 'Admin\OrganizersController');
     Route::post('organizers_mass_destroy', ['uses' => 'Admin\OrganizersController@massDestroy', 'as' => 'organizers.mass_destroy']);
+    Route::get('participators/list/{competitionid}', 'Admin\ParticipatorsController@list');
+    Route::get('participators/download/{competitionid}', 'Admin\ParticipatorsController@download');
     Route::resource('participators', 'Admin\ParticipatorsController');
     Route::post('participators_mass_destroy', ['uses' => 'Admin\ParticipatorsController@massDestroy', 'as' => 'participators.mass_destroy']);
+    Route::get('competitions/fillageclasses', 'Admin\CompetitionController@fillageclasses');
     Route::post('competitions/uploader/{competition_id}', 'Admin\CompetitionController@uploader')->name('competitions.uploader');
     Route::post('competitions/participators/{competition_id}', 'Admin\CompetitionController@participators')->name('competitions.participators');
     Route::delete('competitions/delete_file/{upload_id}', 'Admin\CompetitionController@delete_file')->name('competitions.delete_file');

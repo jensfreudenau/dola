@@ -15,10 +15,9 @@
                     @include('common.errors')
 
                     {!! Form::model($competition, ['method' => 'PUT', 'route' => ['admin.competitions.update', $competition->id]]) !!}
-                    @include('admin.competitions._form')
+                    @include('admin.competitions._form', ['disabled' => false])
                     @if($additionals)
                         @foreach($additionals as $key => $additional)
-
                             <div class="form-group">
                                 {!! Form::label('keyvalue['.$additional->id. '][key]', Lang::get('quickadmin.competitions.fields.key')) !!}
                                 {!! Form::text('keyvalue['.$additional->id. '][key]', $additional->key, ['id'=> 'additional-key_'.$additional->id, 'class'=>'form-control']) !!}
@@ -31,9 +30,7 @@
                             <hr>
                         @endforeach
                     @endif
-                    <div id="additionalGroup">
-
-                    </div>
+                    <div id="additionalGroup"></div>
                     <div class="form-group">
                         <div class="input-group">
                             {!! Form::button('<i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Werte hinzufügen', array('id'=> 'addValues', 'class' => 'btn btn-outline-dark')) !!}
@@ -65,7 +62,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            @include('common.errors')
+
                             {!! Form::model($competition, ['method' => 'POST', 'url'=>'admin/competitions/uploader/'.$competition->id, 'enctype'=>'multipart/form-data', 'class'=>'dropzone', 'id' => 'additionals']) !!}
                             <div class="dz-message" data-dz-message><span>Datei hier hin ziehen</span></div>
                             {!! Form::close() !!}
@@ -89,7 +86,7 @@
                                 @endforeach
                                 </tbody>
                             </table>
-                            @include('common.errors')
+
                             {!! Form::model($competition, ['method' => 'POST', 'url'=>'admin/competitions/uploader/'.$competition->id, 'enctype'=>'multipart/form-data', 'class'=>'dropzone', 'id' => 'participators']) !!}
                             <div class="dz-message" data-dz-message><span>Teilnehmerliste hier hin ziehen</span></div>
                             {!! Form::close() !!}
@@ -120,7 +117,7 @@
                                 @endforeach
                                 </tbody>
                             </table>
-                            @include('common.errors')
+
                             {!! Form::model($competition, ['method' => 'POST', 'url'=>'admin/competitions/uploader/'.$competition->id, 'enctype'=>'multipart/form-data', 'class'=>'dropzone', 'id' => 'resultsets']) !!}
                             <div class="dz-message" data-dz-message><span>Ergebnisliste hier hin ziehen</span></div>
                             {!! Form::close() !!}

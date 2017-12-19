@@ -29,8 +29,10 @@ class AnnounciatorsController extends Controller
             $id = $competition[0]->id;
         }
         $competition = Competition::findOrFail($id);
+        $disciplines = $competition->disciplines->pluck('shortname', 'id')->toArray();
+        $ageclasses = $competition->ageclasses->pluck('shortname', 'id')->toArray();
         $competitionselect = Competition::where('submit_date', '>=', date('Y-m-d'))->where('register', '=', 0)->orderBy('start_date', 'asc')->get()->pluck('header', 'id');
-        return view('front.announciators.create', compact('competition', 'competitionselect'));
+        return view('front.announciators.create', compact('competition', 'competitionselect', 'disciplines', 'ageclasses'));
     }
 
     /**
@@ -51,10 +53,10 @@ class AnnounciatorsController extends Controller
         foreach ($request->jahrgang as $key => $item) {
             $participators[$key]['birthyear'] = $item;
         }
-        foreach ($request->altersklasse as $key => $item) {
+        foreach ($request->ageclass as $key => $item) {
             $participators[$key]['age_group'] = $item;
         }
-        foreach ($request->wettkampf as $key => $item) {
+        foreach ($request->discipline as $key => $item) {
             $participators[$key]['discipline'] = $item;
         }
         foreach ($request->bestzeit as $key => $item) {

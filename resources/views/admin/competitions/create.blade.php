@@ -11,11 +11,17 @@
                     <div class="card-heading">
                         Create Competition
                     </div>
+                    <div class="flash-message">
+                        @if(Session::has('flash_message'))
+                            <div class="alert alert-success"><em> {!! session('flash_message') !!}</em></div>
+                        @endif
+
+                    </div> <!-- end .flash-message -->
                     <div class="card-body">
                         <!-- Display Validation Errors -->
                         @include('common.errors')
                         {{ Form::open(['url'=>'admin/competitions', 'enctype'=>'multipart/form-data', 'class'=>'dropzone', 'id' => 'csvuploader']) }}
-                        @include('admin.competitions._form')
+                        @include('admin.competitions._form', ['disabled' => true])
                         <div id="additionalGroup">
 
                         </div>
