@@ -41,7 +41,7 @@
                             <td>{{ Carbon\Carbon::parse($competition->start_date)->format('d.m.Y') }}</td>
                             <td>{{ $competition->season or '' }}</td>
                             <td>{{ $competition->Participators->count() }}</td>
-                            <td>{{ $competition->updated_at }}</td>
+                            <td>{{ Carbon\Carbon::parse($competition->updated_at)->format('d.m.Y') }}</td>
                             <td>
                                 @can('competition_view')
                                     <a href="{{ route('admin.competitions.show',[$competition->id]) }}" class="btn btn-sm btn-primary">@lang('quickadmin.qa_view')</a>
