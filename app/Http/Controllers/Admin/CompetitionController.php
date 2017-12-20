@@ -122,8 +122,6 @@ class CompetitionController extends Controller
         $this->competionsErrorList = array();
         $this->disciplineListError = array();
         $this->ageclassErrorList   = array();
-        #$this->disciplineList = array();
-        #$this->ageclassList = array();
         $this->classCollection = array();
         #TODO move to Model
         foreach ($this->disciplineList as $discipline) {
@@ -136,11 +134,6 @@ class CompetitionController extends Controller
                 unset($this->disciplineError[$key]);
             }
         }
-        # $this->classCollection = $classes = $submitData['ageclasses'];
-//        foreach ($classes as $class) {
-//            if ($class == "") continue;
-//            $this->proofAgeclasses($class);
-//        }
         foreach ($this->ageclassList as $parsedClass) {
             $this->proofAgeclasses($parsedClass);
         }
@@ -215,6 +208,7 @@ class CompetitionController extends Controller
         foreach ($this->ageclassList as $class) {
             $this->proofAgeclasses($class);
         }
+
         foreach ($this->disciplineList as $discipline) {
             $this->proofDiscipline($discipline);
         }

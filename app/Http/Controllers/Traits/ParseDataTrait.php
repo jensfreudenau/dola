@@ -7,8 +7,8 @@
  */
 
 namespace App\Http\Controllers\Traits;
-
-use App\Ageclass;
+use App\Helpers;
+use App\Helpers\Str;
 use DOMDocument;
 
 trait ParseDataTrait
@@ -83,28 +83,77 @@ trait ParseDataTrait
         if (strpos($col, '/')) {
             #[$firstArg, $secondArg] = explode('/', $col); //php7
             list($firstArg, $secondArg) = explode('/', $col);
-            $this->disciplineList[] = $this->prepareDisciplineData($firstArg);
-            $this->disciplineList[] = $this->prepareDisciplineData($secondArg);
+            $this->disciplineList[] = $this->prepareDisciplineData($firstArg, true);
+            $this->disciplineList[] = $this->prepareDisciplineData($secondArg, true);
         } else {
-            $this->disciplineList[] = $this->prepareDisciplineData($col);
+            $this->disciplineList[] = $this->prepareDisciplineData($col, true);
         }
         $this->disciplineList = array_unique($this->disciplineList);
     }
 
-    protected function prepareDisciplineData($str)
+    protected function prepareDisciplineData($str, $forList = false)
     {
+        if($str == ' ') return '';
         $str = trim($str);
-        $str = str_replace(' ', '', $str);
+        $str = $this->checkM($str);
+        $str = $this->checkX($str);
+        if($forList){
+            $str = $this->checkZ($str);
+        }
+        $str = $this->checkH($str);
+        $str = $this->checkJumpDisciplines($str);
+        $str = trim($str);
+        return $str ;
+    }
+
+    /**
+     * @param $str
+     * @return mixed
+     */
+    protected function checkZ($str)
+    {
+        if(Str::from($str)->contains('Z')) {
+            return (string) Str::from($str)->beforeFirst('Z');
+        }
+        else {
+            return $str;
+        }
+    }
+
+    protected function checkJumpDisciplines($str)
+    {
+        $jumps = array('Weit', 'Hoch');
+        if(Str::from($str)->contains($jumps[0]) || Str::from($str)->contains($jumps[1]) ) {
+            return (string) Str::from($str)->beforeFirst(' ');
+        }
+        else {
+            return $str;
+        }
+    }
+
+    protected function checkH($str)
+    {
+        return $str;
+    }
+
+    protected function checkX($str)
+    {
+        $pos = strpos($str, 'x');
+        if($pos == false) return $str;
+        if ($str[$pos - 1] != ' ' && $str[$pos + 1] != ' ') {
+            $str = str_replace('x', ' x ', $str);
+        }
+        return trim($str);
+    }
+    protected function checkM($str)
+    {
         $pos = strpos($str, 'm');
         if($pos == false) return $str;
         $newPos = $pos - 1;
         if ($str[$newPos] != ' ') {
-            $str = str_replace('m', ' m ', $str);
+            $str = str_replace('m', ' m', $str);
         }
-        $pos = strpos($str, 'x');
-        if($pos == false) return $str;
-        $str = str_replace('x', ' x ', $str);
-        return trim($str);
+        return $str;
     }
 
     protected function markFounded($timetable, $collection)
