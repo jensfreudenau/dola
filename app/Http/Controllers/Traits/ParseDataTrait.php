@@ -94,12 +94,17 @@ trait ParseDataTrait
     protected function prepareDisciplineData($str)
     {
         $str = trim($str);
+        $str = str_replace(' ', '', $str);
+        return $str;
         $pos = strpos($str, 'm');
         if($pos == false) return $str;
         $newPos = $pos - 1;
         if ($str[$newPos] != ' ') {
             $str = str_replace('m', ' m', $str);
         }
+        $pos = strpos($str, 'x');
+        if($pos == false) return $str;
+        $str = str_replace('x', ' x ', $str);
         return $str;
     }
 
