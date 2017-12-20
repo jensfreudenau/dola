@@ -122,7 +122,7 @@ trait ParseDataTrait
 
     protected function checkJumpDisciplines($str)
     {
-        $jumps = array('Weit', 'Hoch');
+        $jumps = array('Weit', 'Hoch', 'Kugel');
         if(Str::from($str)->contains($jumps[0]) || Str::from($str)->contains($jumps[1]) ) {
             return (string) Str::from($str)->beforeFirst(' ');
         }
