@@ -93,7 +93,7 @@ trait ParseDataTrait
 
     protected function prepareDisciplineData($str, $forList = false)
     {
-        if($str == ' ') return '';
+        if((string)Str::from($str)->trim($str) == '') return '';
         $str = trim($str);
         $str = $this->checkM($str);
         $str = $this->checkX($str);
