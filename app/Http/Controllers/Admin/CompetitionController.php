@@ -203,10 +203,13 @@ class CompetitionController extends Controller
             return abort(401);
         }
         #TODO move to Model
+        $this->ageclassCollection = array();
+        $this->disciplineCollection = array();
         $submitData = $request->all();
         if (!empty($submitData['timetable_1'])) {
             $submitData['timetable_1'] = $this->parsingTable($submitData['timetable_1']);
         }
+
         foreach ($this->ageclassList as $class) {
             $this->proofAgeclasses($class);
         }

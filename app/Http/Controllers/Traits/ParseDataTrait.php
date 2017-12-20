@@ -99,9 +99,10 @@ trait ParseDataTrait
         $str = $this->checkX($str);
         if($forList){
             $str = $this->checkZ($str);
+            $str = $this->checkJumpDisciplines($str);
         }
         $str = $this->checkH($str);
-        $str = $this->checkJumpDisciplines($str);
+
         $str = trim($str);
         return $str ;
     }
@@ -127,7 +128,8 @@ trait ParseDataTrait
             || Str::from($str)->contains($jumps[1])
             || Str::from($str)->contains($jumps[2])
         ) {
-            return (string) Str::from($str)->beforeFirst(' ');
+            if(strlen($jumps[0]) < strlen($str))
+                return (string) Str::from($str)->beforeFirst(' ');
         }
         else {
             return $str;
