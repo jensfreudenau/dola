@@ -99,9 +99,10 @@ trait ParseDataTrait
         $str = $this->checkX($str);
         if($forList){
             $str = $this->checkZ($str);
+            $str = $this->checkJumpDisciplines($str);
         }
         $str = $this->checkH($str);
-        $str = $this->checkJumpDisciplines($str);
+
         $str = trim($str);
         return $str ;
     }
