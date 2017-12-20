@@ -88,14 +88,13 @@ trait ParseDataTrait
         } else {
             $this->disciplineList[] = $this->prepareDisciplineData($col, true);
         }
+        $this->disciplineList = array_filter($this->disciplineList);
         $this->disciplineList = array_unique($this->disciplineList);
     }
 
     protected function prepareDisciplineData($str, $forList = false)
     {
         $str = (string)Str::from($str)->trim();
-        if($str == '') return '';
-        $str = trim($str);
         $str = $this->checkM($str);
         $str = $this->checkX($str);
         if($forList){

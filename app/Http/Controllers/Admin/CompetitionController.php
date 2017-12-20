@@ -123,10 +123,12 @@ class CompetitionController extends Controller
         $this->disciplineListError = array();
         $this->ageclassErrorList   = array();
         $this->classCollection = array();
+
         #TODO move to Model
         foreach ($this->disciplineList as $discipline) {
             $this->proofDiscipline($discipline);
         }
+
         foreach ($this->disciplineListError as $key => $disciplineError) {
             #[$discipline,] = explode(' ', $disciplineError); //php7
             list($discipline, $secondArg) = explode(' ', $disciplineError);
@@ -153,7 +155,7 @@ class CompetitionController extends Controller
         }
 
         $competition->disciplines()->sync($ids);
-        return redirect('/admin/competitions');
+        return redirect('/admin/competitions/' . $id);
     }
 
     use FileUploadTrait;
@@ -208,21 +210,22 @@ class CompetitionController extends Controller
         foreach ($this->ageclassList as $class) {
             $this->proofAgeclasses($class);
         }
-
         foreach ($this->disciplineList as $discipline) {
             $this->proofDiscipline($discipline);
         }
-        foreach ($this->disciplineCollectionError as $disciplineErr) {
-            #[$discipline,] = explode(' ', $disciplineErr); //php7
-            list($discipline, $secondArg) = explode(' ', $disciplineErr);
-            $this->proofDiscipline($discipline);
-        }
+
+//        foreach ($this->disciplineCollectionError as $disciplineErr) {
+//            #[$discipline,] = explode(' ', $disciplineErr); //php7
+//            list($discipline, $secondArg) = explode(' ', $disciplineErr);
+//            $this->proofDiscipline($discipline);
+//        }
 
         $id = Competition::create($submitData)->id;
         foreach ($this->ageclassCollection as $key => $class) {
             $ageClass = Ageclass::where('ladv', '=', $key)->first();
             $ageClass->competitions()->attach($id);
         }
+
         foreach ($this->disciplineCollection as $key => $class) {
             $discipline = Discipline::where('ladv', '=', $key)->first();
             $discipline->competitions()->attach($id);
