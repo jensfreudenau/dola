@@ -24,6 +24,7 @@
                         <th>@lang('quickadmin.competitions.fields.start_date')</th>
                         <th>@lang('quickadmin.competitions.fields.season')</th>
                         <th>@lang('quickadmin.competitions.fields.participator')</th>
+                        <th>@lang('quickadmin.competitions.fields.update')</th>
                         <th>&nbsp;</th>
                     </tr>
                 </thead>
@@ -40,6 +41,7 @@
                             <td>{{ Carbon\Carbon::parse($competition->start_date)->format('d.m.Y') }}</td>
                             <td>{{ $competition->season or '' }}</td>
                             <td>{{ $competition->Participators->count() }}</td>
+                            <td>{{ $competition->updated_at }}</td>
                             <td>
                                 @can('competition_view')
                                     <a href="{{ route('admin.competitions.show',[$competition->id]) }}" class="btn btn-sm btn-primary">@lang('quickadmin.qa_view')</a>
