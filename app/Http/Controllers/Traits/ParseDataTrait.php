@@ -95,7 +95,9 @@ trait ParseDataTrait
     {
         $str = trim($str);
         $pos = strpos($str, 'm');
-        if ($str[$pos - 1] != ' ') {
+        if($pos == false) return $str;
+        $newPos = $pos - 1;
+        if ($str[$newPos] != ' ') {
             $str = str_replace('m', ' m', $str);
         }
         return $str;
