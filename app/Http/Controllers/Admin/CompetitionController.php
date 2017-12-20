@@ -147,11 +147,20 @@ class CompetitionController extends Controller
         if ($this->ageclassErrorList) {
             return back()->withInput()->withErrors($this->ageclassErrorList);
         }
-        $ids = Ageclass::whereIn('shortname', $this->ageclassCollection)->select('id')->get()->toArray();
+        $ids = array();
+        foreach ($this->ageclassCollection as $ageclassKey => $ageclass) {
+            $data = Ageclass::where('ladv', '=', $ageclassKey)->select('id')->get()->toArray();
+            $ids[] = $data[0]['id'];
+        }
         $competition->ageclasses()->sync($ids);
-        $ids = Discipline::whereIn('shortname', $this->disciplineCollection)->select('id')->get();
+        $ids = array();
+        foreach ($this->disciplineCollection as $disciplineKey => $discipline) {
+            $data = Discipline::where('ladv', '=', $disciplineKey)->select('id')->get()->toArray();
+            $ids[] = $data[0]['id'];
+        }
+
         $competition->disciplines()->sync($ids);
-        #return redirect('/admin/competitions');
+        return redirect('/admin/competitions');
     }
 
     use FileUploadTrait;
@@ -214,7 +223,7 @@ class CompetitionController extends Controller
             list($discipline, $secondArg) = explode(' ', $disciplineErr);
             $this->proofDiscipline($discipline);
         }
-        $submitData['timetable_1'] = $this->markFounded($submitData['timetable_1']);
+
         $id = Competition::create($submitData)->id;
         foreach ($this->ageclassCollection as $key => $class) {
             $ageClass = Ageclass::where('ladv', '=', $key)->first();
