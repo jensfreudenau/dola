@@ -1,12 +1,15 @@
 @extends('layouts.front')
 @section('content')
 
-    <p class="size-h3">{{ $competition->header }}</p>
+    <h3>{{ $competition->header }}</h3>
     <dl class="dl-horizontal">
         <dt>Datum:</dt>
         <dd>{{ $competition->start_date }}</dd>
         <dt>Veranstalter:</dt>
         <dd>{{ $competition->organizer->name }}</dd>
+        <dd>{{ $competition->organizer->address->name }}</dd>
+        <dd>{{ $competition->organizer->address->telephone }}</dd>
+        <dd>{{ $competition->organizer->address->email }}</dd>
     </dl>
     <table class="table table-hover">
         <thead class="thead-inverse">

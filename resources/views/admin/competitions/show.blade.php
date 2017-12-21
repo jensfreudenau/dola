@@ -98,6 +98,7 @@
                                 <th>@lang('quickadmin.participator.fields.name')</th>
                                 <th>@lang('quickadmin.participator.fields.discipline')</th>
                                 <th>@lang('quickadmin.participator.fields.age_group')</th>
+                                <th>@lang('quickadmin.participator.fields.best_time')</th>
 
                             </tr>
                             </thead>
@@ -108,8 +109,9 @@
                                     <td>{{$participator->Announciator->clubname}}</td>
                                     <td>{{$participator->Announciator->name}}</td>
                                     <td>{{$participator->prename}} &nbsp; {{$participator->lastname}}</td>
-                                    <td>{{$participator->discipline->shortname}}</td>
-                                    <td>{{$participator->ageclass->shortname}}</td>
+                                    <td>{{$participator->Discipline['shortname']}}</td>
+                                    <td>{{$participator->Ageclass['shortname']}}</td>
+                                    <td>{{$participator->best_time}}</td>
                                 </tr>
                             @endforeach
                             <tbody>

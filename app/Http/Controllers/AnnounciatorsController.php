@@ -44,6 +44,7 @@ class AnnounciatorsController extends Controller
      */
     public function store(Request $request)
     {
+
         foreach ($request->vorname as $key => $item) {
             $participators[$key]['prename'] = $item;
         }
@@ -54,20 +55,23 @@ class AnnounciatorsController extends Controller
             $participators[$key]['birthyear'] = $item;
         }
         foreach ($request->ageclass as $key => $item) {
-            $participators[$key]['age_group'] = $item;
+            $participators[$key]['ageclass_id'] = $item;
         }
         foreach ($request->discipline as $key => $item) {
-            $participators[$key]['discipline'] = $item;
+            $participators[$key]['discipline_id'] = $item;
         }
+
         foreach ($request->bestzeit as $key => $item) {
             $participators[$key]['best_time'] = $item;
         }
+
         $announciator = Announciator::create($request->all());
         foreach ($participators as $participator) {
             $participator['announciator_id'] = $announciator->id;
             Participator::create($participator);
         }
         $competition = Competition::findOrFail($request->competition_id);
+
         Mail::to('jens@freude-now.de')->send(new EnrolReceived($announciator, $competition));
         $cookie = Cookie::make('announciators_id', $announciator->id);
         return redirect()->action('AnnounciatorsController@listParticipator')->withCookie($cookie);
