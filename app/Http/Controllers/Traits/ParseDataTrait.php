@@ -7,6 +7,7 @@
  */
 
 namespace App\Http\Controllers\Traits;
+
 use App\Helpers;
 use App\Helpers\Str;
 use DOMDocument;
@@ -97,14 +98,34 @@ trait ParseDataTrait
         $str = (string)Str::from($str)->trim();
         $str = $this->checkM($str);
         $str = $this->checkX($str);
-        if($forList){
+        if ($forList) {
             $str = $this->checkZ($str);
             $str = $this->checkJumpDisciplines($str);
         }
         $str = $this->checkH($str);
-
         $str = trim($str);
-        return $str ;
+        return $str;
+    }
+
+    protected function checkM($str)
+    {
+        $pos = strpos($str, 'm');
+        if ($pos == false) return $str;
+        $newPos = $pos - 1;
+        if ($str[$newPos] != ' ') {
+            $str = str_replace('m', ' m', $str);
+        }
+        return $str;
+    }
+
+    protected function checkX($str)
+    {
+        $pos = strpos($str, 'x');
+        if ($pos == false) return $str;
+        if ($str[$pos - 1] != ' ' && $str[$pos + 1] != ' ') {
+            $str = str_replace('x', ' x ', $str);
+        }
+        return trim($str);
     }
 
     /**
@@ -113,10 +134,9 @@ trait ParseDataTrait
      */
     protected function checkZ($str)
     {
-        if(Str::from($str)->contains('Z')) {
-            return (string) Str::from($str)->beforeFirst('Z');
-        }
-        else {
+        if (Str::from($str)->contains('Z')) {
+            return (string)Str::from($str)->beforeFirst('Z');
+        } else {
             return $str;
         }
     }
@@ -124,14 +144,16 @@ trait ParseDataTrait
     protected function checkJumpDisciplines($str)
     {
         $jumps = array('Weit', 'Hoch', 'Kugel');
-        if(Str::from($str)->contains($jumps[0])
+        if (Str::from($str)->contains($jumps[0])
             || Str::from($str)->contains($jumps[1])
             || Str::from($str)->contains($jumps[2])
         ) {
-            if(strlen($jumps[0]) < strlen($str))
-                return (string) Str::from($str)->beforeFirst(' ');
-        }
-        else {
+            if ($jumps[0] == $str && (strlen($jumps[0]) < strlen($str)))
+                return (string)Str::from($str)->beforeFirst(' ');
+            else {
+                return $str;
+            }
+        } else {
             return $str;
         }
     }
@@ -141,33 +163,12 @@ trait ParseDataTrait
         return $str;
     }
 
-    protected function checkX($str)
-    {
-        $pos = strpos($str, 'x');
-        if($pos == false) return $str;
-        if ($str[$pos - 1] != ' ' && $str[$pos + 1] != ' ') {
-            $str = str_replace('x', ' x ', $str);
-        }
-        return trim($str);
-    }
-    protected function checkM($str)
-    {
-        $pos = strpos($str, 'm');
-        if($pos == false) return $str;
-        $newPos = $pos - 1;
-        if ($str[$newPos] != ' ') {
-            $str = str_replace('m', ' m', $str);
-        }
-        return $str;
-    }
-
     protected function markFounded($timetable, $collection)
     {
         foreach ($collection as $ageclass) {
             $timetable = $this->setMarker($ageclass->shortname, $timetable);
             $timetable = $this->setMarker($ageclass->rieping, $timetable);
         }
-
         return $timetable;
     }
 
