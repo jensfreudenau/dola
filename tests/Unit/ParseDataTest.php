@@ -60,4 +60,14 @@ class ParseDataTest extends TestCase
         $this->assertEquals('4 x 100 m', $this->checkX('4 x 100 m'));
     }
 
+    public function testParseAgeclass()
+    {
+        $this->assertEquals('4 x 200 m', $this->checkX('4 x 200 m'));
+    }
+
+    public function testFillAgeclassesList()
+    {
+        $this->fillAgeclassesList('WK U12 * W10/W11');
+        print_r($this->ageclassList);
+    }
 }
