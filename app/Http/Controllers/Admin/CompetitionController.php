@@ -122,7 +122,8 @@ class CompetitionController extends Controller
         $this->competionsErrorList = array();
         $this->disciplineListError = array();
         $this->ageclassErrorList   = array();
-        $this->classCollection = array();
+        $this->ageclassCollection = array();
+        $this->disciplineCollection = array();
 
         #TODO move to Model
         foreach ($this->disciplineList as $discipline) {

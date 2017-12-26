@@ -31,7 +31,7 @@ trait ParseDataTrait
                 }
                 $first .= '<tr>';
                 foreach ($cols as $col) {
-                    $this->fillClassesList($col->nodeValue);
+                    $this->fillAgeclassesList($col->nodeValue);
                     $first .= '<td>' . $this->prepareAgeclassData($col->nodeValue) . '</td>';
                 }
                 $first .= '</tr>';
@@ -51,7 +51,7 @@ trait ParseDataTrait
         return '<table>' . $first . $tableData . '</tbody></table>';
     }
 
-    protected function fillClassesList($class)
+    protected function fillAgeclassesList($class)
     {
         $class = str_replace('*', '', $class);
         $class = $this->prepareAgeclassData($class);
