@@ -135,7 +135,7 @@ trait ParseDataTrait
     protected function checkZ($str)
     {
         if (Str::from($str)->contains('Z')) {
-            return (string)Str::from($str)->beforeFirst('Z');
+            return trim((string)Str::from($str)->beforeFirst('Z'));
         } else {
             return $str;
         }
@@ -144,18 +144,17 @@ trait ParseDataTrait
     protected function checkJumpDisciplines($str)
     {
         $jumps = array('Weit', 'Hoch', 'Kugel');
-        if (Str::from($str)->contains($jumps[0])
-            || Str::from($str)->contains($jumps[1])
-            || Str::from($str)->contains($jumps[2])
-        ) {
-            if ($jumps[0] == $str && (strlen($jumps[0]) < strlen($str)))
-                return (string)Str::from($str)->beforeFirst(' ');
-            else {
-                return $str;
-            }
-        } else {
-            return $str;
+
+        if (Str::from($str)->contains($jumps[0])) {
+            return $jumps[0];
         }
+        if (Str::from($str)->contains($jumps[1])) {
+            return $jumps[1];
+        }
+        if (Str::from($str)->contains($jumps[2])) {
+            return $jumps[2];
+        }
+        return $str;
     }
 
     protected function checkH($str)

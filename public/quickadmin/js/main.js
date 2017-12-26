@@ -171,7 +171,7 @@ $(document).ready(function () {
         content_css: '/adminlte/css/tinymce_custom.css',
         plugins: [
             "advlist autolink lists link image charmap anchor searchreplace visualblocks code fullscreen insertdatetime media table contextmenu"
-        ],        
+        ],
         relative_urls: false,
         convert_urls: false,
         forced_root_block: "",
