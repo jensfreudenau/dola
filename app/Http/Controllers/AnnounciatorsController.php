@@ -29,6 +29,7 @@ class AnnounciatorsController extends Controller
             $id = $competition[0]->id;
         }
         $competition = Competition::findOrFail($id);
+
         $disciplines = $competition->disciplines->pluck('shortname', 'id')->toArray();
         $ageclasses = $competition->ageclasses->pluck('shortname', 'id')->toArray();
         $competitionselect = Competition::where('submit_date', '>=', date('Y-m-d'))->where('register', '=', 0)->orderBy('start_date', 'asc')->get()->pluck('header', 'id');
@@ -73,6 +74,35 @@ class AnnounciatorsController extends Controller
         $competition = Competition::findOrFail($request->competition_id);
 
         Mail::to('jens@freude-now.de')->send(new EnrolReceived($announciator, $competition));
+
+//        Mail::send('emails.welcome', $data, function ($message) {
+//            $message->from('us@example.com', 'Laravel');
+//
+//            $message->to('foo@example.com')->cc('bar@example.com');
+//        });
+//
+//        Here is a list of the available methods on the $message message builder instance:
+//
+//$message->from($address, $name = null);
+//$message->sender($address, $name = null);
+//$message->to($address, $name = null);
+//$message->cc($address, $name = null);
+//$message->bcc($address, $name = null);
+//$message->replyTo($address, $name = null);
+//$message->subject($subject);
+//$message->priority($level);
+//$message->attach($pathToFile, array $options = []);
+//
+//// Attach a file from a raw $data string...
+//$message->attachData($data, $name, array $options = []);
+//
+//// Get the underlying SwiftMailer message instance...
+/// Mail::send('emails.welcome', $data, function ($message) {
+        //
+
+//        $message->attach($pathToFile);
+//    });
+//$message->getSwiftMessage();
         $cookie = Cookie::make('announciators_id', $announciator->id);
         return redirect()->action('AnnounciatorsController@listParticipator')->withCookie($cookie);
     }

@@ -40,5 +40,6 @@
 
 @include('partials.footer')
 @include('partials.front.javascripts')
+@yield('page-script')
 </body>
 </html>
