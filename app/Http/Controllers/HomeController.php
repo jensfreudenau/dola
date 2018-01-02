@@ -20,7 +20,8 @@ class HomeController extends Controller
     {
         $competitions = Competition::orderBy('start_date', 'asc')
             ->whereDate('start_date', '>', date('Y-m-d'))->take(5)->get();
-
-        return view('home', compact('competitions'));
+        $lastcompetitions = Competition::orderBy('start_date', 'asc')
+            ->whereDate('start_date', '<', date('Y-m-d'))->take(5)->get();
+        return view('home', compact('competitions','lastcompetitions'));
     }
 }

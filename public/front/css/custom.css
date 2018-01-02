@@ -1,6 +1,6 @@
 body {
     padding-top: 20px;
-    font-family: "Source Sans Pro",sans-serif;
+    font-size: 0.8rem;
     background: #ccc url('../../images/DSCF1951.jpg') no-repeat fixed top center;
     background-size: cover;
 }
@@ -28,6 +28,11 @@ a {
 }
 a:hover {
     color: rgb(2, 150, 98);
+}
+div.info a:hover {
+    color: rgb(2, 150, 98);
+    text-decoration: none;
+    border-bottom: 1px solid rgb(2, 150, 98);
 }
 header {
     border-bottom: 1px solid white;
@@ -60,6 +65,7 @@ a.header   {
 }
 .navbar-light .navbar-nav .nav-link{
     color:white;
+    font-size: 1.1rem;
 }
 li.nav-item
 {
@@ -78,4 +84,13 @@ li.nav-item
 }
 .pages_table table td, .pages_table table th{
     border-top:none;
+}
+.desc_type, time {
+    font-weight:600;
+}
+desc {
+    font-weight: 200;
+}
+p {
+    margin-bottom: 0.2rem;
 }
