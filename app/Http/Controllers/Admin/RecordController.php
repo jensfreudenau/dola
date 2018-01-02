@@ -122,6 +122,7 @@ public function sort(Request $request)
                 Best::create($finalRequest->all());
             }
         }
+        return redirect('admin/records');
     }
 
     public function bestsindex()
