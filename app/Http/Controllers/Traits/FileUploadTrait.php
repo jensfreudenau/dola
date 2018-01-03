@@ -2,14 +2,8 @@
 
 namespace App\Http\Controllers\Traits;
 
-use App\Competition;
-use App\Upload;
-use DOMDocument;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
 use jensf\csv\CsvParser;
 
 trait FileUploadTrait

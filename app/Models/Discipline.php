@@ -1,8 +1,7 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
@@ -11,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property \Carbon\Carbon $updated_at
  * @property mixed $competitions
  */
-class Ageclass extends BaseModel
+class Discipline extends BaseModel
 {
     /**
      * @return BelongsToMany

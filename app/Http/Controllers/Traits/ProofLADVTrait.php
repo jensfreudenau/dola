@@ -8,9 +8,8 @@
 
 namespace App\Http\Controllers\Traits;
 
-use App\Ageclass;
-use App\Discipline;
-use DOMDocument;
+use App\Models\Ageclass;
+use App\Models\Discipline;
 
 trait ProofLADVTrait
 {

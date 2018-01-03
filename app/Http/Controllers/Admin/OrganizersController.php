@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Address;
-use App\Competition;
-use App\Organizer;
-use App\Team;
+use App\Models\Address;
+use App\Models\Competition;
+use App\Models\Organizer;
+use App\Models\Team;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
@@ -53,12 +53,12 @@ class OrganizersController extends Controller
         if (!Gate::allows('organizer_create')) {
             return abort(401);
         }
-        $organizer = Organizer::create([
-                                           'name' => $request->name,
-                                           'leader' => $request->leader,
-                                           'addresses_id' => $request->address_id,
-                                           'homepage' => $request->homepage,
-                                       ]);
+        Organizer::create([
+                              'name' => $request->name,
+                              'leader' => $request->leader,
+                              'addresses_id' => $request->address_id,
+                              'homepage' => $request->homepage,
+                          ]);
         return redirect()->route('admin.organizers.index');
     }
 

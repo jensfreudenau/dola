@@ -5,7 +5,7 @@
  * Date: 27.10.17
  * Time: 14:44
  */
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;

@@ -5,17 +5,16 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Page;
+use App\Models\Page;
 use Illuminate\Http\Request;
 use Session;
 
 class PagesController extends Controller
 {
-     /**
+    /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     *
+     * @param $mnemonic
      * @return \Illuminate\View\View
      */
     public function show($mnemonic)

@@ -8,9 +8,9 @@
 
 namespace App\Http\Controllers\Traits;
 
-use App\Helpers;
 use App\Helpers\Str;
 use DOMDocument;
+use DateTime;
 
 trait ParseDataTrait
 {
@@ -189,5 +189,36 @@ trait ParseDataTrait
         $classes = str_replace(',', '|', $classes);
         $classes = str_replace(' ', '', $classes);
         return str_replace('|', ', ', $classes);
+    }
+
+    protected function listdir_by_date($files)
+    {
+        $list = [];
+        foreach ($files as $key => $file) {
+            if (basename($file) == 'styles.css') continue;
+            if (basename($file) == 'index.html') continue;
+            // add the filename, to be sure not to
+            // overwrite a array key
+            list($filebase, $ending) = explode(".", $file);
+            if ($ending != 'html') continue;
+//
+            preg_match_all('/[0-9]/', $filebase, $match);
+            if (count($match[0]) < 6) continue;
+            $six = false;
+            if (count($match[0]) == 6) {
+                $six = true;
+            }
+            if (count($match[0]) > 8) {
+                $match[0][8] = '';
+            }
+            $v = implode($match[0]);
+            if ($six) {
+                $v = '20' . $v;
+            }
+            $date                                   = new DateTime($v);
+            $list[$date->format('Y')][$key]['file'] = $file;
+            $list[$date->format('Y')][$key]['date'] = $date->format('d.m.Y');
+        }
+        return $list;
     }
 }

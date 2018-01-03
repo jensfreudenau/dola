@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Best;
+use App\Models\Best;
+use App\Models\Record;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Record;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Session;
 use Illuminate\Support\Facades\Log;

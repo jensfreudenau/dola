@@ -87,7 +87,7 @@ class AuthServiceProvider extends ServiceProvider
             return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
         });
 
-        // Auth gates for: Pages
+        // Auth gates for: Page
         Gate::define('page_access', function ($user) {
             return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
         });

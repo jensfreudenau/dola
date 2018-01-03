@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -26,5 +26,15 @@ class Participator extends Model
     public function Ageclass()
     {
         return $this->belongsTo(Ageclass::class, 'ageclass_id');
+    }
+
+    /**
+     * Get members full name
+     *
+     * @return string
+     */
+    public function getFullNameAttribute()
+    {
+        return $this->prename . ' ' . $this->lastname;
     }
 }

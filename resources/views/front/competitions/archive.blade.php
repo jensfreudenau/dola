@@ -9,7 +9,7 @@
     <hr>
     @foreach ($archives as $season => $archive)
         @if(!$archive)  @php continue @endphp @endif
-        <h3>{{ $season }}</h3>
+        <h3>{{ title_case($season) }}</h3>
         @foreach ($archive as $year => $results)
             @php $i = 0 @endphp
             <div class="card mb-3">

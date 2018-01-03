@@ -5,13 +5,20 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Page;
+use App\Models\Page;
+use App\Repositories\Page\PageRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Session;
 
 class PagesController extends Controller
 {
+
+    public function __construct(PageRepositoryInterface $pageRepository)
+    {
+        $this->pageRepository = $pageRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *

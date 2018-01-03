@@ -2,20 +2,28 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Address;
+use App\Models\Address;
 use App\Http\Controllers\Controller;
+use App\Repositories\Address\AddressRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class AddressesController extends Controller
 {
+    protected $addressRepository;
+
+    public function __construct(AddressRepositoryInterface $addressRepository)
+    {
+        $this->addressRepository = $addressRepository;
+    }
+
     public function index()
     {
         if (! Gate::allows('address_access')) {
             return abort(401);
         }
 
-        $addresses = Address::all();
+        $addresses = $this->addressRepository->getAll();
         return view('admin.addresses.index', compact('addresses'));
     }
 
@@ -44,7 +52,7 @@ class AddressesController extends Controller
         if (! Gate::allows('address_access')) {
             return abort(401);
         }
-        $address = Address::findOrFail($id);
+        $address = $this->addressRepository->findById($id);
 
         return view('admin.addresses.show', compact('address'));
     }
@@ -73,7 +81,7 @@ class AddressesController extends Controller
         if (!Gate::allows('address_access')) {
             return abort(401);
         }
-        $address = Address::findOrFail($id);
+        $address = $this->addressRepository->findById($id);
         return view('admin.addresses.edit', compact('address'));
     }
 
@@ -91,7 +99,7 @@ class AddressesController extends Controller
             return abort(401);
         }
         $requestData = $request->all();
-        $address = Address::findOrFail($id);
+        $address = $this->addressRepository->findById($id);
         $address->update($requestData);
         return redirect('admin/addresses');
     }

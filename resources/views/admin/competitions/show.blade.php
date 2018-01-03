@@ -102,24 +102,25 @@
 
                             </tr>
                             </thead>
-
                             <tbody>
-                            @foreach($competition->Participators as $participator)
-                                <tr>
-                                    <td>{{$participator->Announciator->clubname}}</td>
-                                    <td>{{$participator->Announciator->name}}</td>
-                                    <td>{{$participator->prename}} &nbsp; {{$participator->lastname}}</td>
-                                    <td>{{$participator->Discipline['shortname']}}</td>
-                                    <td>{{$participator->Ageclass['shortname']}}</td>
-                                    <td>{{$participator->best_time}}</td>
-                                </tr>
+                            @foreach($announciators as $announciator)
+                                @foreach($announciator->participator as $participator)
+                                    <tr>
+                                        <td>{{$announciator->clubname}}</td>
+                                        <td>{{$announciator->name}}</td>
+                                        <td>{{$participator->full_name}}</td>
+                                        <td>{{$participator->Discipline->shortname}}</td>
+                                        <td>{{$participator->Ageclass->shortname}}</td>
+                                        <td>{{$participator->best_time}}</td>
+                                    </tr>
+
+                                @endforeach
                             @endforeach
                             <tbody>
                         </table>
                     </div>
                 </div>
                 <div class="col-md-2">
-
                 </div>
             </div>
         </div>

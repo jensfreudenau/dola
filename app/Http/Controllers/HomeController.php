@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Competition;
+use App\Models\Competition;
 use App\Http\Requests;
-use App\Participator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 

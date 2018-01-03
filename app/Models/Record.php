@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 class Record extends BaseModel
 {
     protected $fillable = ['header', 'records_table', 'sex'];

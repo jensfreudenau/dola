@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Competition;
+use App\Models\Competition;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 

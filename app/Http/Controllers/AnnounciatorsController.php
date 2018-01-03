@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Announciator;
-use App\Competition;
+use App\Models\Announciator;
+use App\Models\Competition;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use App\Mail\EnrolReceived;
-use App\Annunciator;
-use App\Participator;
+use App\Models\Participator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Mail;
@@ -110,12 +108,13 @@ class AnnounciatorsController extends Controller
     public function listParticipator()
     {
         $announciators_id = Cookie::get('announciators_id', 0);
-        if(0 == $announciators_id) {
-            return redirect()->action('HomeController@index');
-        }
+//        if(0 == $announciators_id) {
+//            return redirect()->action('HomeController@index');
+//        }
+        $announciators_id = 14211;
         $announciator = Announciator::findOrFail($announciators_id);
         $competition = Competition::findOrFail($announciator->competition_id);
-
+        Mail::to('jens@freude-now.de')->send(new EnrolReceived($announciator, $competition));
         return view('front.announciators.list', compact('announciator', 'competition'));
     }
     /**

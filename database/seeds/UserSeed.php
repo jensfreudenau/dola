@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class UserSeed extends Seeder
@@ -18,7 +19,7 @@ class UserSeed extends Seeder
         ];
 
         foreach ($items as $item) {
-            \App\User::create($item);
+            User::create($item);
         }
     }
 }

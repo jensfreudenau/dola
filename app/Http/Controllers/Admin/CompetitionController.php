@@ -2,27 +2,35 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Additional;
-use App\Ageclass;
-use App\Competition;
-use App\Address;
-use App\Discipline;
+use App\Models\Additional;
+use App\Models\Ageclass;
+use App\Models\Announciator;
+use App\Models\Competition;
+use App\Models\Address;
+use App\Models\Discipline;
+use App\Models\Organizer;
+use App\Models\Upload;
 use App\Http\Controllers\Traits\ProofLADVTrait;
-use App\Organizer;
-use App\Upload;
 use App\Http\Controllers\Traits\FileUploadTrait;
 use App\Http\Controllers\Traits\ParseDataTrait;
 use App\Http\Requests\Admin\StoreCompetitionsRequest;
 use App\Http\Requests\Admin\UpdateCompetitionsRequest;
-use Carbon\Carbon;
+use App\Repositories\Competition\CompetitionRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * @property CompetitionRepositoryInterface competitionRepository
+ */
 class CompetitionController extends Controller
 {
+    public function __construct(CompetitionRepositoryInterface $competitionRepository)
+    {
+        $this->competitionRepository = $competitionRepository;
+    }
+
     public function index()
     {
         if (!Gate::allows('competition_access')) {
@@ -39,13 +47,14 @@ class CompetitionController extends Controller
         if (!Gate::allows('competition_access')) {
             return abort(401);
         }
-        $competition = Competition::findOrFail($id);
-        $additionals = Additional::where('external_id', '=', $competition->id)->get();
-        $ageclasses  = $competition->Ageclasses;
-        $disciplines = $competition->Disciplines;
+        $competition              = $this->competitionRepository->findById($id);
+        $additionals              = Additional::where('external_id', '=', $competition->id)->get();
+        $ageclasses               = $competition->Ageclasses;
+        $disciplines              = $competition->Disciplines;
         $competition->timetable_1 = $this->markFounded($competition->timetable_1, $ageclasses);
         $competition->timetable_1 = $this->markFounded($competition->timetable_1, $disciplines);
-        return view('admin.competitions.show', compact('competition', 'additionals', 'disciplines'));
+        $announciators            = Announciator::where('competition_id', '=', $id)->get();
+        return view('admin.competitions.show', compact('competition', 'additionals', 'disciplines', 'announciators'));
     }
 
     public function edit($id)
@@ -53,17 +62,16 @@ class CompetitionController extends Controller
         if (!Gate::allows('competition_edit')) {
             return abort(401);
         }
-        $competition = Competition::findOrFail($id);
+        $competition = $this->competitionRepository->findById($id);
         $addresses   = Address::get()->pluck('name', 'id');
         $ageclasses  = Ageclass::get()->pluck('shortname', 'id')->toArray();
 //        $ageclasses       = $competition->getAgeclassListAttribute();
-        $organizers  = Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
-        $additionals = Additional::where('external_id', '=', $id)->get();
-        $disciplines = Discipline::pluck('shortname', 'id')->toArray();
+        $organizers       = Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
+        $additionals      = Additional::where('external_id', '=', $id)->get();
+        $disciplines      = Discipline::pluck('shortname', 'id')->toArray();
         $season['track']  = $competition->season == 'bahn' ? 'active' : '';
         $season['indoor'] = $competition->season == 'halle' ? 'active' : '';
         $season['cross']  = $competition->season == 'cross' ? 'active' : '';
-
         #TODO
         #getRegister
         if ($competition->register) {
@@ -100,7 +108,7 @@ class CompetitionController extends Controller
         if (!Gate::allows('competition_edit')) {
             return abort(401);
         }
-        $competition          = Competition::findOrFail($id);
+        $competition          = $this->competitionRepository->findById($id);
         $submitData           = $request->all();
         $this->competionsList = [];
         if (!empty($submitData['timetable_1'])) {
@@ -119,17 +127,15 @@ class CompetitionController extends Controller
                 );
             }
         }
-        $this->competionsErrorList = array();
-        $this->disciplineListError = array();
-        $this->ageclassErrorList   = array();
-        $this->ageclassCollection = array();
+        $this->competionsErrorList  = array();
+        $this->disciplineListError  = array();
+        $this->ageclassErrorList    = array();
+        $this->ageclassCollection   = array();
         $this->disciplineCollection = array();
-
-        #TODO move to Model
+        #TODO move to Models
         foreach ($this->disciplineList as $discipline) {
             $this->proofDiscipline($discipline);
         }
-
         foreach ($this->disciplineListError as $key => $disciplineError) {
             #[$discipline,] = explode(' ', $disciplineError); //php7
             list($discipline, $secondArg) = explode(' ', $disciplineError);
@@ -145,16 +151,15 @@ class CompetitionController extends Controller
         }
         $ids = array();
         foreach ($this->ageclassCollection as $ageclassKey => $ageclass) {
-            $data = Ageclass::where('ladv', '=', $ageclassKey)->select('id')->get()->toArray();
+            $data  = Ageclass::where('ladv', '=', $ageclassKey)->select('id')->get()->toArray();
             $ids[] = $data[0]['id'];
         }
         $competition->ageclasses()->sync($ids);
         $ids = array();
         foreach ($this->disciplineCollection as $disciplineKey => $discipline) {
-            $data = Discipline::where('ladv', '=', $disciplineKey)->select('id')->get()->toArray();
+            $data  = Discipline::where('ladv', '=', $disciplineKey)->select('id')->get()->toArray();
             $ids[] = $data[0]['id'];
         }
-
         $competition->disciplines()->sync($ids);
         return redirect('/admin/competitions/' . $id);
     }
@@ -166,7 +171,7 @@ class CompetitionController extends Controller
         if (!Gate::allows('competition_access')) {
             return abort(401);
         }
-        $competition                = Competition::findOrFail($id);
+        $competition                = $this->competitionRepository->findById($id);
         $path                       = 'public/' . $request->type . '/' . $competition->season;
         $uploads                    = $this->saveFiles($request, $path);
         $requests                   = $request->all();
@@ -203,33 +208,24 @@ class CompetitionController extends Controller
         if (!Gate::allows('competition_create')) {
             return abort(401);
         }
-        #TODO move to Model
-        $this->ageclassCollection = array();
+        #TODO move to Models
+        $this->ageclassCollection   = array();
         $this->disciplineCollection = array();
-        $submitData = $request->all();
+        $submitData                 = $request->all();
         if (!empty($submitData['timetable_1'])) {
             $submitData['timetable_1'] = $this->parsingTable($submitData['timetable_1']);
         }
-
         foreach ($this->ageclassList as $class) {
             $this->proofAgeclasses($class);
         }
         foreach ($this->disciplineList as $discipline) {
             $this->proofDiscipline($discipline);
         }
-
-//        foreach ($this->disciplineCollectionError as $disciplineErr) {
-//            #[$discipline,] = explode(' ', $disciplineErr); //php7
-//            list($discipline, $secondArg) = explode(' ', $disciplineErr);
-//            $this->proofDiscipline($discipline);
-//        }
-
         $id = Competition::create($submitData)->id;
         foreach ($this->ageclassCollection as $key => $class) {
             $ageClass = Ageclass::where('ladv', '=', $key)->first();
             $ageClass->competitions()->attach($id);
         }
-
         foreach ($this->disciplineCollection as $key => $class) {
             $discipline = Discipline::where('ladv', '=', $key)->first();
             $discipline->competitions()->attach($id);
@@ -249,13 +245,14 @@ class CompetitionController extends Controller
      *
      * @param  int $id
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy($id)
     {
         if (!Gate::allows('competition_delete')) {
             return abort(401);
         }
-        $competition = Competition::findOrFail($id);
+        $competition = $this->competitionRepository->findById($id);
         $competition->delete();
         return redirect()->route('admin.competitions.index');
     }
@@ -266,7 +263,7 @@ class CompetitionController extends Controller
             return abort(401);
         }
         $uploadedFile = Upload::findOrFail($id);
-        $competition  = Competition::findOrFail($uploadedFile->competition_id);
+        $competition  = $this->competitionRepository->findById($uploadedFile->competition_id);
         Storage::delete('public/' . $uploadedFile->type . '/' . $competition->season . '/' . $uploadedFile->filename);
         $uploadedFile->delete();
         return redirect()->route('admin.competitions.edit', $competition->id);

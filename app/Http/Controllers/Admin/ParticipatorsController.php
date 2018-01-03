@@ -2,17 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Announciator;
-use App\Competition;
-use App\Organizer;
-use App\Participator;
-use Illuminate\Http\Request;
+use App\Models\Competition;
+use App\Models\Organizer;
+use App\Models\Participator;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreParticipatorsRequest;
-use App\Http\Requests\Admin\UpdateParticipatorsRequest;
-#use Illuminate\Support\Facades\Response;
-use Illuminate\Http\Response;
 
 class ParticipatorsController extends Controller
 {
