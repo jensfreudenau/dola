@@ -26,15 +26,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Repositories\Competition\CompetitionRepositoryInterface', 'App\Repositories\Competition\CompetitionRepository');
-        $this->app->bind('App\Repositories\Address\AddressRepositoryInterface', 'App\Repositories\Address\AddressRepository');
-        $this->app->bind('App\Repositories\Page\PageRepositoryInterface', 'App\Repositories\Page\PageRepository');
-        $this->app->bind('App\Repositories\Record\RecordRepositoryInterface', 'App\Repositories\Record\RecordRepository');
         Carbon::setLocale(config('app.locale'));
         setlocale(LC_TIME, "de_DE");
         if ($this->app->environment() == 'local') {
             $this->app->register('Appzcoder\CrudGenerator\CrudGeneratorServiceProvider');
         }
-
+        $this->app->bind('App\Repositories\Competition\CompetitionRepositoryInterface', 'App\Repositories\Competition\CompetitionRepository');
     }
 }

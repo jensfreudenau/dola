@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Competition;
 use App\Models\Organizer;
 use App\Models\Participator;
+use App\Services\ParticipatorService;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreParticipatorsRequest;
@@ -79,42 +80,9 @@ class ParticipatorsController extends Controller
         return view('admin.participators.show', compact('participator'));
     }
 
-    public function download($id)
+    public function download($id , ParticipatorService $participatorService)
     {
         $competition = Competition::findOrFail($id);
-        foreach ($competition->Participators as $key => $participator) {
-            $list[$key]['BIB']        = 1;
-            $list[$key]['Code']       = '';
-            $list[$key]['Event']      = $competition->header;
-            $list[$key]['Team']       = $participator->Announciator->clubname;
-            $list[$key]['telephone']  = $participator->Announciator->telephone;
-            $list[$key]['street']     = $participator->Announciator->street;
-            $list[$key]['city']       = $participator->Announciator->city;
-            $list[$key]['Forename']   = $participator->prename;
-            $list[$key]['Name']       = $participator->lastname;
-            $list[$key]['Value']      = $participator->best_time;
-            $list[$key]['YOB']        = $participator->birthyear;
-            $list[$key]['discipline'] = $participator->discipline->dlv;
-            $list[$key]['ageclass']   = $participator->ageclass->dlv;
-        }
-        $headers = [
-            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0'
-            , 'Content-type' => 'text/csv'
-            , 'Content-Disposition' => 'attachment; filename=participators.csv'
-            , 'Expires' => '0'
-            , 'Pragma' => 'public'
-        ];
-        # add headers for each column in the CSV download
-        array_unshift($list, array_keys($list[0]));
-        $callback = function () use ($list) {
-            $FH = fopen('php://output', 'w');
-            foreach ($list as $row) {
-                fputcsv($FH, $row);
-            }
-            fclose($FH);
-        };
-        return response()->stream($callback, 200, $headers);
-        #return Response::download($callback, 'tweets.csv', $headers);
-        #return Response::stream($callback, 200, $headers);
+        $participatorService->sendCsvFile($competition->Participators, $competition);
     }
 }

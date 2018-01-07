@@ -19,6 +19,7 @@ use App\Repositories\Competition\CompetitionRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -26,6 +27,9 @@ use Illuminate\Support\Facades\Storage;
  */
 class CompetitionController extends Controller
 {
+    protected $competitionRepository;
+    protected $competitionService;
+
     public function __construct(CompetitionRepositoryInterface $competitionRepository)
     {
         $this->competitionRepository = $competitionRepository;
@@ -48,6 +52,9 @@ class CompetitionController extends Controller
             return abort(401);
         }
         $competition              = $this->competitionRepository->findById($id);
+        //$userRepository = App::make(App\Repositories\User\UserRepositoryInterface::class);
+
+       // $userRepository->getByEmail('john@example.com');
         $additionals              = Additional::where('external_id', '=', $competition->id)->get();
         $ageclasses               = $competition->Ageclasses;
         $disciplines              = $competition->Disciplines;
@@ -63,33 +70,15 @@ class CompetitionController extends Controller
             return abort(401);
         }
         $competition = $this->competitionRepository->findById($id);
+
         $addresses   = Address::get()->pluck('name', 'id');
         $ageclasses  = Ageclass::get()->pluck('shortname', 'id')->toArray();
-//        $ageclasses       = $competition->getAgeclassListAttribute();
-        $organizers       = Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
-        $additionals      = Additional::where('external_id', '=', $id)->get();
-        $disciplines      = Discipline::pluck('shortname', 'id')->toArray();
-        $season['track']  = $competition->season == 'bahn' ? 'active' : '';
-        $season['indoor'] = $competition->season == 'halle' ? 'active' : '';
-        $season['cross']  = $competition->season == 'cross' ? 'active' : '';
-        #TODO
-        #getRegister
-        if ($competition->register) {
-            $register['external'] = 'active';
-            $register['internal'] = '';
-        } else {
-            $register['internal'] = 'active';
-            $register['external'] = '';
-        }
-        #TODO
-        #getListed();
-        if ($competition->only_list) {
-            $onlyList['list']     = 'active';
-            $onlyList['not_list'] = '';
-        } else {
-            $onlyList['not_list'] = 'active';
-            $onlyList['list']     = '';
-        }
+        $organizers  = Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
+        $additionals = Additional::where('external_id', '=', $id)->get();
+        $disciplines = Discipline::pluck('shortname', 'id')->toArray();
+        $season   = $this->competitionRepository->getActiveSeason($competition);
+        $register = $this->competitionRepository->getActiveRegister($competition);
+        $onlyList = $this->competitionRepository->getActiveListed($competition);
         return view('admin.competitions.edit', compact('addresses', 'competition', 'organizers', 'season', 'additionals', 'register', 'onlyList', 'ageclassList', 'ageclasses', 'disciplines'));
     }
 

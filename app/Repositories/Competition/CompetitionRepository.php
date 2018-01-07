@@ -10,6 +10,7 @@ namespace App\Repositories\Competition;
 
 use App\Models\Competition;
 use App\Repositories\Repository;
+use Illuminate\Support\Facades\Log;
 
 class CompetitionRepository extends Repository implements CompetitionRepositoryInterface
 {
@@ -21,13 +22,6 @@ class CompetitionRepository extends Repository implements CompetitionRepositoryI
         $this->model = $model;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAll()
-    {
-        return Competition::all();
-    }
 
     public function findBySeason($season)
     {
@@ -38,4 +32,40 @@ class CompetitionRepository extends Repository implements CompetitionRepositoryI
     {
         return Competition::class;
     }
+
+    public function getActiveSeason(Competition $competition)
+    {
+        $season['track']  = $competition->season == 'bahn' ? 'active' : '';
+        $season['indoor'] = $competition->season == 'halle' ? 'active' : '';
+        $season['cross']  = $competition->season == 'cross' ? 'active' : '';
+        return $season;
+    }
+
+    public function getActiveRegister(Competition $competition)
+    {
+
+        if ($competition->register) {
+            $register['external'] = 'active';
+            $register['internal'] = '';
+        } else {
+            $register['internal'] = 'active';
+            $register['external'] = '';
+        }
+        return $register;
+    }
+
+    public function getActiveListed(Competition $competition)
+    {
+        Log::info('getActiveRegister competition');
+        Log::info((array)$this);
+        if ($competition->only_list) {
+            $onlyList['list']     = 'active';
+            $onlyList['not_list'] = '';
+        } else {
+            $onlyList['not_list'] = 'active';
+            $onlyList['list']     = '';
+        }
+        return $onlyList;
+    }
+
 }

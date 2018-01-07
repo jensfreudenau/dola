@@ -11,6 +11,8 @@ namespace App\Repositories;
 use App\Exceptions\RepositoryException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Container\Container;
 
 abstract class Repository implements RepositoryInterface
 {
@@ -21,14 +23,15 @@ abstract class Repository implements RepositoryInterface
     /**
      * @var App
      */
-    private $app;
+    protected $app;
 
     /**
-     * @param App $app
-     * @throws \App\Exceptions\RepositoryException
+     * @param Container $app
+     * @throws RepositoryException
      */
-    public function __construct(App $app)
+    public function __construct(Container $app)
     {
+
         $this->app = $app;
         $this->makeModel();
     }
@@ -39,9 +42,6 @@ abstract class Repository implements RepositoryInterface
      */
     public function makeModel()
     {
-        Log::info('Repository');
-        Log::info($this->app);
-        Log::info($this->model());
         $model = $this->app->make($this->model());
         if (!$model instanceof Model)
             throw new RepositoryException("Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model");
@@ -132,4 +132,5 @@ abstract class Repository implements RepositoryInterface
     {
         return $this->model->findOrFail($id);
     }
+
 }

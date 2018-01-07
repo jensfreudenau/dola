@@ -7,11 +7,15 @@
  */
 
 namespace App\Repositories\Competition;
+use App\Models\Competition;
+
 interface CompetitionRepositoryInterface
 {
-    public function getAll();
-
-    public function findById($id);
-
     public function findBySeason($season);
+
+    public function getActiveSeason(Competition $competition);
+
+    public function getActiveRegister(Competition $competition);
+
+    public function getActiveListed(Competition $competition);
 }

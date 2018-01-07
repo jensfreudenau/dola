@@ -28,7 +28,8 @@
             "vendor/delight-im/str"
         ],
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "App\\Repositories\\": "*"
         },
         "files": [
             "app/Helpers/Utils.php",
