@@ -28,12 +28,12 @@ class ParticipatorsController extends Controller
 
     public function list($competitionId)
     {
-        if (!Gate::allows('participator_access')) {
-            return abort(401);
-        }
-        $competition = Competition::findOrFail($competitionId);
-        dd($competition->Participators);
-        return view('admin.participators.list', compact('competition'));
+//        if (!Gate::allows('participator_access')) {
+//            return abort(401);
+//        }
+//        $competition = Competition::findOrFail($competitionId);
+//
+//        return view('admin.participators.list', compact('competition'));
     }
 
     /**
