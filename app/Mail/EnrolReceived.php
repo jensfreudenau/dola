@@ -37,9 +37,8 @@ class EnrolReceived extends Mailable
         $announciator = $this->announciator;
         $competition = $this->competition;
 
-        return $this->from($this->announciator->email)
-            ->to($this->competition->organizer->address->email)
-            ->cc($this->announciator->email)
+        return $this->from($this->competition->organizer->address->email)
+            ->to($this->announciator->email)
             ->subject('Meldungen für '.$this->competition->header)
             ->view('emails.registration', compact('announciator', 'competition'));
     }

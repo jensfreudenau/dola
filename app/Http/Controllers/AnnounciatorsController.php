@@ -7,6 +7,8 @@ use App\Models\Competition;
 use App\Http\Requests;
 use App\Mail\EnrolReceived;
 use App\Models\Participator;
+use App\Repositories\Competition\CompetitionRepositoryInterface;
+use App\Services\ParticipatorService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Mail;
@@ -14,6 +16,13 @@ use Session;
 
 class AnnounciatorsController extends Controller
 {
+    protected $competitionRepository;
+
+    public function __construct(CompetitionRepositoryInterface $competitionRepository)
+    {
+        $this->competitionRepository = $competitionRepository;
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -39,9 +48,10 @@ class AnnounciatorsController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      *
+     * @param ParticipatorService $participatorService
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(Request $request)
+    public function store(Request $request, ParticipatorService $participatorService)
     {
 
         foreach ($request->vorname as $key => $item) {
@@ -69,52 +79,26 @@ class AnnounciatorsController extends Controller
             $participator['announciator_id'] = $announciator->id;
             Participator::create($participator);
         }
-        $competition = Competition::findOrFail($request->competition_id);
+        $competition = $this->competitionRepository->findById($request->competition_id);
+        $participatorService->sendCsvFile($announciator->Participator, $competition);
 
-        Mail::to('jens@freude-now.de')->send(new EnrolReceived($announciator, $competition));
+        Mail::send(new EnrolReceived($announciator, $competition));
 
-//        Mail::send('emails.welcome', $data, function ($message) {
-//            $message->from('us@example.com', 'Laravel');
-//
-//            $message->to('foo@example.com')->cc('bar@example.com');
-//        });
-//
-//        Here is a list of the available methods on the $message message builder instance:
-//
-//$message->from($address, $name = null);
-//$message->sender($address, $name = null);
-//$message->to($address, $name = null);
-//$message->cc($address, $name = null);
-//$message->bcc($address, $name = null);
-//$message->replyTo($address, $name = null);
-//$message->subject($subject);
-//$message->priority($level);
-//$message->attach($pathToFile, array $options = []);
-//
-//// Attach a file from a raw $data string...
-//$message->attachData($data, $name, array $options = []);
-//
-//// Get the underlying SwiftMailer message instance...
-/// Mail::send('emails.welcome', $data, function ($message) {
-        //
-
-//        $message->attach($pathToFile);
-//    });
-//$message->getSwiftMessage();
         $cookie = Cookie::make('announciators_id', $announciator->id);
         return redirect()->action('AnnounciatorsController@listParticipator')->withCookie($cookie);
     }
 
-    public function listParticipator()
+    public function listParticipator(ParticipatorService $participatorService)
     {
-        $announciators_id = Cookie::get('announciators_id', 0);
-//        if(0 == $announciators_id) {
-//            return redirect()->action('HomeController@index');
-//        }
-        $announciators_id = 14211;
-        $announciator = Announciator::findOrFail($announciators_id);
-        $competition = Competition::findOrFail($announciator->competition_id);
-        Mail::to('jens@freude-now.de')->send(new EnrolReceived($announciator, $competition));
+        $announciatorId = Cookie::get('announciators_id', 0);
+        if(0 == $announciatorId) {
+            return redirect()->action('HomeController@index');
+        }
+
+        $announciator = Announciator::findOrFail($announciatorId);
+        //$competition = Competition::findOrFail($announciator->competition_id);
+        $competition = $this->competitionRepository->findById($announciator->competition_id);
+        $participatorService->sendCsvFile($announciator->Participator, $competition);
         return view('front.announciators.list', compact('announciator', 'competition'));
     }
     /**

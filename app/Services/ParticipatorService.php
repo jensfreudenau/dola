@@ -8,7 +8,6 @@
 
 namespace App\Services;
 use App\Models\Competition;
-use App\Models\Participator;
 use Illuminate\Support\Facades\Mail;
 
 class ParticipatorService
@@ -30,20 +29,21 @@ class ParticipatorService
             $list[$key]['discipline'] = $participator->discipline->dlv;
             $list[$key]['ageclass']   = $participator->ageclass->dlv;
         }
-        $column_headers = array('BIB,Code,Event,Team,Telefon,Straße,Stadt,Vorname,Nacname,Value,YOB,discipline,ageclass');
+        $column_headers = array("BIB","Code","Event","Team","Telefon","Straße","Stadt","Vorname","Nachname","Value","YOB","discipline","ageclass");
         $filename =  'teilnehmer.csv';
         $file = fopen('php://temp', 'w+');
-        fputcsv($file, $column_headers);
+        fputcsv($file, $column_headers, ",", '"');
         foreach ($list as $row) {
-            fputcsv($file, $row);
+            fputcsv($file, $row, ",", '"');
         }
         rewind($file);
-        Mail::send('emails.test', [], function($message) use($file, $filename, $competition)
+        Mail::send('emails.registration', [], function($message) use($file, $filename, $competition, $participators)
         {
             $message->to($competition->organizer->address->email)
-                ->from('info@dortmunder-leichtathletik.de')
+                ->from($participators[0]->Announciator->email)
                 ->subject('Teilnehmerliste '. $competition->header);
             $message->attachData(stream_get_contents($file), $filename);
+
         });
 
         fclose($file);
