@@ -35,8 +35,7 @@ class AnnounciatorsController extends Controller
             $competition = Competition::where('submit_date', '>=', date('Y-m-d'))->where('register', '=', 0)->orderBy('start_date', 'asc')->limit(1)->get();
             $id = $competition[0]->id;
         }
-        $competition = Competition::findOrFail($id);
-
+        $competition = $this->competitionRepository->findById($id);
         $disciplines = $competition->disciplines->pluck('shortname', 'id')->toArray();
         $ageclasses = $competition->ageclasses->pluck('shortname', 'id')->toArray();
         $competitionselect = Competition::where('submit_date', '>=', date('Y-m-d'))->where('register', '=', 0)->orderBy('start_date', 'asc')->get()->pluck('header', 'id');
@@ -157,12 +156,5 @@ class AnnounciatorsController extends Controller
         Annunciator::destroy($id);
         Session::flash('flash_message', 'Announciators deleted!');
         return redirect('announciators');
-    }
-
-    public function competitions_select($id, Request $request)
-    {
-        $competitions = Competition::findOrFail($id);
-        $competitions->organizer->name;
-        return $competitions;
     }
 }
