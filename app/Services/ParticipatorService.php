@@ -37,37 +37,13 @@ class ParticipatorService
             fputcsv($file, $row, ",", '"');
         }
         rewind($file);
-        Mail::send('emails.registration', [], function($message) use($file, $filename, $competition, $participators)
+        Mail::send('emails.registration', ['competition'=>$competition, 'announciator'=> $participator->Announciator], function($message) use($file, $filename, $competition, $participators)
         {
             $message->to($competition->organizer->address->email)
                 ->from($participators[0]->Announciator->email)
                 ->subject('Teilnehmerliste '. $competition->header);
             $message->attachData(stream_get_contents($file), $filename);
 
-        });
-
-        fclose($file);
-    }
-
-
-
-    public function test($a, $b)
-    {
-        $filename =  'launch_codes.csv';
-        $file = fopen('php://temp', 'w+');
-        $column_headers = ['Weapon', 'Launch Code'];
-        fputcsv($file, $column_headers);
-        fputcsv($file, [
-            'nuclear_arsenal','swordfish'
-        ]);
-
-        rewind($file);
-
-        Mail::send('emails.test', [], function($message) use($file, $filename)
-        {
-            $message->to('please_not_trump@not-that-secure.gov')
-                ->subject('Confidential Data');
-            $message->attachData(stream_get_contents($file), $filename);
         });
 
         fclose($file);
