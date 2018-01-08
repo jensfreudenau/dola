@@ -51,8 +51,8 @@ class CompetitionsController extends Controller
      */
     public function cross()
     {
+        $competitions = $this->competitionRepository->findBySeason('cross');
         $season       = 'Strasse';
-        $competitions = $this->competitionRepository->findBySeason($season);
         return view('front.competitions.track', compact('competitions', 'season'));
     }
 
