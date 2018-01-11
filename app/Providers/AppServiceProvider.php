@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\Additional\AdditionalRepository;
+use App\Services\CompetitionService;
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
@@ -36,5 +38,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Repositories\Address\AddressRepositoryInterface', 'App\Repositories\Address\AddressRepository');
         $this->app->bind('App\Repositories\Page\PageRepositoryInterface', 'App\Repositories\Page\PageRepository');
         $this->app->bind('App\Repositories\Participator\ParticipatorRepositoryInterface', 'App\Repositories\Participator\ParticipatorRepository');
+        $this->app->bind('App\Repositories\Additional\AdditionalRepositoryInterface', AdditionalRepository::class);
+        $this->app->bind('CompetitionService', CompetitionService::class);
     }
 }

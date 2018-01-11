@@ -58,19 +58,15 @@ class CompetitionsController extends Controller
 
     public function details($id)
     {
-        $competition = $competition = $this->competitionRepository->findById($id);
-        $additionals = Additional::where('external_id', '=', $competition->id)->get();
+        $competition = $this->competitionRepository->findById($id);
+        $additionals = app()->make('CompetitionService')->getAdditionals($id);
         return view('front.competitions.details', compact('competition', 'additionals'));
     }
 
     use ParseDataTrait;
     public function archive()
     {
-        foreach ($this->competitionRepository->seasons as $season) {
-            $path              = 'public/' . Config::get('constants.Results') . '/' . $season;
-            $files             = Storage::files($path);
-            $archives[$season] = $this->listdir_by_date($files);
-        }
+        $archives = app()->make('CompetitionService')->getArchive();
         return view('front.competitions.archive', compact('archives'));
     }
 }

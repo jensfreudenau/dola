@@ -16,6 +16,7 @@ use App\Http\Controllers\Traits\ParseDataTrait;
 use App\Http\Requests\Admin\StoreCompetitionsRequest;
 use App\Http\Requests\Admin\UpdateCompetitionsRequest;
 use App\Repositories\Competition\CompetitionRepositoryInterface;
+use App\Services\CompetitionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
@@ -30,9 +31,10 @@ class CompetitionController extends Controller
     protected $competitionRepository;
     protected $competitionService;
 
-    public function __construct(CompetitionRepositoryInterface $competitionRepository)
+    public function __construct(CompetitionRepositoryInterface $competitionRepository, CompetitionService $competitionService)
     {
         $this->competitionRepository = $competitionRepository;
+        $this->competitionService    = $competitionService;
     }
 
     public function index()
@@ -52,10 +54,7 @@ class CompetitionController extends Controller
             return abort(401);
         }
         $competition              = $this->competitionRepository->findById($id);
-        //$userRepository = App::make(App\Repositories\User\UserRepositoryInterface::class);
-
-       // $userRepository->getByEmail('john@example.com');
-        $additionals              = Additional::where('external_id', '=', $competition->id)->get();
+        $additionals              = $this->competitionService->getAdditionals($id);
         $ageclasses               = $competition->Ageclasses;
         $disciplines              = $competition->Disciplines;
         $competition->timetable_1 = $this->markFounded($competition->timetable_1, $ageclasses);
@@ -70,15 +69,14 @@ class CompetitionController extends Controller
             return abort(401);
         }
         $competition = $this->competitionRepository->findById($id);
-
         $addresses   = Address::get()->pluck('name', 'id');
         $ageclasses  = Ageclass::get()->pluck('shortname', 'id')->toArray();
         $organizers  = Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
-        $additionals = Additional::where('external_id', '=', $id)->get();
+        $additionals = $this->competitionService->getAdditionals($id);
         $disciplines = Discipline::pluck('shortname', 'id')->toArray();
-        $season   = $this->competitionRepository->getActiveSeason($competition);
-        $register = $this->competitionRepository->getActiveRegister($competition);
-        $onlyList = $this->competitionRepository->getActiveListed($competition);
+        $season      = $this->competitionRepository->getActiveSeason($competition);
+        $register    = $this->competitionRepository->getActiveRegister($competition);
+        $onlyList    = $this->competitionRepository->getActiveListed($competition);
         return view('admin.competitions.edit', compact('addresses', 'competition', 'organizers', 'season', 'additionals', 'register', 'onlyList', 'ageclassList', 'ageclasses', 'disciplines'));
     }
 
@@ -108,7 +106,7 @@ class CompetitionController extends Controller
             foreach ($submitData['keyvalue'] as $key => $keyVal) {
                 Additional::updateOrCreate(
                     ['id' => $key,
-                     'external_id' => $competition->id],
+                     'competition_id' => $competition->id],
                     ['key' => $keyVal['key'],
                      'value' => $keyVal['value'],
                      'mnemonic' => $competition->season,

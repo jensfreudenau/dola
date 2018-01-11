@@ -14,6 +14,7 @@ class ParticipatorService
 {
     public function sendCsvFile($participators, Competition $competition)
     {
+        $list = array();
         foreach ($participators as $key => $participator) {
             $list[$key]['BIB']        = 1;
             $list[$key]['Code']       = '';
@@ -29,15 +30,15 @@ class ParticipatorService
             $list[$key]['discipline'] = $participator->discipline->dlv;
             $list[$key]['ageclass']   = $participator->ageclass->dlv;
         }
-        $column_headers = array("BIB","Code","Event","Team","Telefon","Straße","Stadt","Vorname","Nachname","Value","YOB","discipline","ageclass");
+        $columnHeaders = array("BIB","Code","Event","Team","Telefon","Straße","Stadt","Vorname","Nachname","Value","YOB","discipline","ageclass");
         $filename =  'teilnehmer.csv';
         $file = fopen('php://temp', 'w+');
-        fputcsv($file, $column_headers, ",", '"');
+        fputcsv($file, $columnHeaders, ",", '"');
         foreach ($list as $row) {
             fputcsv($file, $row, ",", '"');
         }
         rewind($file);
-        Mail::send('emails.registration', ['competition'=>$competition, 'announciator'=> $participator->Announciator], function($message) use($file, $filename, $competition, $participators)
+        Mail::send('emails.registration', ['competition'=>$competition, 'announciator'=> $participators[0]->Announciator], function($message) use($file, $filename, $competition, $participators)
         {
             $message->to($competition->organizer->address->email)
                 ->from($participators[0]->Announciator->email)

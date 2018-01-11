@@ -6,17 +6,16 @@
  * Time: 15:58
  */
 
-namespace App\Repositories\Address;
+namespace App\Repositories\Additional;
 
-use App\Models\Address;
+use App\Models\Additional;
 use App\Repositories\Repository;
-use Illuminate\Support\Facades\Log;
 
-class AddressRepository extends Repository implements AddressRepositoryInterface
+class AdditionalRepository extends Repository implements AdditionalRepositoryInterface
 {
     protected $model;
 
-    public function __construct(Address $model)
+    public function __construct(Additional $model)
     {
         $this->model = $model;
     }
@@ -26,12 +25,12 @@ class AddressRepository extends Repository implements AddressRepositoryInterface
      */
     public function getAll()
     {
-        return Address::all();
+        return Additional::all();
     }
 
     function model()
     {
-        return Address::class;
+        return Additional::class;
     }
 
 
