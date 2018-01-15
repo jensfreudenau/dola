@@ -26,7 +26,7 @@ class ParticipatorsController extends Controller
         return view('admin.participators.index', compact('participators'));
     }
 
-    public function list($competitionId)
+    public function listing($competitionId)
     {
         if (!Gate::allows('participator_access')) {
             return abort(401);

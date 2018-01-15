@@ -40,7 +40,7 @@
                             <td>{{ $competition->header or '' }}</td>
                             <td>{{ Carbon\Carbon::parse($competition->start_date)->format('d.m.Y') }}</td>
                             <td>{{ $competition->season or '' }}</td>
-                            <td><a href="{{ route('admin.participators.list',[$competition->id]) }}" >{{ $competition->Participators->count() }}</a></td>
+                            <td><a href="{{ route('admin.participators.listing',[$competition->id]) }}" >{{ $competition->Participators->count() }}</a></td>
                             <td>{{ Carbon\Carbon::parse($competition->updated_at)->format('d.m.Y') }}</td>
                             <td>
                                 @can('competition_view')
