@@ -38,7 +38,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th>@lang('quickadmin.competitions.fields.diciplines')</th>
+                            <th>@lang('quickadmin.competitions.fields.disciplines')</th>
                             <td>
                                 @foreach ($competition->disciplines as $discipline)
                                     {{ $discipline['shortname'] }},

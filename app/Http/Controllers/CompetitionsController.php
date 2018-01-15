@@ -29,7 +29,7 @@ class CompetitionsController extends Controller
     {
         $season       = 'Bahn';
         $competitions = $this->competitionRepository->findBySeason($season);
-        return view('front.competitions.track', compact('competitions', 'season'));
+        return view('front.competitions.list', compact('competitions', 'season'));
     }
 
     /**
@@ -41,7 +41,7 @@ class CompetitionsController extends Controller
     {
         $season       = 'Halle';
         $competitions = $this->competitionRepository->findBySeason($season);
-        return view('front.competitions.track', compact('competitions', 'season'));
+        return view('front.competitions.list', compact('competitions', 'season'));
     }
 
     /**
@@ -53,7 +53,7 @@ class CompetitionsController extends Controller
     {
         $competitions = $this->competitionRepository->findBySeason('cross');
         $season       = 'Strasse';
-        return view('front.competitions.track', compact('competitions', 'season'));
+        return view('front.competitions.list', compact('competitions', 'season'));
     }
 
     public function details($id)

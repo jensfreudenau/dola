@@ -1,7 +1,7 @@
 @extends('layouts.front')
 @section('content')
 
-
+    <div class="card card-default mb-5 p-3">
         <h3>Wettk&auml;mpfe / {{$season}}</h3>
         <hr>
         <ul class="fa-ul">
@@ -13,6 +13,6 @@
                 </li>
             @endforelse
         </ul>
-
+    </div>
 @endsection
 

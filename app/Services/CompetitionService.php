@@ -24,9 +24,22 @@ class CompetitionService
         $this->additionalRepository = $additionalRepository;
     }
 
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function getAdditionals($id)
     {
-        return $this->additionalRepository->findBy('competition_id', $id)->get();
+        $additionals = $this->additionalRepository->findBy('competition_id', $id);
+        if($additionals) {
+            return $additionals->get();
+        }
+        return false;
+    }
+
+    public function getElapsed()
+    {
+        
     }
 
     use ParseDataTrait;

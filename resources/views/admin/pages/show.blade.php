@@ -3,15 +3,14 @@
 @section('content')
     <h3 class="page-title">@lang('quickadmin.pages.title')</h3>
 
-    <div class="card card-default">
+    <div class="card card-default p-3">
         <div class="card-heading">
-            {{ $page->header }}
+            <h2>{{ $page->header }}</h2>
         </div>
         <div class="card-body">
             <div class="row">
                 <p>&nbsp;</p>
-                <a href="{{ route('admin.pages.index') }}"
-                   class="btn btn-default">@lang('quickadmin.qa_back_to_list')</a>
+
                 <div class="col-md-10">
                     <table class="table table-hover">
 
@@ -30,8 +29,10 @@
                         </tr>
 
                     </table>
-
-
+                    </div>
+                <div class="col-sm-2">
+                    <a href="{{ route('admin.pages.index') }}"
+                       class="btn btn-default">@lang('quickadmin.qa_back_to_list')</a>
 
                 </div>
             </div>

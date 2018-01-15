@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Competition;
 use App\Http\Requests;
+use App\Repositories\Competition\CompetitionRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
 class HomeController extends Controller
 {
 
+    public function __construct(CompetitionRepositoryInterface $competitionRepository)
+    {
+        $this->competitionRepository = $competitionRepository;
+    }
     /**
      * Show the application dashboard.
      *
@@ -17,10 +22,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $competitions = Competition::orderBy('start_date', 'asc')
-            ->whereDate('start_date', '>', date('Y-m-d'))->take(5)->get();
-        $lastcompetitions = Competition::orderBy('start_date', 'asc')
-            ->whereDate('start_date', '<', date('Y-m-d'))->take(5)->get();
+        $competitions = $this->competitionRepository->getFutured()->take(5);
+        $lastcompetitions = $this->competitionRepository->getElapsed()->take(5);
         return view('home', compact('competitions','lastcompetitions'));
     }
 }

@@ -7,7 +7,11 @@
         </div>
         <div class="card-body">
             <div class="row">
+
                 <div class="col-sm-12 form-group">
+                    <div class="float-right mb-2">
+                        <a href="{{ route('admin.pages.index') }}" class="btn btn-default">@lang('quickadmin.qa_back_to_list')</a>
+                    </div>
                     @include('common.errors')
                     {!! Form::model($page, ['method' => 'PUT', 'route' => ['admin.pages.update', $page->id]]) !!}
                     {{ method_field('PATCH') }}

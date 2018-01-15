@@ -5,18 +5,22 @@
 @stop
 @section('content')
     <div class="container">
-        <div class="col-sm-10">
+        <div class="col-sm-12">
             <div class="card card-default">
                 <div class="card-heading">
-                    Create Records
+                    <h2>Update Records</h2>
                 </div>
+
                 <div class="card-body">
+                    <div class="float-right mb-2">
+                        <a href="{{ route('admin.records.index') }}" class="btn btn-default">@lang('quickadmin.qa_back_to_list')</a>
+                    </div>
                     <!-- Display Validation Errors -->
                     @include('common.errors')
                     {!! Form::model($record, ['method' => 'PUT', 'route' => ['admin.records.update', $record->id]]) !!}
 
                     <div class="form-group">
-                        {!! Form::label('header', Lang::get('quickadmin.records.fields.header')) !!}
+                        {!! Form::label('header', Lang::get('quickadmin.records.fields.typ')) !!}
                         {!! Form::text('header', null, ['id'=> 'record-headline', 'class'=>'form-control', 'required']) !!}
                     </div>
                     <div class="form-group">

@@ -16,7 +16,7 @@
                 @if(($key % 2) == 0)
                     <div class="col-md-6">
                         @endif
-                        <div class="card">
+                        <div class="card m-3 p-3">
                             <div class="card-block">
                                 <h3 class="card-title">{{ $competitions[$key]->Participators->count() }} Anmeldungen für</h3>
                                 <h4 class="card-title">{{ $competitions[$key]->header }} am {{ $competitions[$key]->start_date }}</h4>

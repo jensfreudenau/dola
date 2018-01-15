@@ -46,7 +46,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], 
     Route::post('users_mass_destroy', ['uses' => 'Admin\UsersController@massDestroy', 'as' => 'users.mass_destroy']);
     Route::resource('organizers', 'Admin\OrganizersController');
     Route::post('organizers_mass_destroy', ['uses' => 'Admin\OrganizersController@massDestroy', 'as' => 'organizers.mass_destroy']);
-    Route::get('participators/list/{competitionid}', 'Admin\ParticipatorsController@list');
+    Route::get('participators/list/{competitionid}', ['uses' => 'Admin\ParticipatorsController@list', 'as' => 'participators.list']);
     Route::get('participators/download/{competitionid}', 'Admin\ParticipatorsController@download');
     Route::resource('participators', 'Admin\ParticipatorsController');
     Route::post('participators_mass_destroy', ['uses' => 'Admin\ParticipatorsController@massDestroy', 'as' => 'participators.mass_destroy']);

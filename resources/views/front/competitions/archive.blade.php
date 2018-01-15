@@ -5,6 +5,7 @@
           border-width: 0;
         }
     </style>
+    <div class="card card-default mb-5 p-3">
     <h2>Archiv</h2>
     <hr>
     @foreach ($archives as $season => $archive)
@@ -28,6 +29,8 @@
                 </div>
 
             </div>
+
         @endforeach
     @endforeach
+    </div>
 @endsection

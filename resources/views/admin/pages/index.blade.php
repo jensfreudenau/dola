@@ -10,12 +10,10 @@
     @endcan
 
     <div class="card card-default">
-        <div class="card-heading">
-            @lang('quickadmin.qa_list')
-        </div>
+
 
         <div class="card-body table-responsive">
-            <table class="table table-bordered table-striped {{ count($pages) > 0 ? 'datatable' : '' }} @can('address_delete') dt-select @endcan">
+            <table class="table table-striped {{ count($pages) > 0 ? 'datatable' : '' }} @can('address_delete') dt-select @endcan">
                 <thead>
                 <tr>
                     @can('address_delete')

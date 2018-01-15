@@ -18,7 +18,7 @@
 
                 <h4 class="text-green">Anzahl Teilnehmer: {{$competition->Participators->count()}}</h4>
                 <div class="card-body table-responsive">
-                    <table class="table table-bordered table-striped datatable">
+                    <table class="table table-striped datatable">
                         <thead>
                         <tr>
                             <th>@lang('quickadmin.announciator.fields.clubname')</th>

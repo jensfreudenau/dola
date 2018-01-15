@@ -42,8 +42,9 @@ class CompetitionController extends Controller
         if (!Gate::allows('competition_access')) {
             return abort(401);
         }
-        $competitions = Competition::orderBy('start_date', 'desc')->get();
-        return view('admin.competitions.index', compact('competitions'));
+        $future = $this->competitionRepository->getFutured();
+        $elapsed = $this->competitionRepository->getElapsed();
+        return view('admin.competitions.index', compact('future', 'elapsed'));
     }
 
     use ParseDataTrait;
@@ -73,6 +74,7 @@ class CompetitionController extends Controller
         $ageclasses  = Ageclass::get()->pluck('shortname', 'id')->toArray();
         $organizers  = Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
         $additionals = $this->competitionService->getAdditionals($id);
+
         $disciplines = Discipline::pluck('shortname', 'id')->toArray();
         $season      = $this->competitionRepository->getActiveSeason($competition);
         $register    = $this->competitionRepository->getActiveRegister($competition);
@@ -208,7 +210,7 @@ class CompetitionController extends Controller
         foreach ($this->disciplineList as $discipline) {
             $this->proofDiscipline($discipline);
         }
-        $id = Competition::create($submitData)->id;
+        $id = $this->competitionRepository->create($submitData)->id;
         foreach ($this->ageclassCollection as $key => $class) {
             $ageClass = Ageclass::where('ladv', '=', $key)->first();
             $ageClass->competitions()->attach($id);
@@ -239,8 +241,8 @@ class CompetitionController extends Controller
         if (!Gate::allows('competition_delete')) {
             return abort(401);
         }
-        $competition = $this->competitionRepository->findById($id);
-        $competition->delete();
+       $this->competitionRepository->delete($id);
+
         return redirect()->route('admin.competitions.index');
     }
 

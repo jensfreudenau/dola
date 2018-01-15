@@ -15,7 +15,7 @@
         </div>
 
         <div class="card-body table-responsive">
-            <table class="table table-bordered table-striped datatable">
+            <table class="table table-striped datatable">
                 <thead>
                 <tr>
                     <th>@lang('quickadmin.records.fields.header')</th>

@@ -68,4 +68,13 @@ class CompetitionRepository extends Repository implements CompetitionRepositoryI
         return $onlyList;
     }
 
+    public function getFutured()
+    {
+        return $this->model->orderBy('start_date', 'asc')->whereDate('start_date', '>', date('Y-m-d'))->get();
+    }
+
+    public function getElapsed()
+    {
+        return $this->model->orderBy('start_date', 'asc')->whereDate('start_date', '<', date('Y-m-d'))->get();
+    }
 }

@@ -124,6 +124,7 @@ abstract class Repository implements RepositoryInterface
         return $this->model->where($attribute, '=', $value)->first($columns);
     }
 
+
     /**
      * @param $id
      * @return mixed
@@ -133,4 +134,8 @@ abstract class Repository implements RepositoryInterface
         return $this->model->findOrFail($id);
     }
 
+    public function order($field, $direction)
+    {
+        return $this->model->orderBy($field, $direction)->get();
+    }
 }

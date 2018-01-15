@@ -15,7 +15,7 @@
         </div>
 
         <div class="card-body table-responsive">
-            <table class="table table-bordered table-striped {{ count($roles) > 0 ? 'datatable' : '' }} @can('role_delete') dt-select @endcan">
+            <table class="table table-striped {{ count($roles) > 0 ? 'datatable' : '' }} @can('role_delete') dt-select @endcan">
                 <thead>
                     <tr>
                         @can('role_delete')

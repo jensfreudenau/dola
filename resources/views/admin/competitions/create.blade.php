@@ -8,8 +8,8 @@
         <div class="row">
             <div class="col-sm-10">
                 <div class="card card-default">
-                    <div class="card-heading">
-                        Create Competition
+                    <div class="card-title">
+                        <h2>Create Competition</h2>
                     </div>
                     <div class="flash-message">
                         @if(Session::has('flash_message'))
