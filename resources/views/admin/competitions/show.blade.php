@@ -10,7 +10,7 @@
     </h3>
     <div class="card card-default">
         <div class="card-heading">
-            {{ $competition->header }}
+           <h3> {{ $competition->header }}</h3>
         </div>
         <div class="card-body">
             <div class="row">

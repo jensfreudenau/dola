@@ -6,23 +6,31 @@ use App\Models\Best;
 use App\Models\Record;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Repositories\Record\RecordRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Session;
 use Illuminate\Support\Facades\Log;
 class RecordController extends Controller
 {
+    protected $recordRepository;
+
+    public function __construct(RecordRepositoryInterface $recordRepository)
+    {
+        $this->recordRepository = $recordRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @param Request $request
      * @return \Illuminate\View\View
      */
     public function index()
     {
-//        if (!Gate::allows('records_access')) {
-//            return abort(401);
-//        }
+        if (!Gate::allows('record_access')) {
+            return abort(401);
+        }
         $records = Record::orderBy('sex')->orderBy('sort')->get();
         return view('admin.records.index', compact('records'));
     }
@@ -34,6 +42,9 @@ class RecordController extends Controller
      */
     public function create()
     {
+        if (!Gate::allows('record_create')) {
+            return abort(401);
+        }
         return view('admin.records.create');
     }
 
@@ -48,7 +59,7 @@ class RecordController extends Controller
     {
 
         $requestData = $request->all();
-        Record::create($requestData);
+        $this->recordRepository->create($requestData);
         Session::flash('flash_message', ' added!');
         return redirect('admin/records');
     }
@@ -62,14 +73,10 @@ class RecordController extends Controller
      */
     public function show($id)
     {
-        $record = Record::findOrFail($id);
+        $record = $this->recordRepository->find($id);
         return view('admin.records.show', compact('record'));
     }
 
-public function sort(Request $request)
-{
-    Log::info($request);
-}
     /**
      * Show the form for editing the specified resource.
      *
@@ -79,7 +86,7 @@ public function sort(Request $request)
      */
     public function edit($id)
     {
-        $record = Record::findOrFail($id);
+        $record = $this->recordRepository->find($id);
         $female = ['checked' => 0, 'active' => ''];
         $male   = ['checked' => 0, 'active' => ''];
         if ($record->sex == 'f') {
@@ -105,7 +112,7 @@ public function sort(Request $request)
     {
 
         $requestData = $request->all();
-        $record = Record::findOrFail($id);
+        $record = $this->recordRepository->find($id);
         $record->update($requestData);
         Session::flash('flash_message', ' updated!');
         return redirect('admin/records');

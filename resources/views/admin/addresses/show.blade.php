@@ -7,6 +7,7 @@
         <div class="card-heading">
             <h2>{{ $address->name }}</h2>
         </div>
+
         <div class="card-body">
             <div class="row">
                 <div class="col-md-10">
@@ -44,6 +45,13 @@
                 <div class="co-md-2"> <a href="{{ route('admin.addresses.index') }}"
                                          class="btn btn-default">@lang('quickadmin.qa_back_to_list')</a></div>
             </div>
+        </div>
+        <div class="card-body">
+            <ul>
+            @foreach($address->organizers as $organizer)
+                <li>{{$organizer->name}}</li>
+            @endforeach
+            </ul>
         </div>
     </div>
 @stop

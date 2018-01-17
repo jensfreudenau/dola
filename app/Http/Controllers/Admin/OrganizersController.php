@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Address;
 use App\Models\Competition;
 use App\Models\Organizer;
-use App\Models\Team;
+use App\Repositories\Organizer\OrganizerRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
@@ -14,6 +14,13 @@ use App\Http\Requests\Admin\UpdateTeamsRequest;
 
 class OrganizersController extends Controller
 {
+    protected $organizerRepository;
+
+    public function __construct(OrganizerRepositoryInterface $organizerRepository)
+    {
+        $this->organizerRepository = $organizerRepository;
+    }
+
     /**
      * Display a listing of Organizer.
      *
@@ -24,7 +31,7 @@ class OrganizersController extends Controller
         if (!Gate::allows('organizer_access')) {
             return abort(401);
         }
-        $organizers = Organizer::all();
+        $organizers = $this->organizerRepository->all();
         return view('admin.organizers.index', compact('organizers'));
     }
 
@@ -53,7 +60,7 @@ class OrganizersController extends Controller
         if (!Gate::allows('organizer_create')) {
             return abort(401);
         }
-        Organizer::create([
+        $this->organizerRepository->create([
                               'name' => $request->name,
                               'leader' => $request->leader,
                               'addresses_id' => $request->address_id,
@@ -73,7 +80,7 @@ class OrganizersController extends Controller
         if (!Gate::allows('organizer_edit')) {
             return abort(401);
         }
-        $organizer = Organizer::findOrFail($id);
+        $organizer = $this->organizerRepository->find($id);
         $addresses = Address::get()->pluck('name', 'id');
         return view('admin.organizers.edit', compact('organizer', 'addresses'));
     }
@@ -90,7 +97,7 @@ class OrganizersController extends Controller
         if (!Gate::allows('organizer_edit')) {
             return abort(401);
         }
-        $organizer = Organizer::findOrFail($id);
+        $organizer = $this->organizerRepository->find($id);
         $organizer->update($request->all());
         return redirect()->route('admin.organizers.index');
     }
@@ -109,7 +116,7 @@ class OrganizersController extends Controller
         $tracks    = Competition::where('organizer_id', $id)->where('season', 'bahn')->get();
         $indoors   = Competition::where('organizer_id', $id)->where('season', 'halle')->get();
         $crosses   = Competition::where('organizer_id', $id)->where('season', 'cross')->get();
-        $organizer = Organizer::findOrFail($id);
+        $organizer = $this->organizerRepository->find($id);
         return view('admin.organizers.show', compact('organizer', 'tracks', 'indoors', 'crosses'));
     }
 
@@ -124,7 +131,7 @@ class OrganizersController extends Controller
         if (!Gate::allows('organizer_delete')) {
             return abort(401);
         }
-        $organizer = Organizer::findOrFail($id);
+        $organizer = $this->organizerRepository->find($id);
         $organizer->delete();
         return redirect()->route('admin.organizers.index');
     }

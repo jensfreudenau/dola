@@ -23,14 +23,17 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-/**
- * @property CompetitionRepositoryInterface competitionRepository
- */
 class CompetitionController extends Controller
 {
     protected $competitionRepository;
     protected $competitionService;
+    protected $competionsErrorList;
 
+    /**
+     * CompetitionController constructor.
+     * @param CompetitionRepositoryInterface $competitionRepository
+     * @param CompetitionService $competitionService
+     */
     public function __construct(CompetitionRepositoryInterface $competitionRepository, CompetitionService $competitionService)
     {
         $this->competitionRepository = $competitionRepository;

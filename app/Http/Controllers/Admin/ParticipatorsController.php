@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Competition;
 use App\Models\Organizer;
-use App\Models\Participator;
+use App\Repositories\Participator\ParticipatorRepositoryInterface;
 use App\Services\ParticipatorService;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
@@ -12,6 +12,13 @@ use App\Http\Requests\Admin\StoreParticipatorsRequest;
 
 class ParticipatorsController extends Controller
 {
+    protected $participatorRepository;
+
+    public function __construct(ParticipatorRepositoryInterface $participatorRepository)
+    {
+        $this->participatorRepository = $participatorRepository;
+    }
+
     /**
      * Display a listing of participator.
      *
@@ -20,9 +27,9 @@ class ParticipatorsController extends Controller
     public function index()
     {
         if (!Gate::allows('participator_access')) {
-            return abort(401);
-        }
-        $participators = Participator::all();
+            return abort(401);        }
+
+        $participators = $this->participatorRepository->all();
         return view('admin.participators.index', compact('participators'));
     }
 
@@ -32,7 +39,6 @@ class ParticipatorsController extends Controller
             return abort(401);
         }
         $competition = Competition::findOrFail($competitionId);
-
         return view('admin.participators.list', compact('competition'));
     }
 
@@ -61,7 +67,7 @@ class ParticipatorsController extends Controller
         if (!Gate::allows('participator_create')) {
             return abort(401);
         }
-        Participator::create($request->all());
+        $this->participatorRepository->create($request->all());
         return redirect()->route('admin.participators.index');
     }
 
@@ -76,7 +82,7 @@ class ParticipatorsController extends Controller
         if (!Gate::allows('participator_view')) {
             return abort(401);
         }
-        $participator = Participator::findOrFail($id);
+        $participator =  $this->participatorRepository->find($id);
         return view('admin.participators.show', compact('participator'));
     }
 

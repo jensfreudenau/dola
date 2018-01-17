@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -21,9 +22,7 @@ class UsersController extends Controller
         if (! Gate::allows('user_access')) {
             return abort(401);
         }
-
         $users = User::all();
-
         return view('admin.users.index', compact('users'));
     }
 
@@ -37,7 +36,7 @@ class UsersController extends Controller
         if (! Gate::allows('user_create')) {
             return abort(401);
         }
-        $roles = \App\Role::get()->pluck('title', 'id')->prepend('Please select', '');
+        $roles = Role::get()->pluck('title', 'id')->prepend('Please select', '');
 
         return view('admin.users.create', compact('roles'));
     }
@@ -45,7 +44,7 @@ class UsersController extends Controller
     /**
      * Store a newly created User in storage.
      *
-     * @param  \App\Http\Requests\StoreUsersRequest  $request
+     * @param StoreUsersRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreUsersRequest $request)
@@ -53,10 +52,7 @@ class UsersController extends Controller
         if (! Gate::allows('user_create')) {
             return abort(401);
         }
-        $user = User::create($request->all());
-
-
-
+        User::create($request->all());
         return redirect()->route('admin.users.index');
     }
 
@@ -72,7 +68,7 @@ class UsersController extends Controller
         if (! Gate::allows('user_edit')) {
             return abort(401);
         }
-        $roles = \App\Role::get()->pluck('title', 'id')->prepend('Please select', '');
+        $roles = Role::get()->pluck('title', 'id')->prepend('Please select', '');
 
         $user = User::findOrFail($id);
 
@@ -82,8 +78,8 @@ class UsersController extends Controller
     /**
      * Update User in storage.
      *
-     * @param  \App\Http\Requests\UpdateUsersRequest  $request
-     * @param  int  $id
+     * @param UpdateUsersRequest $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateUsersRequest $request, $id)

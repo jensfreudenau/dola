@@ -71,7 +71,7 @@ class AddressesController extends Controller
         }
         $requestData = $request->all();
 
-        Address::create($requestData);
+        $this->addressRepository->create($requestData);
 
         return redirect('admin/addresses');
     }
@@ -116,8 +116,7 @@ class AddressesController extends Controller
         if (! Gate::allows('page_edit')) {
             return abort(401);
         }
-        Address::destroy($id);
-
+        $this->addressRepository->delete($id);
         Session::flash('flash_message', 'Page deleted!');
 
         return redirect('admin/pages');

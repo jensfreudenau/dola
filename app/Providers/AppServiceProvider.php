@@ -3,11 +3,12 @@
 namespace App\Providers;
 
 use App\Repositories\Additional\AdditionalRepository;
+use App\Repositories\Organizer\OrganizerRepository;
 use App\Services\CompetitionService;
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
-
+use Psr\Log\LoggerInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -39,6 +40,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Repositories\Page\PageRepositoryInterface', 'App\Repositories\Page\PageRepository');
         $this->app->bind('App\Repositories\Participator\ParticipatorRepositoryInterface', 'App\Repositories\Participator\ParticipatorRepository');
         $this->app->bind('App\Repositories\Additional\AdditionalRepositoryInterface', AdditionalRepository::class);
+        $this->app->bind('App\Repositories\Organizer\OrganizerRepositoryInterface', OrganizerRepository::class);
         $this->app->bind('CompetitionService', CompetitionService::class);
+        $this->app->alias('bugsnag.logger', \Illuminate\Contracts\Logging\Log::class);
+        $this->app->alias('bugsnag.logger', LoggerInterface::class);
     }
 }

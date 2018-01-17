@@ -60,8 +60,8 @@ class PagesController extends Controller
             return abort(401);
         }
         $requestData = $request->all();
-        
-        Page::create($requestData);
+
+        $this->pageRepository->create($requestData);
 
         Session::flash('flash_message', 'Page added!');
 
@@ -80,7 +80,7 @@ class PagesController extends Controller
         if (! Gate::allows('page_access')) {
             return abort(401);
         }
-        $page = Page::findOrFail($id);
+        $page = $this->pageRepository->find($id);
 
         return view('admin.pages.show', compact('page'));
     }
@@ -97,7 +97,7 @@ class PagesController extends Controller
         if (! Gate::allows('page_edit')) {
             return abort(401);
         }
-        $page = Page::findOrFail($id);
+        $page = $this->pageRepository->find($id);
 
         return view('admin.pages.edit', compact('page'));
     }
@@ -117,7 +117,7 @@ class PagesController extends Controller
         }
         $requestData = $request->all();
         
-        $page = Page::findOrFail($id);
+        $page = $this->pageRepository->find($id);
         $page->update($requestData);
 
         Session::flash('flash_message', 'Page updated!');

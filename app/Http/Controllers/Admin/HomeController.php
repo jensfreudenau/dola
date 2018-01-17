@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Competition;
 use App\Http\Controllers\Controller;
+use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -16,6 +17,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        Bugsnag::notifyError('ErrorType', 'Test Error');
         $competitions = Competition::orderBy('start_date', 'asc')
             ->whereDate('start_date', '>', date('Y-m-d'))->take(4)->get();
         $announces = array();
