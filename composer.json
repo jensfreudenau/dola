@@ -8,16 +8,19 @@
         "php": ">=7.1.0",
         "bugsnag/bugsnag-laravel": "^2.0",
         "delight-im/str": "^2.4",
-        "doctrine/dbal": "^2.5",
+        "doctrine/dbal": "^2.6",
         "guzzlehttp/guzzle": "~6.3",
         "intervention/image": "^2.3",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.3",
-        "league/csv": "^8.0"
+        "league/csv": "^8.0",
+        "league/fractal": "^0.17.0",
+        "prettus/l5-repository": "2.6.31"
     },
     "require-dev": {
         "appzcoder/crud-generator": "^3.0",
+        "barryvdh/laravel-ide-helper": "^2.4",
         "fzaninotto/faker": "~1.4",
         "laralib/l5scaffold": "^1.0",
         "mockery/mockery": "0.9.*",
@@ -55,6 +58,8 @@
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
+            "php artisan ide-helper:generate",
+            "php artisan ide-helper:meta",
             "php artisan optimize"
         ]
     },

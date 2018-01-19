@@ -164,6 +164,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Appzcoder\CrudGenerator\CrudGeneratorServiceProvider::class,
         Bugsnag\BugsnagLaravel\BugsnagServiceProvider::class,
+        Prettus\Repository\Providers\RepositoryServiceProvider::class,
     ],
     /*
     |--------------------------------------------------------------------------

@@ -94,31 +94,20 @@ class CompetitionController extends Controller
     use FileUploadTrait;
     use ParseDataTrait;
     use ProofLADVTrait;
-
     public function update(UpdateCompetitionsRequest $request, $id)
     {
         if (!Gate::allows('competition_edit')) {
             return abort(401);
         }
-        $competition          = $this->competitionRepository->findById($id);
+        $competition          = $this->competitionRepository->find($id);
         $submitData           = $request->all();
         $this->competionsList = [];
         if (!empty($submitData['timetable_1'])) {
             $submitData['timetable_1'] = $this->parsingTable($submitData['timetable_1']);
         }
         $competition->update($submitData);
-        if (!empty($submitData['keyvalue'])) {
-            foreach ($submitData['keyvalue'] as $key => $keyVal) {
-                Additional::updateOrCreate(
-                    ['id' => $key,
-                     'competition_id' => $competition->id],
-                    ['key' => $keyVal['key'],
-                     'value' => $keyVal['value'],
-                     'mnemonic' => $competition->season,
-                    ]
-                );
-            }
-        }
+        $this->competitionService->saveAdditionals($submitData, $competition);
+
         $this->competionsErrorList  = array();
         $this->disciplineListError  = array();
         $this->ageclassErrorList    = array();

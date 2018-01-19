@@ -2,12 +2,14 @@
 /**
  * Created by IntelliJ IDEA.
  * User: jensfreudenau
- * Date: 11.01.18
- * Time: 13:44
+ * Date: 19.01.18
+ * Time: 16:37
  */
 
 namespace App\Services;
+
 use App\Http\Controllers\Traits\ParseDataTrait;
+use App\Models\Competition;
 use App\Repositories\Additional\AdditionalRepositoryInterface;
 use App\Repositories\Competition\CompetitionRepositoryInterface;
 use Illuminate\Support\Facades\Config;
@@ -21,17 +23,17 @@ class CompetitionService
     public function __construct(CompetitionRepositoryInterface $competitionRepository, AdditionalRepositoryInterface $additionalRepository)
     {
         $this->competitionRepository = $competitionRepository;
-        $this->additionalRepository = $additionalRepository;
+        $this->additionalRepository  = $additionalRepository;
     }
 
     /**
-     * @param $id
+     * @param $competitionId
      * @return mixed
      */
-    public function getAdditionals($id)
+    public function getAdditionals($competitionId)
     {
-        $additionals = $this->additionalRepository->findBy('competition_id', $id);
-        if($additionals) {
+        $additionals = $this->additionalRepository->findBy('competition_id', $competitionId);
+        if ($additionals) {
             return $additionals->get();
         }
         return false;
@@ -39,10 +41,11 @@ class CompetitionService
 
     public function getElapsed()
     {
-        
+
     }
 
     use ParseDataTrait;
+
     public function getArchive()
     {
         $archives = array();
@@ -51,5 +54,40 @@ class CompetitionService
             $archives[$season] = $this->listdir_by_date($files);
         }
         return $archives;
+    }
+
+    /**
+     * @param $submitData
+     * @param Competition $competition
+     */
+    public function saveAdditionals($submitData, Competition $competition)
+    {
+        if (!empty($submitData['keyvalue'])) {
+            foreach ($submitData['keyvalue'] as $key => $keyVal) {
+                $this->additionalRepository->updateOrCreate(
+                    ['id'             => $key,
+                     'competition_id' => $competition->id],
+                    ['key'      => $keyVal['key'],
+                     'value'    => $keyVal['value'],
+                     'mnemonic' => $competition->season,
+                    ]
+                );
+            }
+        }
+    }
+
+    public function find($competition_id)
+    {
+        return $this->competitionRepository->find($competition_id);
+    }
+
+    public function getSelectFirst()
+    {
+        return Competition::where('submit_date', '>=', date('Y-m-d'))->where('register', '=', 0)->orderBy('start_date', 'asc')->limit(1)->get();
+    }
+
+    public function getSelectable()
+    {
+        return Competition::where('submit_date', '>=', date('Y-m-d'))->where('register', '=', 0)->orderBy('start_date', 'asc')->get()->pluck('header', 'id');
     }
 }

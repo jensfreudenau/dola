@@ -7,46 +7,49 @@
  */
 
 namespace App\Services;
-use App\Models\Competition;
-use Illuminate\Support\Facades\Mail;
+use App\Models\Participator;
+use App\Repositories\Participator\ParticipatorRepositoryInterface;
 
 class ParticipatorService
 {
-    public function sendCsvFile($participators, Competition $competition)
+    protected $participatorRepository;
+
+    public function __construct(ParticipatorRepositoryInterface $participatorRepository)
     {
-        $list = array();
-        foreach ($participators as $key => $participator) {
-            $list[$key]['BIB']        = 1;
-            $list[$key]['Code']       = '';
-            $list[$key]['Event']      = $competition->header;
-            $list[$key]['Team']       = $participator->Announciator->clubname;
-            $list[$key]['telephone']  = $participator->Announciator->telephone;
-            $list[$key]['street']     = $participator->Announciator->street;
-            $list[$key]['city']       = $participator->Announciator->city;
-            $list[$key]['Forename']   = $participator->prename;
-            $list[$key]['Name']       = $participator->lastname;
-            $list[$key]['Value']      = $participator->best_time;
-            $list[$key]['YOB']        = $participator->birthyear;
-            $list[$key]['discipline'] = $participator->discipline->dlv;
-            $list[$key]['ageclass']   = $participator->ageclass->dlv;
-        }
-        $columnHeaders = array("BIB","Code","Event","Team","Telefon","Straße","Stadt","Vorname","Nachname","Value","YOB","discipline","ageclass");
-        $filename =  'teilnehmer.csv';
-        $file = fopen('php://temp', 'w+');
-        fputcsv($file, $columnHeaders, ",", '"');
-        foreach ($list as $row) {
-            fputcsv($file, $row, ",", '"');
-        }
-        rewind($file);
-        Mail::send('emails.registration', ['competition'=>$competition, 'announciator'=> $participators[0]->Announciator], function($message) use($file, $filename, $competition, $participators)
-        {
-            $message->to($competition->organizer->address->email)
-                ->from($participators[0]->Announciator->email)
-                ->subject('Teilnehmerliste '. $competition->header);
-            $message->attachData(stream_get_contents($file), $filename);
+        $this->participatorRepository = $participatorRepository;
+    }
 
-        });
 
-        fclose($file);
+    /**
+     * @param $request
+     * @param $announciatorId
+     */
+    public function create($request, $announciatorId)
+    {
+        $participators = [];
+        foreach ($request->vorname as $key => $item) {
+            $participators[$key]['prename'] = $item;
+        }
+        foreach ($request->nachname as $key => $item) {
+            $participators[$key]['lastname'] = $item;
+        }
+        foreach ($request->jahrgang as $key => $item) {
+            $participators[$key]['birthyear'] = $item;
+        }
+        foreach ($request->ageclass as $key => $item) {
+            $participators[$key]['ageclass_id'] = $item;
+        }
+        foreach ($request->discipline as $key => $item) {
+            $participators[$key]['discipline_id'] = $item;
+        }
+        foreach ($request->bestzeit as $key => $item) {
+            $participators[$key]['best_time'] = $item;
+        }
+
+        foreach ($participators as $participator) {
+            $participator['announciator_id'] = $announciatorId;
+            $this->participatorRepository->create($participator);
+        }
+
     }
 }

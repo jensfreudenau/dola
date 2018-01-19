@@ -11,6 +11,10 @@ use Session;
 
 class PagesController extends Controller
 {
+    public function __construct()
+    {
+    }
+
     /**
      * Display the specified resource.
      *

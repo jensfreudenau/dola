@@ -4,10 +4,33 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * App\Models\Participator
+ *
  * @property mixed $announciator
  * @property \Carbon\Carbon $created_at
  * @property int $id
  * @property \Carbon\Carbon $updated_at
+ * @property int $announciator_id
+ * @property string $prename
+ * @property string $lastname
+ * @property string $birthyear
+ * @property string $ageclass_id
+ * @property string $discipline_id
+ * @property string $best_time
+ * @property-read \App\Models\Ageclass $Ageclass
+ * @property-read \App\Models\Announciator $Announciator
+ * @property-read \App\Models\Discipline $Discipline
+ * @property-read string $full_name
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Participator whereAgeclassId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Participator whereAnnounciatorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Participator whereBestTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Participator whereBirthyear($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Participator whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Participator whereDisciplineId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Participator whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Participator whereLastname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Participator wherePrename($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Participator whereUpdatedAt($value)
  */
 class Participator extends Model
 {

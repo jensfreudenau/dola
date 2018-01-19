@@ -1,15 +1,15 @@
 @extends('layouts.front')
 @section('content')
 
-    <h3>{{ $competition->header }}</h3>
+    <h3>{{ $list['competition']->header }}</h3>
     <dl class="dl-horizontal">
         <dt>Datum:</dt>
-        <dd>{{ $competition->start_date }}</dd>
+        <dd>{{ $list['competition']->start_date }}</dd>
         <dt>Veranstalter:</dt>
-        <dd>{{ $competition->organizer->name }}</dd>
-        <dd>{{ $competition->organizer->address->name }}</dd>
-        <dd>{{ $competition->organizer->address->telephone }}</dd>
-        <dd>{{ $competition->organizer->address->email }}</dd>
+        <dd>{{ $list['competition']->organizer->name }}</dd>
+        <dd>{{ $list['competition']->organizer->address->name }}</dd>
+        <dd>{{ $list['competition']->organizer->address->telephone }}</dd>
+        <dd>{{ $list['competition']->organizer->address->email }}</dd>
     </dl>
     <table class="table table-hover">
         <thead class="thead-inverse">
@@ -23,8 +23,7 @@
         </tr>
         </thead>
         <tbody>
-
-        @foreach($announciator->Participator as $participator)
+        @foreach($list['announciator']->Participator as $participator)
             <tr>
                 <td>{{$participator->prename}}</td>
                 <td>{{$participator['lastname'] }}</td>
@@ -36,8 +35,4 @@
         @endforeach
         </tbody>
     </table>
-
-
-
-
 @endsection

@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Traits\ParseDataTrait;
 /**
+ * App\Models\Competition
+ *
  * @property string $submit_date
  * @property mixed $organizer
  * @property mixed $uploads
@@ -19,6 +21,42 @@ use App\Http\Controllers\Traits\ParseDataTrait;
  * @property string $start_date
  * @property mixed $ageclasses
  * @property mixed $disciplines
+ * @property int $id
+ * @property int $organizer_id
+ * @property string $season
+ * @property string|null $award
+ * @property string|null $classes
+ * @property string|null $info
+ * @property string $header
+ * @property string|null $timetable_1
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property int $register
+ * @property int $created_by
+ * @property int $updated_by
+ * @property int $only_list
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Ageclass[] $Ageclasses
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Announciator[] $Announciator
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Discipline[] $Disciplines
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Participator[] $Participators
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Upload[] $Uploads
+ * @property-read mixed $ageclass_list
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Competition whereAward($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Competition whereClasses($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Competition whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Competition whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Competition whereHeader($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Competition whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Competition whereInfo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Competition whereOnlyList($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Competition whereOrganizerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Competition whereRegister($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Competition whereSeason($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Competition whereStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Competition whereSubmitDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Competition whereTimetable1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Competition whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Competition whereUpdatedBy($value)
  */
 class Competition extends BaseModel
 {
@@ -73,7 +111,7 @@ class Competition extends BaseModel
     /**
      * @return BelongsToMany
      */
-    public function ageclasses()
+    public function Ageclasses()
     {
        return $this->belongsToMany(Ageclass::class);
     }
@@ -81,7 +119,7 @@ class Competition extends BaseModel
     /**
      * @return BelongsToMany
      */
-    public function disciplines()
+    public function Disciplines()
     {
         return $this->belongsToMany(Discipline::class);
     }
