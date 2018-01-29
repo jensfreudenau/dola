@@ -28,5 +28,5 @@ use Collective\Html\Eloquent\FormAccessible;
 class Additional extends BaseModel
 {
     use FormAccessible;
-    protected $fillable = ['key', 'value', 'mnemonic', 'external_id'];
+    protected $fillable = ['key', 'value', 'mnemonic', 'competition_id'];
 }

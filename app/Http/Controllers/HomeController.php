@@ -6,10 +6,12 @@ use App\Models\Competition;
 use App\Http\Requests;
 use App\Repositories\Competition\CompetitionRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 
 class HomeController extends Controller
 {
+    protected $competitionRepository;
 
     public function __construct(CompetitionRepositoryInterface $competitionRepository)
     {

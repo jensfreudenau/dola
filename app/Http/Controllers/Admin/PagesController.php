@@ -13,11 +13,11 @@ use Session;
 
 class PagesController extends Controller
 {
-    protected $repository;
+    protected $pageRepository;
 
-    public function __construct(PageRepository $repository, PageValidator $validator)
+    public function __construct(PageRepository $pageRepository, PageValidator $validator)
     {
-        $this->repository = $repository;
+        $this->pageRepository = $pageRepository;
     }
 
     /**
@@ -30,7 +30,7 @@ class PagesController extends Controller
         if (!Gate::allows('page_access')) {
             return abort(401);
         }
-        $pages = Page::all();
+        $pages = $this->pageRepository->all();
         return view('admin.pages.index', compact('pages'));
     }
 
@@ -59,7 +59,7 @@ class PagesController extends Controller
         if (!Gate::allows('page_edit')) {
             return abort(401);
         }
-        $this->repository->create($request->all());
+        $this->pageRepository->create($request->all());
         return redirect('admin/pages');
     }
 
@@ -75,7 +75,7 @@ class PagesController extends Controller
         if (!Gate::allows('page_access')) {
             return abort(401);
         }
-        $page = $this->repository->find($id);
+        $page = $this->pageRepository->find($id);
         if (request()->wantsJson()) {
             return response()->json(['data' => $page]);
         }
@@ -94,7 +94,7 @@ class PagesController extends Controller
         if (!Gate::allows('page_edit')) {
             return abort(401);
         }
-        $page = $this->repository->find($id);
+        $page = $this->pageRepository->find($id);
         return view('admin.pages.edit', compact('page'));
     }
 
@@ -109,7 +109,7 @@ class PagesController extends Controller
         if (!Gate::allows('page_edit')) {
             return abort(401);
         }
-        $this->repository->update(Input::all(), $id);
+        $this->pageRepository->update(Input::all(), $id);
         return redirect('admin/pages');
     }
 
@@ -125,7 +125,7 @@ class PagesController extends Controller
         if (!Gate::allows('page_edit')) {
             return abort(401);
         }
-        $this->repository->delete($id);
+        $this->pageRepository->delete($id);
         return redirect('admin/pages');
     }
 }

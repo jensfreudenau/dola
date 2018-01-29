@@ -17,18 +17,6 @@ use Illuminate\Support\Facades\Mail;
 class AnnounciatorService
 {
     /**
-     * @var array
-     */
-    protected $rules = [
-        'flightNumber'       => 'required',
-        'status'             => 'required|flightstatus',
-        'arrival.datetime'   => 'required|date',
-        'arrival.iataCode'   => 'required',
-        'departure.datetime' => 'required|date',
-        'departure.iataCode' => 'required',
-    ];
-
-    /**
      * @var AnnounciatorRepositoryInterface
      */
     protected $announciatorRepository;

@@ -31,7 +31,6 @@ abstract class Repository implements RepositoryInterface
      */
     public function __construct(Container $app)
     {
-
         $this->app = $app;
         $this->makeModel();
     }
@@ -124,6 +123,10 @@ abstract class Repository implements RepositoryInterface
         return $this->model->where($attribute, '=', $value)->first($columns);
     }
 
+    public function where($attribute, $value)
+    {
+        return $this->model->where($attribute, '=', $value);
+    }
 
     /**
      * @param $id

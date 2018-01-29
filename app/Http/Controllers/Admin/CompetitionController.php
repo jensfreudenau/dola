@@ -2,21 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Additional;
 use App\Models\Ageclass;
-use App\Models\Announciator;
 use App\Models\Competition;
 use App\Models\Address;
-use App\Models\Discipline;
+
 use App\Models\Organizer;
 use App\Models\Upload;
-use App\Http\Controllers\Traits\ProofLADVTrait;
-use App\Http\Controllers\Traits\FileUploadTrait;
-use App\Http\Controllers\Traits\ParseDataTrait;
+
+use App\Traits\FileUploadTrait;
+
 use App\Http\Requests\Admin\StoreCompetitionsRequest;
 use App\Http\Requests\Admin\UpdateCompetitionsRequest;
 use App\Repositories\Competition\CompetitionRepositoryInterface;
 use App\Services\CompetitionService;
+use App\Traits\StringMarkerTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
@@ -49,21 +48,19 @@ class CompetitionController extends Controller
         $elapsed = $this->competitionRepository->getElapsed();
         return view('admin.competitions.index', compact('future', 'elapsed'));
     }
-
-    use ParseDataTrait;
-
+    use StringMarkerTrait;
     public function show($id)
     {
         if (!Gate::allows('competition_access')) {
             return abort(401);
         }
-        $competition              = $this->competitionRepository->findById($id);
+        $competition              = $this->competitionService->find($id);
         $additionals              = $this->competitionService->getAdditionals($id);
         $ageclasses               = $competition->Ageclasses;
         $disciplines              = $competition->Disciplines;
         $competition->timetable_1 = $this->markFounded($competition->timetable_1, $ageclasses);
         $competition->timetable_1 = $this->markFounded($competition->timetable_1, $disciplines);
-        $announciators            = Announciator::where('competition_id', '=', $id)->get();
+        $announciators            = $this->competitionService->getAnnounciators($id);
         return view('admin.competitions.show', compact('competition', 'additionals', 'disciplines', 'announciators'));
     }
 
@@ -72,16 +69,16 @@ class CompetitionController extends Controller
         if (!Gate::allows('competition_edit')) {
             return abort(401);
         }
-        $competition = $this->competitionRepository->findById($id);
         $addresses   = Address::get()->pluck('name', 'id');
         $ageclasses  = Ageclass::get()->pluck('shortname', 'id')->toArray();
         $organizers  = Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
+        $disciplines = $this->competitionService->getSelectedDisciplines();
+        $competition = $this->competitionService->find($id);
         $additionals = $this->competitionService->getAdditionals($id);
 
-        $disciplines = Discipline::pluck('shortname', 'id')->toArray();
-        $season      = $this->competitionRepository->getActiveSeason($competition);
-        $register    = $this->competitionRepository->getActiveRegister($competition);
-        $onlyList    = $this->competitionRepository->getActiveListed($competition);
+        $season      = $this->competitionService->getActiveSeason($competition->season);
+        $register    = $this->competitionService->getActiveRegister($competition->register);
+        $onlyList    = $this->competitionService->getActiveListed($competition->only_list);
         return view('admin.competitions.edit', compact('addresses', 'competition', 'organizers', 'season', 'additionals', 'register', 'onlyList', 'ageclassList', 'ageclasses', 'disciplines'));
     }
 
@@ -91,70 +88,29 @@ class CompetitionController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    use FileUploadTrait;
-    use ParseDataTrait;
-    use ProofLADVTrait;
+
     public function update(UpdateCompetitionsRequest $request, $id)
     {
         if (!Gate::allows('competition_edit')) {
             return abort(401);
         }
-        $competition          = $this->competitionRepository->find($id);
-        $submitData           = $request->all();
-        $this->competionsList = [];
-        if (!empty($submitData['timetable_1'])) {
-            $submitData['timetable_1'] = $this->parsingTable($submitData['timetable_1']);
-        }
-        $competition->update($submitData);
-        $this->competitionService->saveAdditionals($submitData, $competition);
-
-        $this->competionsErrorList  = array();
-        $this->disciplineListError  = array();
-        $this->ageclassErrorList    = array();
-        $this->ageclassCollection   = array();
-        $this->disciplineCollection = array();
-        #TODO move to Models
-        foreach ($this->disciplineList as $discipline) {
-            $this->proofDiscipline($discipline);
-        }
-        foreach ($this->disciplineListError as $key => $disciplineError) {
-            #[$discipline,] = explode(' ', $disciplineError); //php7
-            list($discipline, $secondArg) = explode(' ', $disciplineError);
-            if (true == $this->proofDiscipline($discipline)) {
-                unset($this->disciplineError[$key]);
-            }
-        }
-        foreach ($this->ageclassList as $parsedClass) {
-            $this->proofAgeclasses($parsedClass);
-        }
-        if ($this->ageclassErrorList) {
-            return back()->withInput()->withErrors($this->ageclassErrorList);
-        }
-        $ids = array();
-        foreach ($this->ageclassCollection as $ageclassKey => $ageclass) {
-            $data  = Ageclass::where('ladv', '=', $ageclassKey)->select('id')->get()->toArray();
-            $ids[] = $data[0]['id'];
-        }
-        $competition->ageclasses()->sync($ids);
-        $ids = array();
-        foreach ($this->disciplineCollection as $disciplineKey => $discipline) {
-            $data  = Discipline::where('ladv', '=', $disciplineKey)->select('id')->get()->toArray();
-            $ids[] = $data[0]['id'];
-        }
-        $competition->disciplines()->sync($ids);
+        $this->competitionService->updateData($id, $request->all());
         return redirect('/admin/competitions/' . $id);
     }
 
     use FileUploadTrait;
-
     public function uploader(Request $request, $id)
     {
         if (!Gate::allows('competition_access')) {
             return abort(401);
         }
-        $competition                = $this->competitionRepository->findById($id);
+        $competition                = $this->competitionService->find($id);
+        Log::debug('competition Id: '.$id);
+        Log::debug('competition: ', ['object' => $competition->toJson()]);
+
         $path                       = 'public/' . $request->type . '/' . $competition->season;
         $uploads                    = $this->saveFiles($request, $path);
+        Log::debug('uploads: ', ['object' => $uploads->toJson()]);
         $requests                   = $request->all();
         $requests['competition_id'] = $id;
         $requests['type']           = $request->type;
@@ -168,57 +124,27 @@ class CompetitionController extends Controller
         if (!Gate::allows('competition_create')) {
             return abort(401);
         }
-        $addresses            = Address::get()->pluck('name', 'id')->prepend('Please select', '');
-        $organizers           = Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
+        $organizers           = $this->competitionService->getOrganizers();
         $competition          = '';
         $register['external'] = '';
-        $register['internal'] = '';
+        $register['internal'] = 'active';
         $onlyList['list']     = '';
-        $onlyList['not_list'] = '';
-        $season['track']      = '';
+        $onlyList['not_list'] = 'active';
+        $season['track']      = 'active';
         $season['indoor']     = '';
         $season['cross']      = '';
-        return view('admin.competitions.create', compact('addresses', 'organizers', 'competition', 'season', 'additionals', 'register', 'onlyList'));
+        return view('admin.competitions.create', compact('organizers', 'competition', 'season', 'additionals', 'register', 'onlyList'));
     }
 
-    use ParseDataTrait;
-    use FileUploadTrait;
+
 
     public function store(StoreCompetitionsRequest $request)
     {
         if (!Gate::allows('competition_create')) {
             return abort(401);
         }
-        #TODO move to Models
-        $this->ageclassCollection   = array();
-        $this->disciplineCollection = array();
-        $submitData                 = $request->all();
-        if (!empty($submitData['timetable_1'])) {
-            $submitData['timetable_1'] = $this->parsingTable($submitData['timetable_1']);
-        }
-        foreach ($this->ageclassList as $class) {
-            $this->proofAgeclasses($class);
-        }
-        foreach ($this->disciplineList as $discipline) {
-            $this->proofDiscipline($discipline);
-        }
-        $id = $this->competitionRepository->create($submitData)->id;
-        foreach ($this->ageclassCollection as $key => $class) {
-            $ageClass = Ageclass::where('ladv', '=', $key)->first();
-            $ageClass->competitions()->attach($id);
-        }
-        foreach ($this->disciplineCollection as $key => $class) {
-            $discipline = Discipline::where('ladv', '=', $key)->first();
-            $discipline->competitions()->attach($id);
-        }
-        if (!empty($submitData['keyvalue'])) {
-            foreach ($submitData['keyvalue'] as $keyval) {
-                $keyval['external_id'] = $id;
-                $keyval['mnemonic']    = $request->season;
-                Additional::create($keyval);
-            }
-        }
-        return redirect('/admin/competitions/' . $id);
+        $competionId = $this->competitionService->storeData($request->all());
+        return redirect('/admin/competitions/' . $competionId);
     }
 
     /**
@@ -244,7 +170,7 @@ class CompetitionController extends Controller
             return abort(401);
         }
         $uploadedFile = Upload::findOrFail($id);
-        $competition  = $this->competitionRepository->findById($uploadedFile->competition_id);
+        $competition  = $this->competitionService->find($uploadedFile->competition_id);
         Storage::delete('public/' . $uploadedFile->type . '/' . $competition->season . '/' . $uploadedFile->filename);
         $uploadedFile->delete();
         return redirect()->route('admin.competitions.edit', $competition->id);
@@ -254,6 +180,8 @@ class CompetitionController extends Controller
      * Delete all selected Comps at once.
      *
      * @param Request $request
+     * @return void
+     * @throws \Exception
      */
     public function massDestroy(Request $request)
     {

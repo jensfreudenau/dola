@@ -17,7 +17,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        Bugsnag::notifyError('ErrorType', 'Test Error');
         $competitions = Competition::orderBy('start_date', 'asc')
             ->whereDate('start_date', '>', date('Y-m-d'))->take(4)->get();
         $announces = array();

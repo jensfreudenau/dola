@@ -179,6 +179,7 @@ $(document).ready(function () {
 //            document_base_url: "http://",
         toolbar: "undo redo paste | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media code table",
     });
+
     Dropzone.options.csvuploader = {
         maxFilesize: 10, // Mb+
         autoProcessQueue: false,

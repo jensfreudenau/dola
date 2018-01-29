@@ -7,7 +7,7 @@ use App\Models\Additional;
 use App\Models\Competition;
 use App\Http\Requests;
 use App\Repositories\Competition\CompetitionRepositoryInterface;
-
+use App\Services\CompetitionService;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,9 +15,9 @@ class CompetitionsController extends Controller
 {
     protected $competitionRepository;
 
-    public function __construct(CompetitionRepositoryInterface $competitionRepository)
+    public function __construct(CompetitionService $competitionService)
     {
-        $this->competitionRepository = $competitionRepository;
+        $this->competitionService = $competitionService;
     }
 
     /**
@@ -28,7 +28,7 @@ class CompetitionsController extends Controller
     public function track()
     {
         $season       = 'Bahn';
-        $competitions = $this->competitionRepository->findBySeason($season);
+        $competitions = $this->competitionService->findBySeason($season);
         return view('front.competitions.list', compact('competitions', 'season'));
     }
 
@@ -40,7 +40,7 @@ class CompetitionsController extends Controller
     public function indoor()
     {
         $season       = 'Halle';
-        $competitions = $this->competitionRepository->findBySeason($season);
+        $competitions = $this->competitionService->findBySeason($season);
         return view('front.competitions.list', compact('competitions', 'season'));
     }
 
@@ -51,22 +51,22 @@ class CompetitionsController extends Controller
      */
     public function cross()
     {
-        $competitions = $this->competitionRepository->findBySeason('cross');
+        $competitions = $this->competitionService->findBySeason('cross');
         $season       = 'Strasse';
         return view('front.competitions.list', compact('competitions', 'season'));
     }
 
     public function details($id)
     {
-        $competition = $this->competitionRepository->findById($id);
+        $competition = $this->competitionService->find($id);
         $additionals = app()->make('CompetitionService')->getAdditionals($id);
         return view('front.competitions.details', compact('competition', 'additionals'));
     }
 
-    use ParseDataTrait;
+
     public function archive()
     {
-        $archives = app()->make('CompetitionService')->getArchive();
+        $archives = $this->competitionService->getArchive();
         return view('front.competitions.archive', compact('archives'));
     }
 }
