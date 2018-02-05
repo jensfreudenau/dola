@@ -49,7 +49,6 @@ class CompetitionService
         return false;
     }
 
-
     public function getArchive()
     {
         $archives = array();
@@ -93,9 +92,8 @@ class CompetitionService
     {
         if (!empty($submitData['timetable_1'])) {
             $submitData['timetable_1'] = $this->storeTimetableData($submitData['timetable_1']);
-            $errorList = $this->getErrorlists();
+            $errorList                 = $this->getErrorlists();
         }
-
         $competitionId = $this->competitionRepository->create($submitData)->id;
         $this->attachAgeclasses($competitionId);
         $this->attacheDisciplines($competitionId);
@@ -125,15 +123,13 @@ class CompetitionService
 
         if (!empty($submitData['timetable_1'])) {
             $submitData['timetable_1'] = $this->storeTimetableData($submitData['timetable_1']);
-            $errorList = $this->getErrorlists();
+            $errorList                 = $this->getErrorlists();
         }
-
         $competition = $this->find($competitionId);
         $competition->update($submitData);
         $this->syncAgeClasses($competition);
         $this->syncDisciplines($competition);
         $this->saveAdditionals($submitData, $competition);
-
         if (!empty($errorList['ageclassError'])) {
             Log::debug('ageclassError');
 //            Log::debug(dump($errorList['ageclassError']));
@@ -144,8 +140,6 @@ class CompetitionService
 //            Log::debug(dump($errorList['disciplineError']));
 //            return back()->withInput()->withErrors($errorList['disciplineError']);
         }
-
-
         return true;
     }
 
@@ -163,10 +157,10 @@ class CompetitionService
     {
         foreach ($values as $value) {
             Additional::updateOrCreate(
-                [ 'competition_id' => $id,
-                  'key'      => $value['key'],
-                 'value'    => $value['value'],
-                 'mnemonic' => $season,
+                ['competition_id' => $id,
+                 'key'            => $value['key'],
+                 'value'          => $value['value'],
+                 'mnemonic'       => $season,
                 ]
             );
         }
@@ -245,6 +239,11 @@ class CompetitionService
         return $this->competitionRepository->order('start_date', 'asc')->where('season', strtolower($season));
     }
 
+    public function findByClubId($id)
+    {
+        return $this->competitionRepository->order('start_date', 'asc')->where('organizer_id', $id);
+    }
+
     public function getSelectFirst()
     {
         return Competition::where('submit_date', '>=', date('Y-m-d'))->where('register', '=', 0)->orderBy('start_date', 'asc')->limit(1)->get();
@@ -283,7 +282,6 @@ class CompetitionService
         foreach ($this->getDisciplinesFromTable() as $discipline) {
             $this->proofDisciplineCollection($discipline);
         }
-
         return $timetable;
     }
 
@@ -291,7 +289,7 @@ class CompetitionService
     {
         $ageclassIds = [];
         foreach ($this->getProofedAgeclasses() as $ageclassKey => $ageclass) {
-            $data  = Ageclass::where('ladv', '=', $ageclassKey)->select('id')->get()->toArray();
+            $data          = Ageclass::where('ladv', '=', $ageclassKey)->select('id')->get()->toArray();
             $ageclassIds[] = $data[0]['id'];
         }
         $competition->Ageclasses()->sync($ageclassIds);
@@ -301,9 +299,9 @@ class CompetitionService
     {
         $disciplineIds = [];
         foreach ($this->getProofedDisciplines() as $disciplineKey => $discipline) {
-            $data  = Discipline::where('ladv', '=', $disciplineKey)->select('id')->get()->toArray();
+            $data            = Discipline::where('ladv', '=', $disciplineKey)->select('id')->get()->toArray();
             $disciplineIds[] = $data[0]['id'];
         }
-       $competition->disciplines()->sync($disciplineIds);
+        $competition->disciplines()->sync($disciplineIds);
     }
 }

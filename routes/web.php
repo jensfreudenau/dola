@@ -10,6 +10,7 @@ Route::get('/cross', 'CompetitionsController@cross');
 Route::get('/archive', 'CompetitionsController@archive');
 
 Route::get('/details/{competition_id}', 'CompetitionsController@details');
+Route::get('/showByClubId/{competition_id}', 'CompetitionsController@showByClubId');
 
 Route::get('/table', 'TableController@index');
 Route::get('/announciators/competitions_select/{competition_id}', 'AnnounciatorsController@competitions_select');

@@ -9,6 +9,7 @@ use App\Http\Requests;
 use App\Repositories\Competition\CompetitionRepositoryInterface;
 use App\Services\CompetitionService;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
 
 class CompetitionsController extends Controller
@@ -59,6 +60,12 @@ class CompetitionsController extends Controller
     public function details($id)
     {
         $competition = $this->competitionService->find($id);
+        if (Request::wantsJson()) {
+            $competition->name= $competition->organizer->address->name;
+            $competition->classes= $competition->Disciplines;
+            return response()->json($competition);
+        }
+
         $additionals = app()->make('CompetitionService')->getAdditionals($id);
         return view('front.competitions.details', compact('competition', 'additionals'));
     }
@@ -68,5 +75,15 @@ class CompetitionsController extends Controller
     {
         $archives = $this->competitionService->getArchive();
         return view('front.competitions.archive', compact('archives'));
+    }
+
+    public function showByClubId($id)
+    {
+        $competitions = $this->competitionService->findByClubId($id);
+        foreach ($competitions as $competition) {
+            $competition->Disciplines;
+            $competition->Ageclasses;
+        }
+        return response()->json($competitions);
     }
 }

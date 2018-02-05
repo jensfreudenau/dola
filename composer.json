@@ -11,7 +11,7 @@
         "doctrine/dbal": "^2.6",
         "guzzlehttp/guzzle": "~6.3",
         "intervention/image": "^2.3",
-        "laravel/framework": "5.4.*",
+        "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.3",
         "league/csv": "^8.0",
@@ -19,12 +19,13 @@
         "prettus/l5-repository": "2.6.31"
     },
     "require-dev": {
+        "filp/whoops" : "~2.0",
         "appzcoder/crud-generator": "^3.0",
         "barryvdh/laravel-ide-helper": "^2.4",
         "fzaninotto/faker": "~1.4",
         "laralib/l5scaffold": "^1.0",
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~5.7"
+        "phpunit/phpunit": "~6.0"
     },
     "autoload": {
         "classmap": [
@@ -61,6 +62,10 @@
             "php artisan ide-helper:generate",
             "php artisan ide-helper:meta",
             "php artisan optimize"
+        ],
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover"
         ]
     },
     "config": {
