@@ -105,12 +105,8 @@ class CompetitionController extends Controller
             return abort(401);
         }
         $competition                = $this->competitionService->find($id);
-        Log::debug('competition Id: '.$id);
-        Log::debug('competition: ', ['object' => $competition->toJson()]);
-
         $path                       = 'public/' . $request->type . '/' . $competition->season;
         $uploads                    = $this->saveFiles($request, $path);
-        Log::debug('uploads: ', ['object' => $uploads->toJson()]);
         $requests                   = $request->all();
         $requests['competition_id'] = $id;
         $requests['type']           = $request->type;
