@@ -5,7 +5,7 @@ body {
     background-size: cover;
 }
 .section {
-    background-color: snow;
+    background-color: white;
     padding:20px;
 }
 h3, h4{
@@ -93,4 +93,13 @@ desc {
 }
 p {
     margin-bottom: 0.2rem;
+}
+.card li {
+    padding: 10px;
+    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
+    margin-bottom: 25px;
+    border: 1px solid lightgray;
+}
+.card {
+    border:none;
 }
