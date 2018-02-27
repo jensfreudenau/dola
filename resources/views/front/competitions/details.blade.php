@@ -39,7 +39,7 @@
             @endif
             <dt class="col-sm-3">Haftung:</dt>
             <dd class="col-sm-9">Veranstalter und Ausrichter &uuml;bernehmen keinerlei Haftung für Sch&auml;den jeglicher Art.</dd>
-            @if($competition->register == 0 && (Carbon\Carbon::now()->lte(Carbon\Carbon::parse($competition->submit_date))))
+            @if($competition->register == 0 && (Carbon\Carbon::now()->lte(Carbon\Carbon::parse($competition->submit_date)->addDay())))
                 <dt class="col-sm-3"></dt>
                 <dd class="col-sm-9">
                     <a class="btn btn-primary" href="/announciators/create/{{ $competition->id }}" role="button"><i class="fa fa-pencil"></i> anmelden</a>
