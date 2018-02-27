@@ -18,6 +18,7 @@ use App\Models\Discipline;
 use App\Models\Organizer;
 use App\Repositories\Additional\AdditionalRepositoryInterface;
 use App\Repositories\Competition\CompetitionRepositoryInterface;
+use DateTime;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -59,8 +60,88 @@ class CompetitionService
         return $archives;
     }
 
+    /**
+     * @param $files
+     * @return array
+     */
+    protected function listdir_by_date($files)
+    {
+        $list = [];
+        foreach ($files as $key => $file) {
+            if (basename($file) == 'styles.css') continue;
+            if (basename($file) == 'index.html') continue;
+            // add the filename, to be sure not to
+            // overwrite a array key
+            list($filebase, $ending) = explode(".", $file);
+            if ($ending != 'html') continue;
+//
+            preg_match_all('/[0-9]/', $filebase, $match);
+            if (count($match[0]) < 6) continue;
+            $six = false;
+            if (count($match[0]) == 6) {
+                $six = true;
+            }
+            if (count($match[0]) > 8) {
+                $match[0][8] = '';
+            }
+            $v = implode($match[0]);
+            if ($six) {
+                $v = '20' . $v;
+            }
+            $date                                   = new DateTime($v);
+            $list[$date->format('Y')][$key]['file'] = $file;
+            $list[$date->format('Y')][$key]['date'] = $date->format('d.m.Y');
+        }
+        return $list;
+    }
+
     use ProofLADVTrait;
     use ParseDataTrait;
+    /**
+     * @param $submitData
+     * @return  $competitionId
+     */
+    public function storeData($submitData)
+    {
+
+        if (!empty($submitData['timetable_1'])) {
+            $submitData['timetable_1'] = $this->storeTimetableData($submitData['timetable_1']);
+            $errorList                 = $this->getErrorlists();
+        }
+        $competitionId = $this->competitionRepository->create($submitData)->id;
+        $this->attachAgeclasses($competitionId);
+        $this->attacheDisciplines($competitionId);
+        if (!empty($submitData['keyvalue'])) {
+            $this->appendAdditionals($competitionId, $submitData['keyvalue'], $submitData['season']);
+        }
+        if (!empty($errorList['ageclassError'])) {
+            Log::info('ageclassError');
+            // Log::debug(print_r($errorList['ageclassError'], TRUE));
+//            return back()->withInput()->withErrors($errorList['ageclassError']);
+        }
+        if (!empty($errorList['disciplineError'])) {
+            Log::info('disciplineError');
+            // Log::debug(print_r($errorList['disciplineError'], TRUE));
+//            return back()->withInput()->withErrors($errorList['disciplineError']);
+        }
+        return $competitionId;
+    }
+
+    private function storeTimetableData($timetable)
+    {
+        $this->createDomObject($timetable);
+        $this->parsingTable();
+        $timetable = $this->getParsedTable();
+        $this->searchAgeclasses();
+        $this->searchDisciplines();
+        foreach ($this->getAgeclassesFromTable() as $class) {
+            $this->proofAgeclassCollection($class);
+        }
+        foreach ($this->getDisciplinesFromTable() as $discipline) {
+            $this->proofDisciplineCollection($discipline);
+        }
+        return $timetable;
+    }
 
     /**
      * @param $id
@@ -85,32 +166,21 @@ class CompetitionService
     }
 
     /**
-     * @param $submitData
-     * @return $this
+     * @param $id
+     * @param $values
+     * @param $season
      */
-    public function storeData($submitData)
+    public function appendAdditionals($id, $values, $season)
     {
-        if (!empty($submitData['timetable_1'])) {
-            $submitData['timetable_1'] = $this->storeTimetableData($submitData['timetable_1']);
-            $errorList                 = $this->getErrorlists();
+        foreach ($values as $value) {
+            Additional::updateOrCreate(
+                ['competition_id' => $id,
+                 'key'            => $value['key'],
+                 'value'          => $value['value'],
+                 'mnemonic'       => $season,
+                ]
+            );
         }
-        $competitionId = $this->competitionRepository->create($submitData)->id;
-        $this->attachAgeclasses($competitionId);
-        $this->attacheDisciplines($competitionId);
-        if (!empty($submitData['keyvalue'])) {
-            $this->appendAdditionals($competitionId, $submitData['keyvalue'], $submitData['season']);
-        }
-        if (!empty($errorList['ageclassError'])) {
-            Log::info('ageclassError');
-//            Log::info($errorList['ageclassError']));
-//            return back()->withInput()->withErrors($errorList['ageclassError']);
-        }
-        if (!empty($errorList['disciplineError'])) {
-            Log::info('disciplineError');
-//            Log::info(($errorList['disciplineError']));
-//            return back()->withInput()->withErrors($errorList['disciplineError']);
-        }
-        return $competitionId;
     }
 
     /**
@@ -132,12 +202,12 @@ class CompetitionService
         $this->saveAdditionals($submitData, $competition);
         if (!empty($errorList['ageclassError'])) {
             Log::debug('ageclassError');
-//            Log::debug(dump($errorList['ageclassError']));
+            // Log::debug(print_r($errorList['ageclassError'], TRUE));
 //            return back()->withInput()->withErrors($errorList['ageclassError']);
         }
         if (!empty($errorList['disciplineError'])) {
             Log::debug('disciplineError');
-//            Log::debug(dump($errorList['disciplineError']));
+            // Log::debug(print_r($errorList['disciplineError'], TRUE));
 //            return back()->withInput()->withErrors($errorList['disciplineError']);
         }
         return true;
@@ -148,22 +218,25 @@ class CompetitionService
         return $this->competitionRepository->find($competition_id);
     }
 
-    /**
-     * @param $id
-     * @param $values
-     * @param $season
-     */
-    public function appendAdditionals($id, $values, $season)
+    private function syncAgeClasses($competition)
     {
-        foreach ($values as $value) {
-            Additional::updateOrCreate(
-                ['competition_id' => $id,
-                 'key'            => $value['key'],
-                 'value'          => $value['value'],
-                 'mnemonic'       => $season,
-                ]
-            );
+
+        $ageclassIds = [];
+        foreach ($this->getProofedAgeclasses() as $ageclassKey => $ageclass) {
+            $data          = Ageclass::where('ladv', '=', $ageclassKey)->select('id')->get()->toArray();
+            $ageclassIds[] = $data[0]['id'];
         }
+        $competition->Ageclasses()->sync($ageclassIds);
+    }
+
+    private function syncDisciplines($competition)
+    {
+        $disciplineIds = [];
+        foreach ($this->getProofedDisciplines() as $disciplineKey => $discipline) {
+            $data            = Discipline::where('ladv', '=', $disciplineKey)->select('id')->get()->toArray();
+            $disciplineIds[] = $data[0]['id'];
+        }
+        $competition->disciplines()->sync($disciplineIds);
     }
 
     /**
@@ -267,41 +340,5 @@ class CompetitionService
     public function getOrganizers()
     {
         return Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
-    }
-
-    private function storeTimetableData($timetable)
-    {
-        $this->createDomObject($timetable);
-        $this->parsingTable();
-        $timetable = $this->getParsedTable();
-        $this->searchAgeclasses();
-        $this->searchDisciplines();
-        foreach ($this->getAgeclassesFromTable() as $class) {
-            $this->proofAgeclassCollection($class);
-        }
-        foreach ($this->getDisciplinesFromTable() as $discipline) {
-            $this->proofDisciplineCollection($discipline);
-        }
-        return $timetable;
-    }
-
-    private function syncAgeClasses($competition)
-    {
-        $ageclassIds = [];
-        foreach ($this->getProofedAgeclasses() as $ageclassKey => $ageclass) {
-            $data          = Ageclass::where('ladv', '=', $ageclassKey)->select('id')->get()->toArray();
-            $ageclassIds[] = $data[0]['id'];
-        }
-        $competition->Ageclasses()->sync($ageclassIds);
-    }
-
-    private function syncDisciplines($competition)
-    {
-        $disciplineIds = [];
-        foreach ($this->getProofedDisciplines() as $disciplineKey => $discipline) {
-            $data            = Discipline::where('ladv', '=', $disciplineKey)->select('id')->get()->toArray();
-            $disciplineIds[] = $data[0]['id'];
-        }
-        $competition->disciplines()->sync($disciplineIds);
     }
 }

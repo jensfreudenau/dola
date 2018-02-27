@@ -37,7 +37,11 @@
                     <a href="{{ route('admin.organizers.index') }}"> <i class="fa fa-gears"></i> <span class="title">@lang('quickadmin.organizers.title')</span> </a>
                 </li>
             @endcan
-
+            @can('organizer_access')
+                <li class="{{ $request->segment(2) == 'pages' ? 'active' : '' }}">
+                    <a href="{{ route('admin.pages.index') }}"> <i class="fa fa-gears"></i> <span class="title">@lang('quickadmin.pages.title')</span> </a>
+                </li>
+            @endcan
             @can('participators_access')
                 <li class="{{ $request->segment(2) == 'participators' ? 'active' : '' }}">
                     <a href="{{ route('admin.participators.index') }}"> <i class="fa fa-user"></i> <span class="title">@lang('quickadmin.participators.title')</span> </a>

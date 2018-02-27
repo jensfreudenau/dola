@@ -36,11 +36,11 @@
     @foreach($announciator->Participator as $participator)
         <tr>
             <td>{{$participator->prename}}</td>
-            <td>{{$participator['lastname'] }}</td>
-            <td>{{$participator['birthyear'] }}</td>
+            <td>{{$participator->lastname }}</td>
+            <td>{{$participator->birthyear }}</td>
             <td>{{$participator->ageclass->shortname }}</td>
             <td>{{$participator->discipline->shortname }}</td>
-            <td>{{$participator['best_time'] }}</td>
+            <td>{{$participator->best_time}}</td>
         </tr>
     @endforeach
     </tbody>

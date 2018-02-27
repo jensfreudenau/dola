@@ -89,7 +89,7 @@ class CompetitionController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function update(UpdateCompetitionsRequest $request, $id)
+    public function update(Request $request, $id)
     {
         if (!Gate::allows('competition_edit')) {
             return abort(401);
@@ -133,8 +133,14 @@ class CompetitionController extends Controller
     }
 
 
-
-    public function store(StoreCompetitionsRequest $request)
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function store(Request $request)
     {
         if (!Gate::allows('competition_create')) {
             return abort(401);

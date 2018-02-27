@@ -1,6 +1,6 @@
 @extends('layouts.front')
 @section('content')
-
+    <div class="card card-default mb-5 p-3">
     <h3>{{ $list['competition']->header }}</h3>
     <dl class="dl-horizontal">
         <dt>Datum:</dt>
@@ -35,4 +35,5 @@
         @endforeach
         </tbody>
     </table>
+    </div>
 @endsection

@@ -1,14 +1,9 @@
 @extends('layouts.front')
-
-
 @section('content')
     <div class="col-md-2"></div>
     <div class="col-md-8">
         <div class="page ng-scope">
-
-
             <section class="panel panel-default">
-
                 <div class="invoice-inner">
                     <div class="row">
                         <div class="col-xs-10">
@@ -50,10 +45,8 @@
                             </div>
                         </div>
                     </div>
+                </div>
             </section>
-
-        </div>
         </div>
     </div>
-
 @endsection

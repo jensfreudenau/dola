@@ -12,7 +12,7 @@ use App\Mail\EnrolReceived;
 use App\Models\Announciator;
 use App\Models\Competition;
 use App\Repositories\Announciator\AnnounciatorRepositoryInterface;
-use Illuminate\Support\Facades\Mail;
+use App\Traits\EmailTrait;
 
 class AnnounciatorService
 {
@@ -22,6 +22,9 @@ class AnnounciatorService
     protected $announciatorRepository;
     protected $participatorService;
     protected $competitionService;
+    protected $competition;
+    protected $participators;
+    protected $announciator;
 
     /**
      * AnnounciatorService constructor.
@@ -35,44 +38,7 @@ class AnnounciatorService
         $this->competitionService = $competitionService;
     }
 
-    /**
-     * @param $participators
-     * @param Competition $competition
-     */
-    public function sendEmailWithCsvFile($participators, Competition $competition)
-    {
-        $list = array();
-        foreach ($participators as $key => $participator) {
-            $list[$key]['BIB']        = 1;
-            $list[$key]['Code']       = '';
-            $list[$key]['Event']      = $competition->header;
-            $list[$key]['Team']       = $participator->Announciator->clubname;
-            $list[$key]['telephone']  = $participator->Announciator->telephone;
-            $list[$key]['street']     = $participator->Announciator->street;
-            $list[$key]['city']       = $participator->Announciator->city;
-            $list[$key]['Forename']   = $participator->prename;
-            $list[$key]['Name']       = $participator->lastname;
-            $list[$key]['Value']      = $participator->best_time;
-            $list[$key]['YOB']        = $participator->birthyear;
-            $list[$key]['discipline'] = $participator->discipline->dlv;
-            $list[$key]['ageclass']   = $participator->ageclass->dlv;
-        }
-        $columnHeaders = array("BIB", "Code", "Event", "Team", "Telefon", "Straße", "Stadt", "Vorname", "Nachname", "Value", "YOB", "discipline", "ageclass");
-        $filename      = 'teilnehmer.csv';
-        $file          = fopen('php://temp', 'w+');
-        fputcsv($file, $columnHeaders, ",", '"');
-        foreach ($list as $row) {
-            fputcsv($file, $row, ",", '"');
-        }
-        rewind($file);
-        Mail::send('emails.registration', ['competition' => $competition, 'announciator' => $participators[0]->Announciator], function ($message) use ($file, $filename, $competition, $participators) {
-            $message->to($competition->organizer->address->email)
-                    ->from($participators[0]->Announciator->email)
-                    ->subject('Teilnehmerliste ' . $competition->header);
-            $message->attachData(stream_get_contents($file), $filename);
-        });
-        fclose($file);
-    }
+
 
     /**
      * @param $all
@@ -83,29 +49,31 @@ class AnnounciatorService
         return $this->announciatorRepository->create($all);
     }
 
+    use EmailTrait;
     /**
      * @param $request
      * @return Announciator
      */
     public function processAnnouncement($request)
     {
-        //melder registrieren
-        $announciator = $this->announciatorRepository->create($request->toArray());
-        //teilnehmer abhängig vom Melder registrieren
-        $this->participatorService->create($request, $announciator->id);
         //wk finden
-        $competition = $this->competitionService->find($request->competition_id);
+        $this->competition = $this->competitionService->find($request->competition_id);
+
+
+        //melder registrieren
+        $this->announciator = $this->announciatorRepository->create($request->all());
+        //teilnehmer abhängig vom Melder registrieren
+        $this->participatorService->create($request, $this->announciator->id, $this->competition->season);
+        $participators = $this->participatorService->getParticipators();
+
+        //Teilnehmer Informationen für seltec generieren
+        $this->participatorService->listParticipatorForSeltec($this->competition, $participators);
         //email abschicken mit Teilnehmerliste
-        $this->sendEmailWithCsvFile($announciator->Participator, $competition);
+        $this->sendEmailWithCsvFile($this->participatorService->getSeltecCollection(), $this->competition, $participators);
         //email an Melder schicken
-        $this->sendEmailToAnnounciator($announciator, $competition);
+        $this->sendEmailToAnnounciator($this->announciator, $this->competition);
 
-        return $announciator;
-    }
-
-    protected function sendEmailToAnnounciator($announciator, $competition)
-    {
-        Mail::send(new EnrolReceived($announciator, $competition));
+        return $this->announciator;
     }
 
     /**
@@ -119,18 +87,29 @@ class AnnounciatorService
         return (['announciator' => $announciator, 'competition' => $competition]);
     }
 
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function findCompetition($id)
     {
         return $this->competitionService->find($id);
     }
 
+    /**
+     * @return mixed
+     */
     public function getCompetionSelectable()
     {
         return $this->competitionService->getSelectable();
     }
 
+    /**
+     * @return mixed
+     */
     public function getSelectFirst()
     {
         return $this->competitionService->getSelectFirst();
     }
+
 }

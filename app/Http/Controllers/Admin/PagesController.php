@@ -104,12 +104,13 @@ class PagesController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update($id)
+    public function update($id, Request $request)
     {
         if (!Gate::allows('page_edit')) {
             return abort(401);
         }
-        $this->pageRepository->update(Input::all(), $id);
+        $inputs = $request->only('header','mnemonic', 'content');
+        $this->pageRepository->update($inputs, $id);
         return redirect('admin/pages');
     }
 

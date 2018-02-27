@@ -7,7 +7,7 @@
     {!! Form::text('leader', old('leader'), ['class' => 'form-control', 'placeholder' => '', 'required' => '']) !!}
 </div>
 <div class="col-sm-12 form-group">
-    {!! Form::label('addresses_id', Lang::get('quickadmin.addresses.title'), ['class' => 'control-label']) !!}
+    {!! Form::label('addresses_id', Lang::get('quickadmin.addresses.title'), ['class' => 'control-label']) !!} <br>
     {!! Form::select('addresses_id', $addresses, ( $organizer ? $organizer->address_id: null), ['class' => 'form-control select2']) !!}
 </div>
 <div class="col-sm-12 form-group">

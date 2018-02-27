@@ -10,6 +10,11 @@
                 <a href="details/{{ $competition->id }}">{{ $competition->header }}</a>
             @endif
         </h4>
+        <p class="desc"><span class="desc_type">Altersklassen:</span>
+            @foreach ($competition->ageclasses as $ageclass)
+           {{ $ageclass['shortname'] }},
+             @endforeach
+        </p>
         @if(!empty(trim($competition->classes)))
             <p class="desc"><span class="desc_type">Altersklassen: </span>{{ $competition->reduceClasses() }}</p>
         @endif

@@ -63,6 +63,7 @@ return [
      | will be used with date and date-time functions.
      |
      */
+    'date_locale_format' => 'd.m.Y',
     'date_format' => 'Y-m-d',
     'date_format_js' => 'yy-mm-dd',
     /*

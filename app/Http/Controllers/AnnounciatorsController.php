@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ageclass;
 use App\Services\AnnounciatorService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Redirect;
 use Session;
 
 class AnnounciatorsController extends Controller
@@ -31,7 +33,12 @@ class AnnounciatorsController extends Controller
         }
         $competition       = $this->announciatorService->findCompetition($id);
         $disciplines       = $competition->disciplines->pluck('shortname', 'id')->toArray();
-        $ageclasses        = $competition->ageclasses->pluck('shortname', 'id')->toArray();
+        if('cross' == $competition->season) {
+            $ageclasses = Ageclass::orderBy('name', 'asc')->pluck('shortname', 'id')->toArray();
+        }
+        else {
+            $ageclasses = $competition->ageclasses->pluck('shortname', 'id')->toArray();
+        }
         $competitionselect = $this->announciatorService->getCompetionSelectable();
         return view('front.announciators.create', compact('competition', 'competitionselect', 'disciplines', 'ageclasses'));
     }
@@ -45,19 +52,23 @@ class AnnounciatorsController extends Controller
      */
     public function store(Request $request)
     {
-        try {
+
+//        try {
             $announciator = $this->announciatorService->processAnnouncement($request);
             $cookie = Cookie::make('announciators_id', $announciator->id);
             return redirect()->action('AnnounciatorsController@listParticipator')->withCookie($cookie);
-        } catch (\Exception $e) {
-            if ($request->wantsJson()) {
-                return response()->json([
-                                            'error'   => true,
-                                            'message' => $e->getMessageBag()
-                                        ]);
-            }
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
-        }
+//        } catch (\Exception $e) {
+//            if ($request->wantsJson()) {
+//                return response()->json([
+//                                            'error'   => true,
+//                                            'message' => $e->getMessageBag()
+//                                        ]);
+//            }
+//            $message = $e->getMessage();
+//            dump($message = $e->getMessage());
+////            return Redirect::back()->withInput()->withErrors(array('user_name' => $message));
+////            return redirect()->back()->withErrors()->withInput();
+//        }
     }
 
     public function listParticipator()
