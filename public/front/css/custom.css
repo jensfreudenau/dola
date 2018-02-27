@@ -1,80 +1,178 @@
+
 body {
-    padding-top: 20px;
-    font-size: 0.8rem;
-    background: #ccc url('../../images/DSCF1951.jpg') no-repeat fixed top center;
-    background-size: cover;
+    display: block;
 }
+
+
+
+
+#main-image {
+    border-bottom: 1px solid #95abadb3;
+    height: auto;
+    background: url(../../images/concrete-wall-1920x1080.png) fixed no-repeat center;
+    position: relative;
+    z-index: 16;
+}
+
+#main-image:after { /* add the transparent pattern overlay */
+    background: #95abadb3 /*url(images/see-through-pattern-background-2.png) center repeat*/;
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    opacity: 0.7;
+    z-index: -1;
+}
+
 .section {
-    background-color: white;
-    padding:20px;
+    /*background-color: white;*/
+    padding: 20px;
+    background-color: #fff;
 }
-h3, h4{
+
+.h1, h1 {
+    font-size: 2.0rem;
+}
+
+h3, h4 {
     padding: 20px 0 20px 0;
 }
-i.fa-li {
-    padding-top:2px;
+
+h1, h2, h3, h4 {
+    letter-spacing: 5px;
+    font-weight: 400;
 }
+
+.card h1, .card h2, .card h3, .card h4 {
+    letter-spacing: 1px;
+    font-weight: 200;
+}
+h1 a.navbar-brand {
+    font-size: 2.5rem;
+}
+.card li {
+    background: #fff;
+    padding: 10px;
+    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
+    margin-bottom: 25px;
+    border: 1px solid lightgray;
+}
+
+.card {
+    border: none;
+    box-shadow:0 5px 6px rgba(0, 0, 0, 0.19)
+}
+
+
+i.fa-li {
+    padding-top: 2px;
+}
+
 .footer {
     padding-top: 40px;
     padding-bottom: 40px;
     margin-top: 40px;
     border-top: 1px solid #eee;
 }
-a.nav-link{
-    color: #fff;
-}
-a {
-    color: rgb(2, 150, 98);
-}
+
 a:hover {
-    color: rgb(2, 150, 98);
+    /*color: rgb(0, 149, 223) !important;*/
 }
-div.info a:hover {
-    color: rgb(2, 150, 98);
+
+h1 a:hover {
+    color: #fff !important;
     text-decoration: none;
-    border-bottom: 1px solid rgb(2, 150, 98);
+    border-bottom: 1px solid #fff;
 }
+
+div.info a:hover {
+    color: #007bff;
+    text-decoration: none;
+    border-bottom: 1px solid #007bff;
+}
+
 header {
     border-bottom: 1px solid white;
 }
+
 header a {
     color: white;
 }
+
 /* Main marketing message and sign up button */
 .jumbotron {
-    text-align: center;
+
     background-color: transparent;
 }
 
-.jumbotron .btn {
-    padding: 14px 24px;
-    font-size: 21px;
+a.header {
+    color: white;
 }
 
-h1, h2, h3,h4{
-    font-weight:200;
+a:hover {
+    color:#007bff;
 }
-h1 a.navbar-brand {
-    font-size: 2.5rem;
+
+.nav-filter {
+    background-color: #444;
 }
-a.header   {
-    color:white;
+.navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover {
+    color:  #fff !important;
 }
+.navbar-light .navbar-nav .active > .nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show > .nav-link {
+    color: #fff
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff !important;
+    background-color: #ff5722 !important;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #fff
+}
+
+.navbar-nav {
+    padding-right: 50px;
+}
+
+a.nav-link {
+    color: #fff;
+}
+
+a.nav-link:hover {
+    color: #fff !important;
+    text-decoration: underline;
+}
+
+.header h1 {
+    letter-spacing: 12px;
+}
+
+nav.background {
+    background: #ccc url('../../images/200m1_slim.jpg');
+    box-shadow: 0 5px 6px rgba(0, 0, 0, 0.19);
+    background-size: cover
+}
+
 .navbar-toggler {
     background: white;
 }
-.navbar-light .navbar-nav .nav-link{
-    color:white;
+
+.navbar-light .navbar-nav .nav-link {
+    color: white;
     font-size: 1.1rem;
 }
-li.nav-item
-{
+
+li.nav-item {
     margin-right: 30px;
+    /*background-color: #FF5722;*/
+    border-radius: .25rem;
 }
-.background {
-   background: #2c9c78;
-}
-.table thead td{
+
+.table thead td {
     vertical-align: bottom;
     border-bottom: 2px solid #e9ecef;
     text-align: inherit;
@@ -82,24 +180,28 @@ li.nav-item
     font-weight: bold;
     padding: 1px;
 }
-.pages_table table td, .pages_table table th{
-    border-top:none;
+
+.pages_table table td, .pages_table table th {
+    border-top: none;
 }
+
 .desc_type, time {
-    font-weight:600;
+    font-weight: 600;
 }
-desc {
-    font-weight: 200;
+
+.desc {
+    font-weight: 100;
 }
+
 p {
     margin-bottom: 0.2rem;
 }
-.card li {
-    padding: 10px;
-    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
-    margin-bottom: 25px;
-    border: 1px solid lightgray;
+
+.list-group-horizontal .list-group-item {
+    display: inline-block;
+    box-shadow: none;
 }
-.card {
-    border:none;
+.list-group-horizontal .list-group-item {
+    margin:4px;
+    border-radius:0;
 }

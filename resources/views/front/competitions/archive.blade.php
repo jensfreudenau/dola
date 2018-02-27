@@ -18,14 +18,18 @@
                     <h4 class="card-title pb-0">{{ $year }}</h4>
                 </div>
                 <div class="card-body">
-                    <table class="table no-border table-sm table-hover table-responsive">
+                    <ul class="list-group-horizontal">
                         @foreach($results as $key => $day)
-                            @if ($i % 4 == 0) <tr> @endif
-                            @php $i ++ @endphp
-                            <td>
-                                <a href="{{ asset('storage/resultsets/'.$season.'/'.basename($day['file'])) }}" target="_blank">{{$day['date'] }}</a>
+                            @if  ('m' == substr(basename($day['file'], ".html"), -1))
+                                <li class="list-group-item"><a href="{{ asset('storage/resultsets/'.$season.'/'.basename($day['file'])) }}"  target="_blank">{{$day['date'] }} </a>m&auml;nnlich</li>
+                            @elseif  ('w' == substr(basename($day['file'], ".html"), -1))
+                                <li class="list-group-item"><a href="{{ asset('storage/resultsets/'.$season.'/'.basename($day['file'])) }}"  target="_blank">{{$day['date'] }} </a> weiblich</li>
+                            @else
+                                <li class="list-group-item"><a href="{{ asset('storage/resultsets/'.$season.'/'.basename($day['file'])) }}"  target="_blank">{{$day['date'] }}</a></li>
+                            @endif
                         @endforeach
-                    </table>
+                    </ul>
+
                 </div>
 
             </div>

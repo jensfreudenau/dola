@@ -71,7 +71,9 @@
         <h5>Zeitplan</h5>
         <div class="justify-content-center">
             <div class="jumbotron my-auto">
+                <div class="table-responsive">
                 {!! $competition->timetable_1 !!}
+                </div>
             </div>
         </div>
 

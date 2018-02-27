@@ -20,7 +20,7 @@ class Competition extends BaseModel
     use FormAccessible;
     use StringMarkerTrait;
     protected $fillable       = ['organizer_id', 'start_date', 'timetable_1', 'submit_date', 'header', 'info', 'season', 'classes', 'award', 'register', 'only_list'];
-    protected $tableStyle     = '<table class="table table-sm table-hover table-responsive">';
+    protected $tableStyle     = '<table class="table table-sm table-hover">';
     protected $tableHeadStyle = '<thead class="thead-inverse">';
 
     public function __construct(array $attributes = [])
@@ -112,7 +112,7 @@ class Competition extends BaseModel
      */
     public function getGermanDate($value)
     {
-        return Carbon::parse($value)->format('d.m.Y');
+        return $this->createViewFormat($value);
     }
 
     /**
@@ -123,12 +123,7 @@ class Competition extends BaseModel
      */
     public function getStartDateAttribute($input)
     {
-        if ($input != null) {
-            $customFormat = Carbon::parse($input)->format('d.m.Y');
-        } else {
-            $customFormat = '';
-        }
-        return $customFormat;
+        return $this->createViewFormat($input);
     }
 
     /**
@@ -137,11 +132,7 @@ class Competition extends BaseModel
      */
     public function setStartDateAttribute($input)
     {
-        if ($input != null && $input != '') {
-            $this->attributes['start_date'] = Carbon::createFromFormat(config('app.date_format'), $input)->format('Y-m-d');
-        } else {
-            $this->attributes['start_date'] = null;
-        }
+        $this->attributes['start_date'] = $this->createMysqlFormat($input);
     }
 
     /**
@@ -152,12 +143,7 @@ class Competition extends BaseModel
      */
     public function getSubmitDateAttribute($input)
     {
-        if ($input != null) {
-            $customFormat = Carbon::parse($input)->format('d.m.Y');
-        } else {
-            $customFormat = '';
-        }
-        return $customFormat;
+        return $this->createViewFormat($input);
     }
 
     /**
@@ -168,10 +154,31 @@ class Competition extends BaseModel
      */
     public function setSubmitDateAttribute($input)
     {
-        if (!empty($input)) {
-            $this->attributes['submit_date'] = Carbon::createFromFormat(config('app.date_format'), $input)->format('Y-m-d');
+        $this->attributes['submit_date'] = $this->createMysqlFormat($input);
+    }
+
+    /**
+     * @param $input
+     * @return null|string
+     */
+    protected function createViewFormat($input)
+    {
+        if ($input != null) {
+            return Carbon::parse($input)->format('d.m.Y');
         } else {
-            $this->attributes['submit_date'] = null;
+            return null;
+        }
+    }
+    /**
+     * @param $input
+     * @return null|string
+     */
+    protected function createMysqlFormat($input)
+    {
+        if (!empty($input)) {
+            return Carbon::createFromFormat(config('app.date_locale_format'), $input)->format('Y-m-d');
+        } else {
+            return null;
         }
     }
 }

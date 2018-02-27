@@ -140,40 +140,7 @@
 @section('javascript')
     @parent
     <script src="{{ url('quickadmin/js') }}/bootstrap-datepicker.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('.datepicker').datepicker({
-                autoclose: true,
-                format: "dd.mm.yyyy"
-            });
-            $('table[data-form="deleteForm"]').on('click', '.form-delete', function (e) {
-                e.preventDefault();
-                var $form = $(this);
-                $('#confirm').modal({backdrop: 'static', keyboard: false})
-                    .on('click', '#delete-btn', function () {
-                        $form.submit();
-                    });
-            });
 
-
-            var counter = 0;
-
-            $("#addValues").click(function () {
-                $(this).removeAttr("href");
-                let newTextBoxDiv = $(document.createElement('div'));
-                newTextBoxDiv.after().html(
-                    '<div class="form-group">' +
-                    '<label for="additional-key_'+counter+'">Key</label>' +
-                    '<input id="additional-key_'+counter+'" class="form-control" name="keyvalue['+counter+'][key]" type="text">' +
-                    '</div><div class="form-group">' +
-                    '<label for="additional-value_'+counter+'">Value</label>' +
-                    '<input id="additional-value_'+counter+'" class="form-control" name="keyvalue['+counter+'][value]" type="text">' +
-                    '</div>'
-                );
-                newTextBoxDiv.appendTo("#additionalGroup");
-                counter++;
-            });
-        });
-    </script>
+    <script src="{{ url('quickadmin/js') }}/add_additional.js"></script>
 
 @stop

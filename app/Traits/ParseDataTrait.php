@@ -209,7 +209,7 @@ trait ParseDataTrait
     {
         $class = str_replace('*', '', $class);
         if ('Zeit' == $class) return true;
-        $class = $this->prepareAgeclassData($class);
+//        $class = $this->prepareAgeclassData($class);
         if (false !== strpos($class, '/')) {
             [$class, $secondClass] = explode('/', $class);
             if ($secondClass) {

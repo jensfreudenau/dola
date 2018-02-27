@@ -1,15 +1,13 @@
-
-<a class="header" href="{{ url('/') }}"><h1>{{ config('app.name', 'DoLa') }}</h1></a>
-
-<nav class="navbar navbar-expand-lg navbar-light background">
-
+{{--<a class="header" href="{{ url('/') }}"><h1>{{ config('app.name', 'DoLa') }}</h1></a>--}}
+<nav class="navbar navbar-light  navbar-expand-lg navbar-fixed-top nav-pills background py-5">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-
+    <h1 class="navbar-brand mb-0">
+        <a class="header" href="{{ url('/') }}">{{ config('app.name', 'DoLa') }}</a>
+    </h1>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-
+        <ul class="navbar-nav ml-auto">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Wettk&auml;mpfe </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -23,7 +21,6 @@
                 <div class="dropdown-menu" aria-labelledby="statistik">
                     <a class="dropdown-item" href="/records/record">Kreisrekorde</a> <a class="dropdown-item" href="/records/best/female">Frauen Bestenliste</a> <a class="dropdown-item" href="/records/best/male">M&auml;nner Bestenliste</a>
                 </div>
-
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="wettkaempfe" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Kontakt</a>
@@ -32,7 +29,5 @@
                 </div>
             </li>
         </ul>
-
     </div>
-
 </nav>
