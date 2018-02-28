@@ -28,7 +28,7 @@ trait EmailTrait
             fputcsv($file, $row, ",", '"');
         }
         rewind($file);
-        Mail::send('emails.registration', ['competition' => $this->competition, 'announciator' => $participator[0]->Announciator], function ($message) use ($file, $filename, $competition, $participator) {
+        Mail::send('emails.registration', ['competition' => $competition, 'announciator' => $participator[0]->Announciator], function ($message) use ($file, $filename, $competition, $participator) {
             $message->to($competition->organizer->address->email)
                     ->from($participator[0]->Announciator->email)
                     ->subject('Teilnehmerliste ' . $competition->header);
