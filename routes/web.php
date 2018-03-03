@@ -21,7 +21,9 @@ Route::post('/announciators/store', 'AnnounciatorsController@store')->name('anno
 Route::get('/records/record', 'RecordsController@index')->name('records.record');
 Route::get('/records/{id}', 'RecordsController@record');
 Route::get('/records/best/{sex}', 'RecordsController@best');
+Route::get('/pages/altersklassen', 'PagesController@ageclasses');
 Route::get('/pages/{mnemonic}', 'PagesController@show');
+
 
 // Authentication Routes...
 $this->get('login', 'Auth\LoginController@showLoginForm')->name('auth.login');

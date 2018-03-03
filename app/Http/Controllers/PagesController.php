@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
+
 use App\Http\Controllers\Controller;
 
-use App\Models\Page;
 use App\Repositories\Page\PageRepositoryInterface;
-use Illuminate\Http\Request;
-use Session;
+use App\Services\PageService;
+
 
 
 class PagesController extends Controller
 {
-    protected $pagerepository;
+    protected $pageService;
 
-    public function __construct(PageRepositoryInterface $pageRepository)
+    public function __construct(PageService $pageService)
     {
-        $this->pagerepository = $pageRepository;
+        $this->pageService = $pageService;
     }
 
     /**
@@ -28,7 +27,13 @@ class PagesController extends Controller
      */
     public function show($mnemonic)
     {
-        $page = $this->pagerepository->findBy('mnemonic', $mnemonic);
+        $page = $this->pageService->findMnemonic($mnemonic);
         return view('front.pages.show', compact('page'));
+    }
+
+    public function ageclasses()
+    {
+        $ageclasses = $this->pageService->loadAgeclasses();
+        return view('front.pages.ageclasses', compact('ageclasses'));
     }
 }

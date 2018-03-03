@@ -2,15 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Traits\ParseDataTrait;
-use App\Models\Additional;
-use App\Models\Competition;
-use App\Http\Requests;
-use App\Repositories\Competition\CompetitionRepositoryInterface;
+
 use App\Services\CompetitionService;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Storage;
+
 
 class CompetitionsController extends Controller
 {

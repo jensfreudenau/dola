@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Address;
 use App\Http\Controllers\Controller;
 use App\Repositories\Address\AddressRepositoryInterface;
+use App\Repositories\Address\AgeclassRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
