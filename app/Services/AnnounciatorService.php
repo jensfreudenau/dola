@@ -30,6 +30,7 @@ class AnnounciatorService
      * AnnounciatorService constructor.
      * @param AnnounciatorRepositoryInterface $announciatorRepository
      * @param ParticipatorService $participatorService
+     * @param CompetitionService $competitionService
      */
     public function __construct(AnnounciatorRepositoryInterface $announciatorRepository, ParticipatorService $participatorService, CompetitionService $competitionService)
     {

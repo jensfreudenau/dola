@@ -8,7 +8,6 @@
 
 namespace App\Services;
 
-use App\Models\Participator;
 use App\Repositories\Participator\ParticipatorRepositoryInterface;
 
 class ParticipatorService

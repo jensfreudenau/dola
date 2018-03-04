@@ -220,7 +220,6 @@ class CompetitionService
 
     private function syncAgeClasses($competition)
     {
-
         $ageclassIds = [];
         foreach ($this->getProofedAgeclasses() as $ageclassKey => $ageclass) {
             $data          = Ageclass::where('ladv', '=', $ageclassKey)->select('id')->get()->toArray();
