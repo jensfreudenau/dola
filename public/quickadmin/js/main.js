@@ -296,26 +296,31 @@ $(document).ready(function () {
     }
 
     function formDataTable(response) {
-        var $th = '';
-        var firstColumn = response.data[0];
+        let th = '';
+        let firstColumn = response.data[0];
         response.data.shift();
-        var $table = $('<table>');
-        var $thead = $('<thead>').appendTo($table);
-        $tr = $('<tr>').appendTo($thead);
+        let table = $('<table>');
+        let thead = $('<thead>').appendTo(table);
+        tr = $('<tr>').appendTo(thead);
+
         $(firstColumn).each(function (i) {
-            $th = $('<th>', {'html': firstColumn[i]}).appendTo($tr);
+            th = $('<th>', {'html': firstColumn[i]}).appendTo(tr);
         });
 
-        var allData = response.data;
-        var $tbody = $('<tbody>').appendTo($table);
+        let allData = response.data;
+        let tbody = $('<tbody>').appendTo(table);
 
         $(allData).each(function (j) {
-            $tr = $('<tr>').appendTo($tbody);
+            if(allData[j].length == 1 || allData[j].length == 0) {
+                return;
+            }
+            tr = $('<tr>').appendTo(tbody);
             $(allData[j]).each(function (k) {
-                var $td = $('<td>', {'html': allData[j][k]}).appendTo($tr);
+                let td = $('<td>', {'html': allData[j][k]}).appendTo(tr);
             });
         });
-        return $table;
+
+        return table;
     }
 
     function processData(csv) {
@@ -325,10 +330,25 @@ $(document).ready(function () {
         // allTextLines.shift();
         let flag = -1;
         for (var i = 0; i < allTextLines.length; i++) {
-            var data = allTextLines[i].split(';');
-            var tarr = [];
-            var anfang = allTextLines[i].indexOf("Zeit");
-            var ende = allTextLines[i].indexOf("Elektr");
+            let data = allTextLines[i].split(';');
+
+            let emptyLineFlag = 'kein treffer';
+            for (let j = 0; j < data.length; j++) {
+                if(data[j].trim() != ""){
+                    emptyLineFlag = 'treffer';
+                }
+            }
+            if(emptyLineFlag == 'kein treffer') {
+                continue;
+            }
+
+            let tarr = [];
+            let anfang = allTextLines[i].indexOf("Zeit");
+            let ende = allTextLines[i].indexOf("Elektr");
+
+            if(ende == -1){
+                ende = allTextLines[i].indexOf("Meldungen");
+            }
             if (anfang === 0) {
                 flag = 1;
                 setClasses(allTextLines[i]);
@@ -339,7 +359,7 @@ $(document).ready(function () {
             if (flag === 1) {
                 table += allTextLines[i] + '\r\n';
             }
-            for (var j = 0; j < data.length; j++) {
+            for (let j = 0; j < data.length; j++) {
                 if (data[j].search("uszei") > 0) {
                     setAward(data[j]);
                 }
@@ -377,26 +397,28 @@ function setRadioSeason(headerline) {
     }
 }
 
-function setHeader(headerline) {
-    $('#competition-headline').val(headerline);
+function setHeader(header) {
+    let headerline = header.split('am');
+    $('#competition-headline').val(headerline[0]);
 }
 
 function setStartDate(data) {
     let startStr = data.toString();
     startStr = startStr.replace(/am/g, "");
     startStr = startStr.replace(/den/g, "");
-    console.log(startStr);
+ 
     if (!moment($.trim(startStr), ['DD. MMMM YYYY', 'DD.MMMM YYYY', 'DD.MM.YYYY'], true).isValid()) {
         return false;
     }
-    var germanDate = moment(startStr, ['DD. MMMM YYYY', 'DD.MMMM YYYY', 'DD.MM.YYYY']);
+    let germanDate = moment(startStr, ['DD. MMMM YYYY', 'DD.MMMM YYYY', 'DD.MM.YYYY']);
+
     $('#competition-start_date').val(germanDate.format('DD.MM.YYYY'));
 }
 
 function setMeldeschluss(data) {
     let meldeschluss = data.split(':');
     let meldeschlussStr = meldeschluss[1].replace(/\s/g, '');
-    var germanDate = moment(meldeschlussStr, ['DD.MMMM YYYY', 'DD.MM.YYYY']);
+    let germanDate = moment(meldeschlussStr, ['DD.MMMM YYYY', 'DD.MM.YYYY']);
     $('#competition-submit_date').val(germanDate.format('DD.MM.YYYY'));
 }
 

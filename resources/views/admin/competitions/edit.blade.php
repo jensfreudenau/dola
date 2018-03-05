@@ -2,13 +2,14 @@
 
 @section('content')
     <h3 class="page-title">@lang('quickadmin.competitions.title')</h3>
-
+    <h3 class="card-title text-right"><a href="{{ route('admin.competitions.show',[$competition->id]) }}" class="btn btn-sm btn-warning">@lang('quickadmin.qa_view')</a></h3>
     <div class="card card-default">
         <div class="card-heading">
-            <h4>@lang('quickadmin.competitions.update') :: {{$competition->header}}</h4>
+            <h2>@lang('quickadmin.competitions.update') :: {{$competition->header}}</h2>
         </div>
 
         <div class="card-body">
+
             <div class="row">
                 <div class="col-sm-10">
                     <!-- Display Validation Errors -->

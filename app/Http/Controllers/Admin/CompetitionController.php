@@ -5,12 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Ageclass;
 use App\Models\Competition;
 use App\Models\Address;
-
 use App\Models\Organizer;
 use App\Models\Upload;
-
 use App\Traits\FileUploadTrait;
-
 use App\Http\Requests\Admin\StoreCompetitionsRequest;
 use App\Http\Requests\Admin\UpdateCompetitionsRequest;
 use App\Repositories\Competition\CompetitionRepositoryInterface;
@@ -44,11 +41,13 @@ class CompetitionController extends Controller
         if (!Gate::allows('competition_access')) {
             return abort(401);
         }
-        $future = $this->competitionRepository->getFutured();
+        $future  = $this->competitionRepository->getFutured();
         $elapsed = $this->competitionRepository->getElapsed();
         return view('admin.competitions.index', compact('future', 'elapsed'));
     }
+
     use StringMarkerTrait;
+
     public function show($id)
     {
         if (!Gate::allows('competition_access')) {
@@ -75,10 +74,9 @@ class CompetitionController extends Controller
         $disciplines = $this->competitionService->getSelectedDisciplines();
         $competition = $this->competitionService->find($id);
         $additionals = $this->competitionService->getAdditionals($id);
-
-        $season      = $this->competitionService->getActiveSeason($competition->season);
-        $register    = $this->competitionService->getActiveRegister($competition->register);
-        $onlyList    = $this->competitionService->getActiveListed($competition->only_list);
+        $season   = $this->competitionService->getActiveSeason($competition->season);
+        $register = $this->competitionService->getActiveRegister($competition->register);
+        $onlyList = $this->competitionService->getActiveListed($competition->only_list);
         return view('admin.competitions.edit', compact('addresses', 'competition', 'organizers', 'season', 'additionals', 'register', 'onlyList', 'ageclassList', 'ageclasses', 'disciplines'));
     }
 
@@ -88,7 +86,6 @@ class CompetitionController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-
     public function update(Request $request, $id)
     {
         if (!Gate::allows('competition_edit')) {
@@ -99,6 +96,7 @@ class CompetitionController extends Controller
     }
 
     use FileUploadTrait;
+
     public function uploader(Request $request, $id)
     {
         if (!Gate::allows('competition_access')) {
@@ -132,7 +130,6 @@ class CompetitionController extends Controller
         return view('admin.competitions.create', compact('organizers', 'competition', 'season', 'additionals', 'register', 'onlyList'));
     }
 
-
     /**
      * Store a newly created resource in storage.
      *
@@ -161,8 +158,7 @@ class CompetitionController extends Controller
         if (!Gate::allows('competition_delete')) {
             return abort(401);
         }
-       $this->competitionRepository->delete($id);
-
+        $this->competitionRepository->delete($id);
         return redirect()->route('admin.competitions.index');
     }
 
