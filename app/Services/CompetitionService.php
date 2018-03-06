@@ -8,6 +8,7 @@
 
 namespace App\Services;
 
+use App\Library\Timetable;
 use App\Models\Additional;
 use App\Models\Ageclass;
 use App\Traits\ProofLADVTrait;
@@ -18,6 +19,7 @@ use App\Models\Discipline;
 use App\Models\Organizer;
 use App\Repositories\Additional\AdditionalRepositoryInterface;
 use App\Repositories\Competition\CompetitionRepositoryInterface;
+use App\Traits\StringMarkerTrait;
 use DateTime;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
@@ -25,11 +27,16 @@ use Illuminate\Support\Facades\Storage;
 
 class CompetitionService
 {
+    const TABLE_STYLE = '<table class="table table-sm table-hover">';
+    const THEAD_STYLE = '<thead class="thead-inverse">';
     protected $competitionRepository;
     protected $additionalRepository;
     protected $ageclassList   = array();
     protected $disciplineList = array();
     protected $competitionService;
+    protected $tableStyle     = '<table class="table table-sm table-hover">';
+    protected $tableHeadStyle = '<thead class="thead-inverse">';
+    protected $errorList;
 
     public function __construct(CompetitionRepositoryInterface $competitionRepository, AdditionalRepositoryInterface $additionalRepository)
     {
@@ -97,16 +104,24 @@ class CompetitionService
 
     use ProofLADVTrait;
     use ParseDataTrait;
+    use StringMarkerTrait;
+
     /**
      * @param $submitData
-     * @return  $competitionId
+     * @param bool $ignore
+     * @return bool $competitionId
      */
-    public function storeData($submitData)
+    public function storeData($submitData, $ignore = false)
     {
-
         if (!empty($submitData['timetable_1'])) {
             $submitData['timetable_1'] = $this->storeTimetableData($submitData['timetable_1']);
-            $errorList                 = $this->getErrorlists();
+            $submitData['timetable_1'] = $this->replaceTableTag($submitData['timetable_1'], $this->tableStyle, $this->tableHeadStyle);
+            $this->errorList           = $this->getErrorlists();
+        }
+        if (!empty($this->errorList['ageclassError']) || !empty($this->errorList['disciplineError'])) {
+            if (false == $ignore) {
+                return true;
+            }
         }
         $competitionId = $this->competitionRepository->create($submitData)->id;
         $this->attachAgeclasses($competitionId);
@@ -116,31 +131,28 @@ class CompetitionService
         }
         if (!empty($errorList['ageclassError'])) {
             Log::info('ageclassError');
-            // Log::debug(print_r($errorList['ageclassError'], TRUE));
-//            return back()->withInput()->withErrors($errorList['ageclassError']);
         }
         if (!empty($errorList['disciplineError'])) {
             Log::info('disciplineError');
-            // Log::debug(print_r($errorList['disciplineError'], TRUE));
-//            return back()->withInput()->withErrors($errorList['disciplineError']);
         }
         return $competitionId;
     }
 
-    private function storeTimetableData($timetable)
+    private function storeTimetableData($timetableCsv)
     {
-        $this->createDomObject($timetable);
-        $this->parsingTable();
-        $timetable = $this->getParsedTable();
-        $this->searchAgeclasses();
-        $this->searchDisciplines();
-        foreach ($this->getAgeclassesFromTable() as $class) {
+        $discipline = new \App\Library\Discipline();
+        $ageclass   = new \App\Library\Ageclass();
+        $timetable  = new Timetable($ageclass, $discipline);
+        $timetable->setTimeTable($timetableCsv);
+        $timetable->loadIntoDom();
+        $timetable->parsingTable();
+        foreach ($timetable->ageclass->getAgeclasses() as $class) {
             $this->proofAgeclassCollection($class);
         }
-        foreach ($this->getDisciplinesFromTable() as $discipline) {
+        foreach ($timetable->discipline->getDisciplines() as $discipline) {
             $this->proofDisciplineCollection($discipline);
         }
-        return $timetable;
+        return $timetable->getTimeTable();
     }
 
     /**
@@ -202,13 +214,9 @@ class CompetitionService
         $this->saveAdditionals($submitData, $competition);
         if (!empty($errorList['ageclassError'])) {
             Log::debug('ageclassError');
-            // Log::debug(print_r($errorList['ageclassError'], TRUE));
-//            return back()->withInput()->withErrors($errorList['ageclassError']);
         }
         if (!empty($errorList['disciplineError'])) {
             Log::debug('disciplineError');
-            // Log::debug(print_r($errorList['disciplineError'], TRUE));
-//            return back()->withInput()->withErrors($errorList['disciplineError']);
         }
         return true;
     }
@@ -339,5 +347,13 @@ class CompetitionService
     public function getOrganizers()
     {
         return Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getErrorList()
+    {
+        return $this->errorList;
     }
 }

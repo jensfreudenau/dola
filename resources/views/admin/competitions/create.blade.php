@@ -11,16 +11,21 @@
                     <div class="card-title">
                         <h2>Create Competition</h2>
                     </div>
-                    <div class="flash-message">
-                        @if(Session::has('flash_message'))
-                            <div class="alert alert-success"><em> {!! session('flash_message') !!}</em></div>
-                        @endif
 
-                    </div> <!-- end .flash-message -->
                     <div class="card-body">
-                        <!-- Display Validation Errors -->
+
                         @include('common.errors')
                         {{ Form::open(['url'=>'admin/competitions', 'enctype'=>'multipart/form-data', 'class'=>'dropzone', 'id' => 'csvuploader']) }}
+
+                            @if (count($errors) > 0)
+                            <div class="form-group">
+                                {!! Form::label('ignore_error', 'ignore_error') !!}
+                                {!! Form::checkbox('ignore_error', 'ignore' , null, ['div' => 'cliente']) !!}
+
+                            </div>
+                            @endif
+
+
                         @include('admin.competitions._form', ['disabled' => true])
                         <div id="additionalGroup">
 

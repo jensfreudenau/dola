@@ -20,8 +20,7 @@ class Competition extends BaseModel
     use FormAccessible;
     use StringMarkerTrait;
     protected $fillable       = ['organizer_id', 'start_date', 'timetable_1', 'submit_date', 'header', 'info', 'season', 'classes', 'award', 'register', 'only_list'];
-    protected $tableStyle     = '<table class="table table-sm table-hover">';
-    protected $tableHeadStyle = '<thead class="thead-inverse">';
+
 
     public function __construct(array $attributes = [])
     {
@@ -90,12 +89,6 @@ class Competition extends BaseModel
 
     public function save(array $options = [])
     {
-        if($this->timetable_1){
-            $this->timetable_1 = $this->replaceTableTag($this->timetable_1, $this->tableStyle, $this->tableHeadStyle);
-        }
-        if($this->classes){
-            $this->classes = $this->prepareClasses($this->classes);
-        }
         parent::save();
     }
 

@@ -17,9 +17,7 @@ trait StringMarkerTrait
      */
     protected function replaceTableTag($timetable, $tableStyle, $tableHeadStyle)
     {
-        $tt = preg_replace("/<([a-z][a-z0-9]*)[^>]*?(\/?)>/i", '<$1$2>', $timetable);
-        $tt = str_replace(['<span>', '</span>', '<p>', '</p>', "Uhr", "\n"], '', $tt);
-        $tt = str_replace('<table>', $tableStyle, $tt);
+        $tt = str_replace('<table>', $tableStyle, $timetable);
         return str_replace('<thead>', $tableHeadStyle, $tt);
     }
 

@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 
 class CompetitionController extends Controller
@@ -142,7 +143,13 @@ class CompetitionController extends Controller
         if (!Gate::allows('competition_create')) {
             return abort(401);
         }
-        $competionId = $this->competitionService->storeData($request->all());
+        $ignore = $request->get('ignore_error');
+        $competionId = $this->competitionService->storeData($request->all(), $ignore);
+        $errorList = $this->competitionService->getErrorList();
+
+        if(count($errorList['disciplineError']) && $ignore != 'ignore') {
+            return Redirect::back()->withInput()->withErrors($errorList['disciplineError']);
+        }
         return redirect('/admin/competitions/' . $competionId);
     }
 
