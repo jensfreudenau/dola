@@ -2,10 +2,6 @@
 body {
     display: block;
 }
-
-
-
-
 #main-image {
     border-bottom: 1px solid #95abadb3;
     height: auto;
@@ -59,7 +55,25 @@ h1 a.navbar-brand {
     margin-bottom: 25px;
     border: 1px solid lightgray;
 }
+.card li.halle {
+    border-top: 2px solid #199c18;
+}
+.card li.cross {
+    border-top: 2px solid #562b0e;
+}
+.card li.bahn {
+    border-top: 2px solid #ff9223;
+}
 
+hr.halle{
+    border: 1px solid #199c18;
+}
+hr.cross{
+    border: 1px solid #562b0e;
+}
+hr.bahn{
+    border: 1px solid #ff9223;
+}
 .card {
     border: none;
     box-shadow:0 5px 6px rgba(0, 0, 0, 0.19)

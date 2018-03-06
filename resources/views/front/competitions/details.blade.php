@@ -1,8 +1,8 @@
 @extends('layouts.front')
 @section('content')
-    <div class="card card-default mb-5 p-3">
+    <div class="card card-default mb-5 p-5">
         <h3>{{ $competition->header }}</h3>
-        <hr>
+        <hr class="{{$competition->season}}">
         <dl class="row">
             <dt class="col-sm-3">Datum:</dt>
             <dd class="col-sm-9">{{ $competition->start_date}}</dd>
