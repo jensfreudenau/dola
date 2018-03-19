@@ -24,6 +24,7 @@ use DateTime;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 class CompetitionService
 {
@@ -114,7 +115,7 @@ class CompetitionService
     public function storeData($submitData, $ignore = false)
     {
         if (!empty($submitData['timetable_1'])) {
-            $submitData['timetable_1'] = $this->storeTimetableData($submitData['timetable_1']);
+            $submitData['timetable_1'] = $this->storeTimetableData($submitData['timetable_1'], false);
             $submitData['timetable_1'] = $this->replaceTableTag($submitData['timetable_1'], $this->tableStyle, $this->tableHeadStyle);
             $this->errorList           = $this->getErrorlists();
         }
@@ -138,14 +139,21 @@ class CompetitionService
         return $competitionId;
     }
 
-    private function storeTimetableData($timetableCsv)
+    /**
+     * @param $timetableCsv
+     * @param $customAgeclasses
+     * @return mixed
+     */
+    private function storeTimetableData($timetableCsv, $customAgeclasses)
     {
         $discipline = new \App\Library\Discipline();
         $ageclass   = new \App\Library\Ageclass();
         $timetable  = new Timetable($ageclass, $discipline);
         $timetable->setTimeTable($timetableCsv);
         $timetable->loadIntoDom();
+        $timetable->setIgnoreAgeclasses($customAgeclasses);
         $timetable->parsingTable();
+
         foreach ($timetable->ageclass->getAgeclasses() as $class) {
             $this->proofAgeclassCollection($class);
         }
@@ -197,19 +205,25 @@ class CompetitionService
 
     /**
      * @param $competitionId
-     * @param $submitData
+     * @param Request $request
      * @return $this|bool
      */
-    public function updateData($competitionId, $submitData)
+    public function updateData($competitionId, Request $request)
     {
-
+        $submitData = $request->all();
         if (!empty($submitData['timetable_1'])) {
-            $submitData['timetable_1'] = $this->storeTimetableData($submitData['timetable_1']);
+            $submitData['timetable_1'] = $this->storeTimetableData($submitData['timetable_1'], $request->has('custom_ageclasses'));
             $errorList                 = $this->getErrorlists();
         }
+        /** @var Competition $competition */
         $competition = $this->find($competitionId);
         $competition->update($submitData);
-        $this->syncAgeClasses($competition);
+        if($request->has('custom_ageclasses')){
+            $competition->Ageclasses()->sync($submitData['ageclasses']);
+        }
+        else {
+            $this->syncAgeClasses($competition);
+        }
         $this->syncDisciplines($competition);
         $this->saveAdditionals($submitData, $competition);
         if (!empty($errorList['ageclassError'])) {

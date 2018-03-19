@@ -10,8 +10,6 @@
             <dd class="col-sm-9">{{ $competition->submit_date }}</dd>
             <dt class="col-sm-3">Auszeichnungen:</dt>
             <dd class="col-sm-9">{{ $competition->award }}</dd>
-            <dt class="col-sm-3">Klassen:</dt>
-            <dd class="col-sm-9">{{ $competition->reduceClasses() }}</dd>
             <dt class="col-sm-3">sportl. Leitung:</dt>
             <dd class="col-sm-9">{{ $competition->organizer->leader }}</dd>
             <dt class="col-sm-3">Meldeanschrift:</dt>
@@ -71,7 +69,7 @@
         <h5>Zeitplan</h5>
         <div class="justify-content-center">
             <div class="jumbotron my-auto">
-                <div class="table-responsive">
+                <div class="table-responsive table table-sm table-hover">
                 {!! $competition->timetable_1 !!}
                 </div>
             </div>

@@ -16,6 +16,7 @@ class Timetable extends Dom
     protected $theader;
     protected $tbody;
     protected $timeTable;
+    protected $ignoreAgeClasses;
 
     public function __construct(Ageclass $ageclass, Discipline $discipline)
     {
@@ -34,9 +35,11 @@ class Timetable extends Dom
     {
         $this->theader = $this->dom->getElementsByTagName('thead')->item(0);
         $this->tbody = $this->dom->getElementsByTagName('tbody')->item(0);
+        if (empty($this->ignoreAgeClasses)) {
+            $this->ageclass->setDomAgeclasses($this->theader);
+            $this->ageclass->iterateAgeclassCollection();
+        }
 
-        $this->ageclass->setDomAgeclasses($this->theader);
-        $this->ageclass->iterateAgeclassCollection();
         $this->discipline->setDomDisciplines($this->tbody);
         $this->discipline->iterateDisciplineCollection();
 
@@ -55,5 +58,10 @@ class Timetable extends Dom
     public function setTimeTable($timeTable)
     {
         $this->timeTable = $timeTable;
+    }
+
+    public function setIgnoreAgeclasses($customAgeclasses)
+    {
+        $this->ignoreAgeClasses = $customAgeclasses;
     }
 }

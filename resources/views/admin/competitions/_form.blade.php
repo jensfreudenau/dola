@@ -29,47 +29,27 @@
         {{ Form::select('disciplines[]', $disciplines, array_pluck($competition->disciplines, 'id'), ['multiple', 'class'=>'form-control select2']) }}
     </div>
     <div class="form-group">
+        {!! Form::label('custom_ageclasses', Lang::get('quickadmin.competitions.custom_ageclasses')) !!}
+            {{ Form::checkbox('custom_ageclasses') }} @lang('quickadmin.competitions.custom_ageclasses')<br>
         {!! Form::label('ageclasses', Lang::get('quickadmin.competitions.fields.classes')) !!}
         {!! Form::select('ageclasses[]', $ageclasses, array_pluck($competition->ageclasses, 'id'), ['multiple', 'class'=>'form-control select2']) !!}
     </div>
 @endif
 <div class="form-group">
     {!! Form::label('register', Lang::get('quickadmin.competitions.register')) !!}<br>
-    <div class="btn-group" data-toggle="buttons">
-        <label class="btn btn-primary {{$register['external']}}">
-            {{ Form::radio('register', 1, 0) }} @lang('quickadmin.competitions.external_register')
-        </label>
-        <label class="btn btn-primary {{$register['internal']}}">
-            {{ Form::radio('register', 0, 0) }} @lang('quickadmin.competitions.intern_register')
-
-        </label>
-
-    </div>
+    {{ Form::radio('register', 1, 0) }} @lang('quickadmin.competitions.external_register')
+    {{ Form::radio('register', 0, 0) }} @lang('quickadmin.competitions.intern_register')
 </div>
 <div class="form-group">
     {!! Form::label('only_list', Lang::get('quickadmin.competitions.only_list')) !!}<br>
-    <div class="btn-group" data-toggle="buttons">
-        <label class="btn btn-primary  {{$onlyList['list']}}">
-            {{ Form::radio('only_list', 1, true) }} @lang('quickadmin.competitions.list')
-        </label>
-        <label class="btn btn-primary {{$onlyList['not_list']}}">
-            {{ Form::radio('only_list', 0, false) }} @lang('quickadmin.competitions.show')
-        </label>
-    </div>
+    {{ Form::radio('only_list', 1, true) }} @lang('quickadmin.competitions.list')
+    {{ Form::radio('only_list', 0, false) }} @lang('quickadmin.competitions.show')
 </div>
 <div class="form-group">
     {!! Form::label('season', Lang::get('quickadmin.season')) !!}<br>
-    <div class="btn-group" data-toggle="buttons">
-        <label class="btn btn-primary {{$season['track']}}">
-            {{ Form::radio('season', 'bahn',0,['required']) }} @lang('quickadmin.competitions.track')
-        </label>
-        <label class="btn btn-primary {{$season['indoor']}}">
-            {{ Form::radio('season', 'halle') }} @lang('quickadmin.competitions.indoor')
-        </label>
-        <label class="btn btn-primary {{$season['cross']}}">
-            {{ Form::radio('season', 'cross') }} @lang('quickadmin.competitions.cross')
-        </label>
-    </div>
+    {{ Form::radio('season', 'bahn',0,['required']) }} @lang('quickadmin.competitions.track')
+    {{ Form::radio('season', 'halle') }} @lang('quickadmin.competitions.indoor')
+    {{ Form::radio('season', 'cross') }} @lang('quickadmin.competitions.cross')
 </div>
 <div class="form-group">
     {!! Form::label('timetable_1', Lang::get('quickadmin.timetable'). '1') !!}

@@ -56,13 +56,13 @@ h1 a.navbar-brand {
     border: 1px solid lightgray;
 }
 .card li.halle {
-    border-top: 2px solid #199c18;
+    border-left: 1px solid #199c18;
 }
 .card li.cross {
-    border-top: 2px solid #562b0e;
+    border-left: 1px solid #562b0e;
 }
 .card li.bahn {
-    border-top: 2px solid #ff9223;
+    border-left: 1px solid #ff9223;
 }
 
 hr.halle{

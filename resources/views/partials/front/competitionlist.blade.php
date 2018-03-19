@@ -11,13 +11,14 @@
             @endif
         </h4>
         <p class="desc"><span class="desc_type">Altersklassen:</span>
+            @php($sorted = array_sort($competition->ageclasses))
+
+
             @foreach ($competition->ageclasses as $ageclass)
-           {{ $ageclass['shortname'] }},
+                {{ $ageclass->shortname }},
              @endforeach
         </p>
-        @if(!empty(trim($competition->classes)))
-            <p class="desc"><span class="desc_type">Altersklassen: </span>{{ $competition->reduceClasses() }}</p>
-        @endif
+
         @if(!empty(trim($competition->submit_date)))
             <p class="desc"><span class="desc_type">Meldeschlu&szlig;: </span>{{ $competition->submit_date}}</p>
         @endif

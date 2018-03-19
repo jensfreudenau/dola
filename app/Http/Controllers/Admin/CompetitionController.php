@@ -83,7 +83,7 @@ class CompetitionController extends Controller
 
     /**
      * Update the given post.
-     * @param UpdateCompetitionsRequest $request
+     * @param Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
@@ -92,7 +92,7 @@ class CompetitionController extends Controller
         if (!Gate::allows('competition_edit')) {
             return abort(401);
         }
-        $this->competitionService->updateData($id, $request->all());
+        $this->competitionService->updateData($id, $request);
         return redirect('/admin/competitions/' . $id);
     }
 

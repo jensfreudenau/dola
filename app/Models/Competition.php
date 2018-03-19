@@ -70,7 +70,7 @@ class Competition extends BaseModel
      */
     public function Ageclasses()
     {
-       return $this->belongsToMany(Ageclass::class);
+       return $this->belongsToMany(Ageclass::class)->orderBy('ageclasses.shortname');
     }
 
     /**
