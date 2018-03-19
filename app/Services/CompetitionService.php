@@ -81,7 +81,7 @@ class CompetitionService
             // add the filename, to be sure not to
             // overwrite a array key
             list($filebase, $ending) = explode(".", $file);
-            if ($ending != 'html' || $ending != 'pdf' ) continue;
+            if ($ending != 'html' AND $ending != 'pdf') continue;
 //
             preg_match_all('/[0-9]/', $filebase, $match);
             if (count($match[0]) < 6) continue;
