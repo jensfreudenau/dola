@@ -30,7 +30,7 @@
     </div>
     <div class="form-group">
         {!! Form::label('custom_ageclasses', Lang::get('quickadmin.competitions.custom_ageclasses')) !!}
-            {{ Form::checkbox('custom_ageclasses') }} @lang('quickadmin.competitions.custom_ageclasses')<br>
+            {{ Form::checkbox('custom_ageclasses') }}<br>
         {!! Form::label('ageclasses', Lang::get('quickadmin.competitions.fields.classes')) !!}
         {!! Form::select('ageclasses[]', $ageclasses, array_pluck($competition->ageclasses, 'id'), ['multiple', 'class'=>'form-control select2']) !!}
     </div>
