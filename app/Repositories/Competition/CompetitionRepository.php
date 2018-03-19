@@ -40,7 +40,7 @@ class CompetitionRepository extends Repository implements CompetitionRepositoryI
      */
     public function getElapsed()
     {
-        return $this->model->orderBy('start_date', 'asc')->whereDate('start_date', '<', date('Y-m-d'))->get();
+        return $this->model->orderBy('start_date', 'desc')->whereDate('start_date', '<', date('Y-m-d'))->get();
     }
 
 }
