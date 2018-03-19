@@ -47,7 +47,7 @@ class Discipline extends Dom
     protected function prepareDisciplineData($str, $forList = false)
     {
         $str = (string)Str::from($str)->trim();
-        $str = $this->checkM($str);
+//        $str = $this->checkM($str);
         $str = $this->checkX($str);
 //        if ($forList) {
             $str = $this->checkZ($str);
