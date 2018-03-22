@@ -9,7 +9,7 @@
 namespace App\Library;
 use App\Helpers\Str;
 
-class Discipline extends Dom
+class DisciplineCreator extends Dom
 {
     protected $domDisciplines;
     protected $disciplines;
@@ -19,6 +19,13 @@ class Discipline extends Dom
         $this->domDisciplines = $domDisciplines;
     }
 
+    public function parseDisciplines($body)
+    {
+
+        $this->setDomDisciplines($body);
+        $this->iterateDisciplineCollection();
+
+    }
     public function iterateDisciplineCollection()
     {
         $rows = $this->domDisciplines->getElementsByTagName('tr');

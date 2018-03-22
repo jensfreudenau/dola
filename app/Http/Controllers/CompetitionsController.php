@@ -25,6 +25,9 @@ class CompetitionsController extends Controller
     {
         $season       = 'Bahn';
         $competitions = $this->competitionService->findBySeason($season);
+        foreach ($competitions as $competition) {
+            $competition->ageclasses =$competition->reduceClasses();
+        }
         return view('front.competitions.list', compact('competitions', 'season'));
     }
 
@@ -37,6 +40,9 @@ class CompetitionsController extends Controller
     {
         $season       = 'Halle';
         $competitions = $this->competitionService->findBySeason($season);
+        foreach ($competitions as $competition) {
+            $competition->ageclasses =$competition->reduceClasses();
+        }
         return view('front.competitions.list', compact('competitions', 'season'));
     }
 
@@ -48,6 +54,9 @@ class CompetitionsController extends Controller
     public function cross()
     {
         $competitions = $this->competitionService->findBySeason('cross');
+        foreach ($competitions as $competition) {
+            $competition->ageclasses =$competition->reduceClasses();
+        }
         $season       = 'Strasse';
         return view('front.competitions.list', compact('competitions', 'season'));
     }

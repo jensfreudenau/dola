@@ -94,7 +94,7 @@ class Competition extends BaseModel
 
     public function reduceClasses()
     {
-        return $this->trimClasses($this->classes);
+        return $this->trimClasses($this->ageclasses);
     }
 
     /**

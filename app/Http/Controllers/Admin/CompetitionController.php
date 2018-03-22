@@ -39,9 +39,6 @@ class CompetitionController extends Controller
 
     public function index()
     {
-        if (!Gate::allows('competition_access')) {
-            return abort(401);
-        }
         $future  = $this->competitionRepository->getFutured();
         $elapsed = $this->competitionRepository->getElapsed();
         return view('admin.competitions.index', compact('future', 'elapsed'));
@@ -92,7 +89,7 @@ class CompetitionController extends Controller
         if (!Gate::allows('competition_edit')) {
             return abort(401);
         }
-        $this->competitionService->updateData($id, $request);
+        $this->competitionService->storeData($request, $id);
         return redirect('/admin/competitions/' . $id);
     }
 
@@ -144,12 +141,12 @@ class CompetitionController extends Controller
             return abort(401);
         }
         $ignore = $request->get('ignore_error');
-        $competionId = $this->competitionService->storeData($request->all(), $ignore);
+        $competionId = $this->competitionService->storeData($request);
         $errorList = $this->competitionService->getErrorList();
 
-        if(count($errorList['disciplineError']) && $ignore != 'ignore') {
-            return Redirect::back()->withInput()->withErrors($errorList['disciplineError']);
-        }
+//        if(count($errorList['disciplineError']) && $ignore != 'ignore') {
+//            return Redirect::back()->withInput()->withErrors($errorList['disciplineError']);
+//        }
         return redirect('/admin/competitions/' . $competionId);
     }
 

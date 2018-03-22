@@ -33,7 +33,7 @@
                             <th>@lang('quickadmin.competitions.fields.classes')</th>
                             <td>
                                 @foreach ($competition->ageclasses as $ageclass)
-                                    {{ $ageclass['shortname'] }},
+                                    {{ $ageclass['shortname'] }}@if (!$loop->last),@endif
                                 @endforeach
                             </td>
                         </tr>
@@ -41,7 +41,7 @@
                             <th>@lang('quickadmin.competitions.fields.disciplines')</th>
                             <td>
                                 @foreach ($competition->disciplines as $discipline)
-                                    {{ $discipline['shortname'] }},
+                                    {{ $discipline['shortname'] }}@if (!$loop->last),@endif
                                 @endforeach
                             </td>
                         </tr>

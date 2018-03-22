@@ -10,13 +10,13 @@
                 <a href="details/{{ $competition->id }}">{{ $competition->header }}</a>
             @endif
         </h4>
-        <p class="desc"><span class="desc_type">Altersklassen:</span>
-            @php($sorted = array_sort($competition->ageclasses))
-
-
+        <p class="desc">
+            <span class="desc_type">Altersklassen:</span>
             @foreach ($competition->ageclasses as $ageclass)
-                {{ $ageclass->shortname }},
-             @endforeach
+                <span class="entry_tags">
+                    {{$ageclass}}@if (!$loop->last),@endif
+                </span>
+            @endforeach
         </p>
 
         @if(!empty(trim($competition->submit_date)))
@@ -37,7 +37,6 @@
             @if($upload->type == config('constants.Results'))
                 <p class="desc"><a href="storage/{{$upload->type}}/{{$competition->season}}/{{$upload->filename}}" target="_blank">Ergebnisliste&nbsp;<i class="fa fa-external-link"></i></a></p>
             @endif
-
         @endforeach
     </div>
 </li>

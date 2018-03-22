@@ -26,7 +26,11 @@ class HomeController extends Controller
     public function index()
     {
         $competitions = $this->competitionRepository->getFutured()->take(5);
+
         $lastcompetitions = $this->competitionRepository->getElapsed()->take(5);
-        return view('home', compact('competitions','lastcompetitions'));
+        foreach ($lastcompetitions as $lastcompetition) {
+            $lastcompetition->ageclasses = $lastcompetition->reduceClasses();
+        }
+        return view('front.home', compact('competitions','lastcompetitions'));
     }
 }
