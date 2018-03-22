@@ -27,6 +27,6 @@ class HomeController extends Controller
     {
         $competitions = $this->competitionRepository->getFutured()->take(5);
         $lastcompetitions = $this->competitionRepository->getElapsed()->take(5);
-        return view('home', compact('competitions','lastcompetitions'));
+        return view('front.home', compact('competitions','lastcompetitions'));
     }
 }

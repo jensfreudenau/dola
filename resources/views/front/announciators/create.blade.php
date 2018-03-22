@@ -94,7 +94,7 @@
                 </div>
                 <div class="form-group">
                     <div class="input-group">
-                        @if ($competition->season == 'cross')
+                        @if ($competition->season == 'cross' || @empty($disciplines))
                             {!! Form::text('discipline[]', null, ['required',  'class' => 'form-control', 'placeholder' => 'Disziplin*']) !!}
                         @else
                             {!! Form::select('discipline[]', $disciplines , null, ['required', 'class' => 'discipline_select form-control', 'placeholder' => 'Disziplin*', 'style'=>'width: 100%']) !!}

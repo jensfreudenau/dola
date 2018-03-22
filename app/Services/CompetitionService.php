@@ -8,10 +8,14 @@
 
 namespace App\Services;
 
-use App\Library\Timetable;
+use App\Helpers\DateTimeHelper;
+use App\Library\AgeclassCreator;
+use App\Library\DisciplineCreator;
+
+use App\Library\TimetableParser;
 use App\Models\Additional;
 use App\Models\Ageclass;
-use App\Traits\ProofLADVTrait;
+
 use App\Traits\ParseDataTrait;
 use App\Models\Announciator;
 use App\Models\Competition;
@@ -38,11 +42,32 @@ class CompetitionService
     protected $tableStyle     = '<table class="table table-sm table-hover">';
     protected $tableHeadStyle = '<thead class="thead-inverse">';
     protected $errorList;
+    protected $ignoreAgeclasses;
+    /**
+     * @var AgeclassService
+     */
+    private $ageclassService;
+    /**
+     * @var DisciplineService
+     */
+    private $disciplineService;
 
-    public function __construct(CompetitionRepositoryInterface $competitionRepository, AdditionalRepositoryInterface $additionalRepository)
+    /**
+     * CompetitionService constructor.
+     * @param CompetitionRepositoryInterface $competitionRepository
+     * @param AdditionalRepositoryInterface $additionalRepository
+     * @param AgeclassService $ageclassService
+     * @param DisciplineService $disciplineService
+     */
+    public function __construct(CompetitionRepositoryInterface $competitionRepository, AdditionalRepositoryInterface $additionalRepository, AgeclassService $ageclassService, DisciplineService $disciplineService)
     {
+        /** @var \App\Repositories\Competition\CompetitionRepository competitionRepository */
         $this->competitionRepository = $competitionRepository;
-        $this->additionalRepository  = $additionalRepository;
+        /** @var \App\Repositories\Additional\AdditionalRepository additionalRepository */
+        $this->additionalRepository = $additionalRepository;
+        /** @var \App\Repositories\Additional\AdditionalRepository additionalRepository */
+        $this->ageclassService = $ageclassService;
+        $this->disciplineService = $disciplineService;
     }
 
     /**
@@ -63,126 +88,33 @@ class CompetitionService
         $archives = array();
         foreach ($this->competitionRepository->seasons as $season) {
             $files             = Storage::files('public/' . Config::get('constants.Results') . '/' . $season);
-            $archives[$season] = $this->listdir_by_date($files);
+            $archives[$season] = DateTimeHelper::listdir_by_date($files);
         }
         return $archives;
     }
 
-    /**
-     * @param $files
-     * @return array
-     */
-    protected function listdir_by_date($files)
-    {
-        $list = [];
-        foreach ($files as $key => $file) {
-            if (basename($file) == 'styles.css') continue;
-            if (basename($file) == 'index.html') continue;
-            // add the filename, to be sure not to
-            // overwrite a array key
-            list($filebase, $ending) = explode(".", $file);
-            if ($ending != 'html' AND $ending != 'pdf') continue;
-//
-            preg_match_all('/[0-9]/', $filebase, $match);
-            if (count($match[0]) < 6) continue;
-            $six = false;
-            if (count($match[0]) == 6) {
-                $six = true;
-            }
-            if (count($match[0]) > 8) {
-                $match[0][8] = '';
-            }
-            $v = implode($match[0]);
-            if ($six) {
-                $v = '20' . $v;
-            }
-            $date                                   = new DateTime($v);
-            $list[$date->format('Y')][$key]['file'] = $file;
-            $list[$date->format('Y')][$key]['date'] = $date->format('d.m.Y');
-        }
-        return $list;
-    }
 
-    use ProofLADVTrait;
+
     use ParseDataTrait;
     use StringMarkerTrait;
 
     /**
-     * @param $submitData
-     * @param bool $ignore
-     * @return bool $competitionId
-     */
-    public function storeData($submitData, $ignore = false)
-    {
-        if (!empty($submitData['timetable_1'])) {
-            $submitData['timetable_1'] = $this->storeTimetableData($submitData['timetable_1'], false);
-            $submitData['timetable_1'] = $this->replaceTableTag($submitData['timetable_1'], $this->tableStyle, $this->tableHeadStyle);
-            $this->errorList           = $this->getErrorlists();
-        }
-        if (!empty($this->errorList['ageclassError']) || !empty($this->errorList['disciplineError'])) {
-            if (false == $ignore) {
-                return true;
-            }
-        }
-        $competitionId = $this->competitionRepository->create($submitData)->id;
-        $this->attachAgeclasses($competitionId);
-        $this->attacheDisciplines($competitionId);
-        if (!empty($submitData['keyvalue'])) {
-            $this->appendAdditionals($competitionId, $submitData['keyvalue'], $submitData['season']);
-        }
-        if (!empty($errorList['ageclassError'])) {
-            Log::info('ageclassError');
-        }
-        if (!empty($errorList['disciplineError'])) {
-            Log::info('disciplineError');
-        }
-        return $competitionId;
-    }
-
-    /**
-     * @param $timetableCsv
+     * @param $timetableRaw
      * @param $customAgeclasses
      * @return mixed
      */
-    private function storeTimetableData($timetableCsv, $customAgeclasses)
+    private function storeTimetableData($timetableRaw)
     {
-        $discipline = new \App\Library\Discipline();
-        $ageclass   = new \App\Library\Ageclass();
-        $timetable  = new Timetable($ageclass, $discipline);
-        $timetable->setTimeTable($timetableCsv);
+        $timetable = new TimetableParser();
+        $timetable->setTimeTableRaw($timetableRaw);
         $timetable->loadIntoDom();
-        $timetable->setIgnoreAgeclasses($customAgeclasses);
-        $timetable->parsingTable();
-
-        foreach ($timetable->ageclass->getAgeclasses() as $class) {
-            $this->proofAgeclassCollection($class);
+        $timetable->createTable();
+        if (!$this->ignoreAgeclasses) {
+            $this->ageclassService->parseAgeclasses($timetable->getHeader());
         }
-        foreach ($timetable->discipline->getDisciplines() as $discipline) {
-            $this->proofDisciplineCollection($discipline);
-        }
+        $this->disciplineService->parseDisciplines($timetable->getTableBody());
+        $t = $timetable->getTimeTable();
         return $timetable->getTimeTable();
-    }
-
-    /**
-     * @param $id
-     */
-    public function attachAgeclasses($id)
-    {
-        foreach ($this->getProofedAgeclasses() as $key => $class) {
-            $ageClass = Ageclass::where('ladv', '=', $key)->first();
-            $ageClass->competitions()->attach($id);
-        }
-    }
-
-    /**
-     * @param $id
-     */
-    public function attacheDisciplines($id)
-    {
-        foreach ($this->getProofedDisciplines() as $key => $class) {
-            $discipline = Discipline::where('ladv', '=', $key)->first();
-            $discipline->competitions()->attach($id);
-        }
     }
 
     /**
@@ -204,28 +136,40 @@ class CompetitionService
     }
 
     /**
-     * @param $competitionId
      * @param Request $request
-     * @return $this|bool
+     * @param bool $competitionId
+     * @return bool $competitionId
      */
-    public function updateData($competitionId, Request $request)
+    public function storeData(Request $request, $competitionId = false)
     {
-        $submitData = $request->all();
-        if (!empty($submitData['timetable_1'])) {
-            $submitData['timetable_1'] = $this->storeTimetableData($submitData['timetable_1'], $request->has('custom_ageclasses'));
-            $errorList                 = $this->getErrorlists();
+        $this->ignoreAgeclasses = $request->has('custom_ageclasses');
+        if ($request->has('timetable_1')) {
+            $newTimetable = $this->storeTimetableData($request->timetable_1);
+            $request->merge(array('timetable_1' => $newTimetable));
+            #$errorList                 = $this->getErrorlists();
+//            if (!empty($this->errorList['ageclassError']) || !empty($this->errorList['disciplineError'])) {
+//                if (false == $request->has('ignore_error')) {
+//                    return true;
+//                }
+//            }
         }
-        /** @var Competition $competition */
-        $competition = $this->find($competitionId);
-        $competition->update($submitData);
-        if($request->has('custom_ageclasses')){
-            $competition->Ageclasses()->sync($submitData['ageclasses']);
+        if(!$competitionId) {
+            $competitionId = $this->competitionRepository->create($request->all())->id;
+            /** @var Competition $competition */
+            $competition = $this->find($competitionId);
         }
         else {
-            $this->syncAgeClasses($competition);
+            /** @var Competition $competition */
+            $competition = $this->find($competitionId);
+            $competition->update($request->all());
         }
-        $this->syncDisciplines($competition);
-        $this->saveAdditionals($submitData, $competition);
+        if ($request->has('custom_ageclasses')) {
+            $competition->Ageclasses()->sync($request->ageclasses);
+        } else {
+            $this->ageclassService->syncAgeClasses($competition);
+        }
+        $this->disciplineService->syncDisciplines($competition);
+        $this->saveAdditionals($request->all(), $competition);
         if (!empty($errorList['ageclassError'])) {
             Log::debug('ageclassError');
         }
@@ -233,31 +177,14 @@ class CompetitionService
             Log::debug('disciplineError');
         }
         return true;
+
     }
+
+
 
     public function find($competition_id)
     {
         return $this->competitionRepository->find($competition_id);
-    }
-
-    private function syncAgeClasses($competition)
-    {
-        $ageclassIds = [];
-        foreach ($this->getProofedAgeclasses() as $ageclassKey => $ageclass) {
-            $data          = Ageclass::where('ladv', '=', $ageclassKey)->select('id')->get()->toArray();
-            $ageclassIds[] = $data[0]['id'];
-        }
-        $competition->Ageclasses()->sync($ageclassIds);
-    }
-
-    private function syncDisciplines($competition)
-    {
-        $disciplineIds = [];
-        foreach ($this->getProofedDisciplines() as $disciplineKey => $discipline) {
-            $data            = Discipline::where('ladv', '=', $disciplineKey)->select('id')->get()->toArray();
-            $disciplineIds[] = $data[0]['id'];
-        }
-        $competition->disciplines()->sync($disciplineIds);
     }
 
     /**
@@ -278,6 +205,62 @@ class CompetitionService
                 );
             }
         }
+    }
+    /**
+     *  $submitData = $request->all();
+    $this->ignoreAgeclasses = $request->has('custom_ageclasses');
+    if ($request->has('timetable_1')) {
+    $submitData['timetable_1'] = $this->storeTimetableData($request->timetable_1);
+    #$errorList                 = $this->getErrorlists();
+    }
+
+$competition = $this->find($competitionId);
+$competition->update($submitData);
+if ($request->has('custom_ageclasses')) {
+$competition->Ageclasses()->sync($submitData['ageclasses']);
+} else {
+    $this->ageclassService->syncAgeClasses($competition);
+}
+$this->disciplineService->syncDisciplines($competition);
+$this->saveAdditionals($submitData, $competition);
+if (!empty($errorList['ageclassError'])) {
+    Log::debug('ageclassError');
+}
+if (!empty($errorList['disciplineError'])) {
+    Log::debug('disciplineError');
+}
+return true;
+     */
+    /**
+     * @param Request $request
+     * @return bool
+     */
+    protected function createData(Request $request)
+    {
+        $this->ignoreAgeclasses = $request->has('custom_ageclasses');
+        if ($request->has('timetable_1')) {
+            $request->timetable_1 = $this->storeTimetableData($request->timetable_1);
+            #$errorList                 = $this->getErrorlists();
+//            if (!empty($this->errorList['ageclassError']) || !empty($this->errorList['disciplineError'])) {
+//                if (false == $request->has('ignore_error')) {
+//                    return true;
+//                }
+//            }
+        }
+        $competitionId = $this->competitionRepository->create($request->all())->id;
+        $this->ageclassService->syncAgeClasses($competition);
+        $this->disciplineService->syncDisciplines($competition);
+
+        if ($request->has('keyvalue')) {
+            $this->appendAdditionals($competitionId, $request->keyvalue, $request->season);
+        }
+        if (!empty($errorList['ageclassError'])) {
+            Log::info('ageclassError');
+        }
+        if (!empty($errorList['disciplineError'])) {
+            Log::info('disciplineError');
+        }
+        return $competitionId;
     }
 
     /**

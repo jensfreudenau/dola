@@ -27,13 +27,17 @@ $(document).ready(function () {
     $("#addParticipant").click(function () {
         let ageclassSelect;
         let disciplineSelect;
-        if (season == 'cross') {
-            disciplineSelect = '<input class="form-control required" name="discipline[]" placeholder="Disziplin*" type="text" required></div></div>';
-            ageclassSelect = '<input class="form-control required" name="ageclass[]" placeholder="Altersklasse*" type="text" required></div></div>';
+        if(disciplinesOption.length) {
+            disciplineSelect = '<select name=discipline[]  class="discipline_select form-control" required placeholder = "Disziplin*" style="width: 100%;">' + disciplinesOption + '</select></div></div>';
         }
         else {
-            disciplineSelect = '<select name=discipline[]  class="discipline_select form-control" required placeholder = "Disziplin*" style="width: 100%;">' + disciplinesOption + '</select></div></div>';
+            disciplineSelect = '<input class="form-control required" name="discipline[]" placeholder="Disziplin*" type="text" required></div></div>';
+        }
+        if (ageclassesOption.length){
             ageclassSelect = '<select name=ageclass[]  class="ageclass_select form-control" required placeholder = "Altersklasse*" style="width: 100%;">' + ageclassesOption + '</select></div></div>';
+        }
+        else {
+            ageclassSelect = '<input class="form-control required" name="ageclass[]" placeholder="Altersklasse*" type="text" required></div></div>';
         }
 
         $(this).removeAttr("href");

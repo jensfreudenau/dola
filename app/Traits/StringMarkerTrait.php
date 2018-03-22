@@ -38,14 +38,13 @@ trait StringMarkerTrait
      */
     public function trimClasses($classes)
     {
-        //WKU12, W10/W11, WJU14, W12/W13, WJU16, W14/W15, MKU12, M10/11, MJU14, M12/13, MJU16, M14/15,
-        //WK U10, WK U12, WJ U14, WJ U16, WJ U18/U20, MK U10, MK U12, MJ U14, MJ U16, MJ U18/U20
-        $sex   = ['WK', 'WJ', 'MK', 'MJ', 'W10/W11', 'W12/W13', 'W14/W15', 'M10/11', 'M12/13', 'M14/15'];
-        $class = str_replace($sex, '', $classes);
-        $class = str_replace(' ', '', $class);
-        $class = explode(',', $class);
-        $class = array_unique($class);
-        return implode(', ', $class);
+        $classTrimmed = [];
+        $sex   = ['WK', 'WJ', 'MK', 'MJ', 'W10/W11', 'W12/W13', 'W14/W15', 'M10/11', 'M12/13', 'M14/15', 'MJ', 'WJ'];
+        foreach ($classes as $class) {
+            $trimmed = str_replace($sex, '', $class->shortname);
+            $classTrimmed[] = str_replace(' ', '', $trimmed);
+        }
+        return $classTrimmed = array_unique($classTrimmed);
     }
 
     protected function markFounded($timetable, $collection)

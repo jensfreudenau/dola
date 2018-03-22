@@ -1,24 +1,28 @@
 
 body {
     display: block;
+    color: #212529;
 }
+
 #main-image {
     border-bottom: 1px solid #95abadb3;
     height: auto;
-    background: url(../../images/concrete-wall-1920x1080.png) fixed no-repeat center;
+    /*background: url(../../images/concrete-wall-1920x1080.png) fixed no-repeat center;*/
     position: relative;
     z-index: 16;
+    background: -moz-linear-gradient(rgb(54, 71, 89), rgb(166, 154, 140));
 }
 
 #main-image:after { /* add the transparent pattern overlay */
-    background: #95abadb3 /*url(images/see-through-pattern-background-2.png) center repeat*/;
+    background: #39464b /*url(images/see-through-pattern-background-2.png) center repeat*/;
     content: "";
+    background: #f6f3f3;
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
     top: 0;
-    opacity: 0.7;
+    /*opacity: 0.7;*/
     z-index: -1;
 }
 
@@ -37,48 +41,80 @@ h3, h4 {
 }
 
 h1, h2, h3, h4 {
-    letter-spacing: 5px;
+    letter-spacing: 5px !important;
     font-weight: 400;
 }
 
 .card h1, .card h2, .card h3, .card h4 {
-    letter-spacing: 1px;
-    font-weight: 200;
+    text-align: center;
 }
+
 h1 a.navbar-brand {
     font-size: 2.5rem;
 }
-.card li {
-    background: #fff;
-    padding: 10px;
-    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
-    margin-bottom: 25px;
-    border: 1px solid lightgray;
-}
-.card li.halle {
-    border-left: 1px solid #199c18;
-}
-.card li.cross {
-    border-left: 1px solid #562b0e;
-}
-.card li.bahn {
-    border-left: 1px solid #ff9223;
-}
-
-hr.halle{
-    border: 1px solid #199c18;
-}
-hr.cross{
-    border: 1px solid #562b0e;
-}
-hr.bahn{
-    border: 1px solid #ff9223;
-}
 .card {
     border: none;
-    box-shadow:0 5px 6px rgba(0, 0, 0, 0.19)
+    box-shadow: 0 5px 6px rgba(0, 0, 0, 0.19);
+    border-radius: 0;
+
+}
+.card ul {
+    list-style: none;
+    padding-left: 0;
+}
+.card li a{
+    color: #546e7a;
+}
+.card li {
+    padding: 10px;
+    /*box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);*/
+    margin-bottom: 25px;
+    /*border: 1px solid lightgray;*/
+    color: #000000;
 }
 
+.card li.halle {
+    /*border-left: 1px solid #199c18;*/
+    border-bottom: 1px solid #199c18;
+}
+
+.card li.cross {
+    /*border-left: 1px solid #562b0e;*/
+    border-bottom: 1px solid #562b0e;
+}
+
+.card li.bahn {
+    /*border-left: 1px solid #ff9223;!**!*/
+    border-bottom: 1px solid #ff9223;
+}
+hr {
+    border-top: 2px solid rgba(0,0,0,.1);
+}
+hr.halle {
+    border: 1px solid #199c18;
+}
+
+hr.cross {
+    border: 1px solid #562b0e;
+}
+
+hr.bahn {
+    border: 1px solid #ff9223;
+}
+
+.entry_tags{
+    display: inline-block;
+    background: #ebebeb;
+    color: #444;
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 2px 5px;
+    margin-right: 3px;
+    transition: color 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
+    outline: none;
+    color: #161616;
+    text-decoration: none;
+}
 
 i.fa-li {
     padding-top: 2px;
@@ -91,9 +127,7 @@ i.fa-li {
     border-top: 1px solid #eee;
 }
 
-a:hover {
-    /*color: rgb(0, 149, 223) !important;*/
-}
+
 
 h1 a:hover {
     color: #fff !important;
@@ -126,15 +160,17 @@ a.header {
 }
 
 a:hover {
-    color:#007bff;
+    color: #007bff;
 }
 
 .nav-filter {
     background-color: #444;
 }
+
 .navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover {
-    color:  #fff !important;
+    color: #fff !important;
 }
+
 .navbar-light .navbar-nav .active > .nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show > .nav-link {
     color: #fff
 }
@@ -168,7 +204,22 @@ a.nav-link:hover {
 nav.background {
     background: #ccc url('../../images/200m1_slim.jpg');
     box-shadow: 0 5px 6px rgba(0, 0, 0, 0.19);
-    background-size: cover
+
+    background-size: cover;
+    z-index: 16;
+}
+
+nav.background:after { /* add the transparent pattern overlay */
+    /*background: #010203 !*url(images/see-through-pattern-background-2.png) center repeat*!;*/
+    /*background-color: #2b80d5;*/
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    /*opacity: 0.3;*/
+    z-index: -1;
 }
 
 .navbar-toggler {
@@ -179,7 +230,9 @@ nav.background {
     color: white;
     font-size: 1.1rem;
 }
-
+li a {
+    color:#284462;
+}
 li.nav-item {
     margin-right: 30px;
     /*background-color: #FF5722;*/
@@ -200,11 +253,13 @@ li.nav-item {
 }
 
 .desc_type, time {
-    font-weight: 600;
+    font-weight: 400;
 }
 
 .desc {
     font-weight: 100;
+    font-size: smaller;
+    letter-spacing: 2px;
 }
 
 p {
@@ -215,7 +270,8 @@ p {
     display: inline-block;
     box-shadow: none;
 }
+
 .list-group-horizontal .list-group-item {
-    margin:4px;
-    border-radius:0;
+    margin: 4px;
+    border-radius: 0;
 }
