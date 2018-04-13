@@ -7,6 +7,7 @@
  */
 
 namespace App\Helpers;
+use DateTime;
 use Illuminate\Support\Carbon;
 
 class DateTimeHelper
