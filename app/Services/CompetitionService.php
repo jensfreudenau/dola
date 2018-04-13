@@ -32,17 +32,6 @@ use Illuminate\Http\Request;
 
 class CompetitionService
 {
-    const TABLE_STYLE = '<table class="table table-sm table-hover">';
-    const THEAD_STYLE = '<thead class="thead-inverse">';
-    protected $competitionRepository;
-    protected $additionalRepository;
-    protected $ageclassList   = array();
-    protected $disciplineList = array();
-    protected $competitionService;
-    protected $tableStyle     = '<table class="table table-sm table-hover">';
-    protected $tableHeadStyle = '<thead class="thead-inverse">';
-    protected $errorList;
-    protected $ignoreAgeclasses;
     /**
      * @var AgeclassService
      */
@@ -51,6 +40,20 @@ class CompetitionService
      * @var DisciplineService
      */
     private $disciplineService;
+
+    const TABLE_STYLE = '<table class="table table-sm table-hover">';
+    const THEAD_STYLE = '<thead class="thead-inverse">';
+    /** @var CompetitionRepositoryInterface @ */
+    protected $competitionRepository;
+    /** @var AdditionalRepositoryInterface @ */
+    protected $additionalRepository;
+    protected $competitionService;
+    protected $ageclassList   = array();
+    protected $disciplineList = array();
+    protected $tableStyle     = self::TABLE_STYLE;
+    protected $tableHeadStyle = self::THEAD_STYLE;
+    protected $errorList;
+    protected $ignoreAgeclasses;
 
     /**
      * CompetitionService constructor.
@@ -63,10 +66,14 @@ class CompetitionService
     {
         /** @var \App\Repositories\Competition\CompetitionRepository competitionRepository */
         $this->competitionRepository = $competitionRepository;
+
         /** @var \App\Repositories\Additional\AdditionalRepository additionalRepository */
         $this->additionalRepository = $additionalRepository;
-        /** @var \App\Repositories\Additional\AdditionalRepository additionalRepository */
+
+        /** @var  ageclassService */
         $this->ageclassService = $ageclassService;
+
+        /** @var  disciplineService */
         $this->disciplineService = $disciplineService;
     }
 
@@ -103,7 +110,7 @@ class CompetitionService
      * @param $customAgeclasses
      * @return mixed
      */
-    private function storeTimetableData($timetableRaw)
+    protected function storeTimetableData($timetableRaw)
     {
         $timetable = new TimetableParser();
         $timetable->setTimeTableRaw($timetableRaw);
@@ -113,7 +120,6 @@ class CompetitionService
             $this->ageclassService->parseAgeclasses($timetable->getHeader());
         }
         $this->disciplineService->parseDisciplines($timetable->getTableBody());
-        $t = $timetable->getTimeTable();
         return $timetable->getTimeTable();
     }
 
@@ -146,12 +152,6 @@ class CompetitionService
         if ($request->has('timetable_1')) {
             $newTimetable = $this->storeTimetableData($request->timetable_1);
             $request->merge(array('timetable_1' => $newTimetable));
-            #$errorList                 = $this->getErrorlists();
-//            if (!empty($this->errorList['ageclassError']) || !empty($this->errorList['disciplineError'])) {
-//                if (false == $request->has('ignore_error')) {
-//                    return true;
-//                }
-//            }
         }
         if(!$competitionId) {
             $competitionId = $this->competitionRepository->create($request->all())->id;
@@ -163,7 +163,7 @@ class CompetitionService
             $competition = $this->find($competitionId);
             $competition->update($request->all());
         }
-        if ($request->has('custom_ageclasses')) {
+        if ($this->ignoreAgeclasses) {
             $competition->Ageclasses()->sync($request->ageclasses);
         } else {
             $this->ageclassService->syncAgeClasses($competition);
@@ -205,106 +205,6 @@ class CompetitionService
                 );
             }
         }
-    }
-    /**
-     *  $submitData = $request->all();
-    $this->ignoreAgeclasses = $request->has('custom_ageclasses');
-    if ($request->has('timetable_1')) {
-    $submitData['timetable_1'] = $this->storeTimetableData($request->timetable_1);
-    #$errorList                 = $this->getErrorlists();
-    }
-
-$competition = $this->find($competitionId);
-$competition->update($submitData);
-if ($request->has('custom_ageclasses')) {
-$competition->Ageclasses()->sync($submitData['ageclasses']);
-} else {
-    $this->ageclassService->syncAgeClasses($competition);
-}
-$this->disciplineService->syncDisciplines($competition);
-$this->saveAdditionals($submitData, $competition);
-if (!empty($errorList['ageclassError'])) {
-    Log::debug('ageclassError');
-}
-if (!empty($errorList['disciplineError'])) {
-    Log::debug('disciplineError');
-}
-return true;
-     */
-    /**
-     * @param Request $request
-     * @return bool
-     */
-    protected function createData(Request $request)
-    {
-        $this->ignoreAgeclasses = $request->has('custom_ageclasses');
-        if ($request->has('timetable_1')) {
-            $request->timetable_1 = $this->storeTimetableData($request->timetable_1);
-            #$errorList                 = $this->getErrorlists();
-//            if (!empty($this->errorList['ageclassError']) || !empty($this->errorList['disciplineError'])) {
-//                if (false == $request->has('ignore_error')) {
-//                    return true;
-//                }
-//            }
-        }
-        $competitionId = $this->competitionRepository->create($request->all())->id;
-        $this->ageclassService->syncAgeClasses($competition);
-        $this->disciplineService->syncDisciplines($competition);
-
-        if ($request->has('keyvalue')) {
-            $this->appendAdditionals($competitionId, $request->keyvalue, $request->season);
-        }
-        if (!empty($errorList['ageclassError'])) {
-            Log::info('ageclassError');
-        }
-        if (!empty($errorList['disciplineError'])) {
-            Log::info('disciplineError');
-        }
-        return $competitionId;
-    }
-
-    /**
-     * @param $registerTyp
-     * @return Competition
-     */
-    public function getActiveRegister($registerTyp)
-    {
-        if ($registerTyp) {
-            $register['external'] = 'active';
-            $register['internal'] = '';
-        } else {
-            $register['internal'] = 'active';
-            $register['external'] = '';
-        }
-        return $register;
-    }
-
-    /**
-     * @param $onlyListed
-     * @return Competition
-     */
-    public function getActiveListed($onlyListed)
-    {
-        if ($onlyListed) {
-            $onlyList['list']     = 'active';
-            $onlyList['not_list'] = '';
-        } else {
-            $onlyList['not_list'] = 'active';
-            $onlyList['list']     = '';
-        }
-        return $onlyList;
-    }
-
-    /**
-     * @param $seasonTyp
-     * @return Competition
-     */
-    public function getActiveSeason($seasonTyp)
-    {
-        $season['track']  = $seasonTyp == 'bahn' ? 'active' : '';
-        $season['indoor'] = $seasonTyp == 'halle' ? 'active' : '';
-        $season['cross']  = $seasonTyp == 'cross' ? 'active' : '';
-        return $season;
     }
 
     /**

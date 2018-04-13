@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Competition;
-use App\Http\Requests;
+
 use App\Repositories\Competition\CompetitionRepositoryInterface;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Mail;
+
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {

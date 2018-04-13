@@ -21,11 +21,6 @@ class DateTimeHelper
         'j.m.Y', //1.02.2018
     ];
 
-    public function __construct()
-    {
-
-
-    }
     /**
      * @param $files
      * @return array
@@ -72,13 +67,19 @@ class DateTimeHelper
             }
         }
     }
-    public function validateDate($date, $format)
+
+
+    /**
+     * @param $range
+     * @return string
+     */
+    public static function createBirthyearRange($range)
     {
-        $d = DateTime::createFromFormat($format, $date);
-        echo '<pre>:'.__LINE__;
-        echo '<br><strong>';
-        print_r($d);
-        echo '</strong></pre>';
-        return $d && $d->format($format) == $date;
+        $ageGroup = '';
+        [$rangeStart, $rangeEnd] = explode('-', $range);
+        $ageGroup .= Carbon::now()->year - $rangeEnd;
+        $ageGroup .= '-';
+        $ageGroup .= Carbon::now()->year - $rangeStart;
+        return $ageGroup;
     }
 }

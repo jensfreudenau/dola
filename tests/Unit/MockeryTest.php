@@ -8,10 +8,15 @@
 
 namespace Tests\Unit;
 
+use App\Helpers\DateTimeHelper;
 use App\Services\PageService;
 use Tests\TestCase;
 use Mockery;
 
+/**
+ * Class Foo
+ * @package Tests\Unit
+ */
 class Foo
 {
     protected $bar;
@@ -28,6 +33,10 @@ class Foo
     }
 }
 
+/**
+ * Class Bar
+ * @package Tests\Unit
+ */
 class Bar
 {
     public function doIt(array $t)
@@ -36,6 +45,10 @@ class Bar
     }
 }
 
+/**
+ * Class Curl
+ * @package Tests\Unit
+ */
 class Curl
 {
     public function post()
@@ -44,6 +57,10 @@ class Curl
     }
 }
 
+/**
+ * Class Newsletter
+ * @package Tests\Unit
+ */
 class Newsletter
 {
     protected $listName;
@@ -64,6 +81,8 @@ class Newsletter
     }
 }
 
+
+
 class MockeryTest extends TestCase
 {
     public function tearDown()
@@ -71,10 +90,9 @@ class MockeryTest extends TestCase
         Mockery::close();
     }
 
-    public function testBearthyearRange()
+    public function testBearthYearRange()
     {
-        $ageClass = new PageService();
-        $range = $ageClass->createBirthyearRange('0-7');
+        $range = DateTimeHelper::createBirthyearRange('0-7');
         $this->assertEquals($range, '2011-2018');
     }
 

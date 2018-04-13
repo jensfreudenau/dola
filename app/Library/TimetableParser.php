@@ -69,7 +69,7 @@ class TimetableParser
      */
     public function getTimeTable()
     {
-        return $this->timeTable;
+        return trim(str_replace(PHP_EOL, ' ', $this->timeTable));
     }
 
     public function setTimeTableRaw($timeTable)

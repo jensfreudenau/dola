@@ -8,7 +8,9 @@
 
 namespace App\Services;
 
+use App\Helpers\DateTimeHelper;
 use App\Models\Ageclass;
+use App\Repositories\Ageclass\AgeclassRepositoryInterface;
 use DOMDocument;
 
 /**
@@ -24,13 +26,19 @@ class AgeclassService
     protected $domAgeclasses;
     protected $classes                 = [];
     protected $dom;
+    /** @var AgeclassRepositoryInterface  */
+    protected $ageclassRepository;
 
-    public function __construct()
+    public function __construct(AgeclassRepositoryInterface $ageclassRepository)
     {
+        $this->ageclassRepository = $ageclassRepository;
         $this->dom                     = new DOMDocument();
         $this->dom->preserveWhiteSpace = false;
     }
 
+    /**
+     * @param $id
+     */
     public function attachAgeclasses($id)
     {
         foreach ($this->getProofedAgeclasses() as $key => $class) {
@@ -47,6 +55,9 @@ class AgeclassService
         return $this->ageclassCollection;
     }
 
+    /**
+     * @param $competition
+     */
     public function syncAgeClasses($competition)
     {
         $ageclassIds = [];
@@ -57,9 +68,11 @@ class AgeclassService
         $competition->Ageclasses()->sync($ageclassIds);
     }
 
+    /**
+     * @param $header
+     */
     public function parseAgeclasses($header)
     {
-
         $this->setDomAgeclasses($header);
         $this->iterateAgeclassCollection();
         foreach ($this->getAgeclasses() as $ageclassList) {
@@ -67,11 +80,17 @@ class AgeclassService
         }
     }
 
+    /**
+     * @param $domAgeclasses
+     */
     public function setDomAgeclasses($domAgeclasses)
     {
         $this->domAgeclasses = $domAgeclasses;
     }
 
+    /**
+     *
+     */
     public function iterateAgeclassCollection()
     {
         if (!empty($this->domAgeclasses)) {
@@ -86,6 +105,26 @@ class AgeclassService
         }
     }
 
+    /**
+     * @return array
+     */
+    public function loadAgeclasses()
+    {
+        $classes    = $this->ageclassRepository->whereNotNull('order');
+        $ageclasses = [];
+        foreach ($classes as $key => $class) {
+            $ageclasses[$key]['yearRange'] = DateTimeHelper::createBirthyearRange($class->year_range);
+            $ageclasses[$key]['ageRange']  = $class->year_range;
+            $ageclasses[$key]['shortname'] = $class->shortname;
+            $ageclasses[$key]['name']      = $class->name;
+        }
+        return $ageclasses;
+    }
+
+    /**
+     * @param $str
+     * @return mixed|null|string|string[]
+     */
     protected function prepareAgeclassData($str)
     {
         $str = trim($str);
@@ -97,6 +136,10 @@ class AgeclassService
         return $str;
     }
 
+    /**
+     * @param $class
+     * @return bool
+     */
     protected function fillAgeclassesList($class)
     {
         $class = str_replace('*', '', $class);
@@ -114,11 +157,17 @@ class AgeclassService
         return true;
     }
 
+    /**
+     * @return array
+     */
     public function getAgeclasses()
     {
         return $this->classes;
     }
 
+    /**
+     * @param $ageclassStr
+     */
     protected function proofAgeclassCollection($ageclassStr)
     {
         $ageclass = Ageclass::where('shortname', '=', $ageclassStr)
@@ -133,6 +182,9 @@ class AgeclassService
         }
     }
 
+    /**
+     * @return array
+     */
     public function getErrorlists()
     {
         return ['ageclassError' => $this->ageclassCollectionError];

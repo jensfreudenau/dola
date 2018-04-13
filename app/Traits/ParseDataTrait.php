@@ -13,6 +13,7 @@ use DOMDocument;
 
 trait ParseDataTrait
 {
+    /**
     protected $table          = '';
     protected $disciplineList = [];
     protected $ageclassList   = [];
@@ -41,10 +42,7 @@ trait ParseDataTrait
         $this->table = '<table><thead>' . $tableHeader . '</thead><tbody>' . $tableRows . '</tbody></table>';
     }
 
-    /**
-     * @param $row
-     * @return string
-     */
+
     protected function createTableFirstRow($row)
     {
         $tableFirstRow = '';
@@ -70,10 +68,6 @@ trait ParseDataTrait
         return $str;
     }
 
-    /**
-     * @param $row
-     * @return string
-     */
     protected function createTableRow($row)
     {
         $cols     = $row->getElementsByTagName('td');
@@ -121,10 +115,7 @@ trait ParseDataTrait
         return trim($str);
     }
 
-    /**
-     * @param $str
-     * @return mixed
-     */
+
     protected function checkZ($str)
     {
         if (Str::from($str)->contains('Z')) {
@@ -201,10 +192,7 @@ trait ParseDataTrait
         $this->disciplineList = array_unique($this->disciplineList);
     }
 
-    /**
-     * @param $class
-     * @return bool
-     */
+
     protected function fillAgeclassesList($class)
     {
         $class = str_replace('*', '', $class);
@@ -224,27 +212,22 @@ trait ParseDataTrait
         return true;
     }
 
-    /**
-     * @return string
-     */
+
     public function getParsedTable(): string
     {
         return $this->table;
     }
 
-    /**
-     * @return array
-     */
+
     public function getDisciplinesFromTable(): array
     {
         return $this->disciplineList;
     }
 
-    /**
-     * @return array
-     */
+
     public function getAgeclassesFromTable(): array
     {
         return $this->ageclassList;
     }
+    */
 }

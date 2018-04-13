@@ -14,7 +14,7 @@ class AnnounciatorsController extends Controller
 {
     protected $announciatorService;
 
-    public function __construct( AnnounciatorService $announciatorService)
+    public function __construct(AnnounciatorService $announciatorService)
     {
         $this->announciatorService = $announciatorService;
     }

@@ -40,10 +40,6 @@ class DisciplineService
         }
     }
 
-    public function createDisciplines()
-    {
-
-    }
     /**
      * @return array
      */
@@ -92,21 +88,24 @@ class DisciplineService
         $rows = $this->domDisciplines->getElementsByTagName('tr');
         foreach ($rows AS $tr) {
             foreach ($tr->childNodes as $key => $td) {
-                #if ($key == 0) continue;
+                if($td->textContent == '1000m') {
+                    echo "stop";
+                }
+                if ($key == 0) continue;
                 if (strlen($td->textContent) < 3) continue;
                 $this->fillDisciplineList($td->textContent);
             }
         }
     }
 
-    protected function fillDisciplineList($col)
+    protected function fillDisciplineList($discipline)
     {
-        if (strpos($col, '/')) {
-            [$firstArg, $secondArg] = explode('/', $col);
+        if (strpos($discipline, '/')) {
+            [$firstArg, $secondArg] = explode('/', $discipline);
             $this->disciplines[] = $this->prepareDisciplineData($firstArg, true);
             $this->disciplines[] = $this->prepareDisciplineData($secondArg, true);
         } else {
-            $this->disciplines[] = $this->prepareDisciplineData($col, true);
+            $this->disciplines[] = $this->prepareDisciplineData($discipline, true);
         }
         $this->disciplines = array_filter($this->disciplines);
         $this->disciplines = array_unique($this->disciplines);
@@ -122,14 +121,30 @@ class DisciplineService
         $competition->disciplines()->sync($disciplineIds);
     }
 
+    /**
+     * @param $str
+     * @return mixed
+     */
+    protected function checkRunDiscipline($str)
+    {
+        $pos = strpos($str, '0m');
+        if ($pos == false) return $str;
+
+        $newPos = $pos - 1;
+        if ($str[$newPos] != ' ') {
+            $str = str_replace('m', ' m', $str);
+        }
+        return $str;
+    }
 
     protected function prepareDisciplineData($str, $forList = false)
     {
         $str = (string)Str::from($str)->trim();
         $str = preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $str);
+        $str = $this->checkJumpDisciplines($str);
+        $str = $this->checkRunDiscipline($str);
         $str = $this->checkX($str);
         $str = $this->checkZ($str);
-        $str = $this->checkJumpDisciplines($str);
         $str = trim($str);
         return $str;
     }
@@ -138,10 +153,14 @@ class DisciplineService
     {
         $pos = strpos($str, 'x');
         if ($pos == false) return $str;
-        if ($str[$pos - 1] != ' ' && $str[$pos + 1] != ' ') {
-            $str = str_replace('x', ' x ', $str);
+        if ($str[$pos - 1] != ' '){
+            $str = str_replace('x', ' x', $str);
         }
-        return trim($str);
+        $pos = strpos($str, 'x');
+        if($str[$pos + 1] != ' ') {
+            $str = str_replace('x', 'x ', $str);
+        }
+        return $str;
     }
 
     /**
@@ -191,32 +210,21 @@ class DisciplineService
         }
     }
 
-    protected function checkM($str)
-    {
-        $pos = strpos($str, 'm');
-        if ($pos == false) return $str;
-        $newPos = $pos - 1;
-        if ($str[$newPos] != ' ') {
-            $str = str_replace('m', ' m', $str);
-        }
-        return $str;
-    }
-
-    protected function searchDisciplines()
-    {
-        $table = $this->dom->getElementsByTagName('table');
-        $rows  = $table->item(0)->getElementsByTagName('tr');
-        foreach ($rows as $key => $row) {
-            if ($key == 0) {
-                continue;
-            }
-            $cols = $row->getElementsByTagName('td');
-            foreach ($cols as $dataKey => $col) {
-                if ($dataKey > 0 && ($col->nodeValue != " ")) {
-                    $this->fillDisciplineList($col->nodeValue);
-                }
-            }
-        }
-        return true;
-    }
+//    protected function searchDisciplines()
+//    {
+//        $table = $this->dom->getElementsByTagName('table');
+//        $rows  = $table->item(0)->getElementsByTagName('tr');
+//        foreach ($rows as $key => $row) {
+//            if ($key == 0) {
+//                continue;
+//            }
+//            $cols = $row->getElementsByTagName('td');
+//            foreach ($cols as $dataKey => $col) {
+//                if ($dataKey > 0 && ($col->nodeValue != " ")) {
+//                    $this->fillDisciplineList($col->nodeValue);
+//                }
+//            }
+//        }
+//        return true;
+//    }
 }

@@ -25,19 +25,20 @@
         @if(!empty(trim($competition->info)))
             <p class="desc"><span class="desc_type red_font">Info: &nbsp;</span>{{ $competition->info }}</p>
         @endif
+        <p class="desc">
+            @foreach($competition->Uploads as $upload)
+                @if($upload->type == config('constants.Additionals'))
+                    <a href="storage/{{$upload->type}}/{{$competition->season}}/{{$upload->filename}}" target="_blank">Zusatzinfos&nbsp;<i class="fa fa-external-link"></i></a>
+                @endif
+                @if($upload->type == config('constants.Participators'))
+                    <p class="desc"><a href="storage/{{$upload->type}}/{{$competition->season}}/{{$upload->filename}}" target="_blank">Teilnehmer&nbsp;<i class="fa fa-external-link"></i></a></p>
+                @endif
 
-        @foreach($competition->Uploads as $upload)
-            @if($upload->type == config('constants.Additionals'))
-                <a href="storage/{{$upload->type}}/{{$competition->season}}/{{$upload->filename}}" target="_blank">Zusatzinfos&nbsp;<i class="fa fa-external-link"></i></a>
-            @endif
-            @if($upload->type == config('constants.Participators'))
-                <p class="desc"><a href="storage/{{$upload->type}}/{{$competition->season}}/{{$upload->filename}}" target="_blank">Teilnehmer&nbsp;<i class="fa fa-external-link"></i></a></p>
-            @endif
-
-            @if($upload->type == config('constants.Results'))
-                <p class="desc"><a href="storage/{{$upload->type}}/{{$competition->season}}/{{$upload->filename}}" target="_blank">Ergebnisliste&nbsp;<i class="fa fa-external-link"></i></a></p>
-            @endif
-        @endforeach
+                @if($upload->type == config('constants.Results'))
+                    <p class="desc"><a href="storage/{{$upload->type}}/{{$competition->season}}/{{$upload->filename}}" target="_blank">Ergebnisliste&nbsp;<i class="fa fa-external-link"></i></a></p>
+                @endif
+            @endforeach
+        </p>
     </div>
 </li>
 

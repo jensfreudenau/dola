@@ -72,10 +72,8 @@ class CompetitionController extends Controller
         $disciplines = $this->competitionService->getSelectedDisciplines();
         $competition = $this->competitionService->find($id);
         $additionals = $this->competitionService->getAdditionals($id);
-        $season   = $this->competitionService->getActiveSeason($competition->season);
-        $register = $this->competitionService->getActiveRegister($competition->register);
-        $onlyList = $this->competitionService->getActiveListed($competition->only_list);
-        return view('admin.competitions.edit', compact('addresses', 'competition', 'organizers', 'season', 'additionals', 'register', 'onlyList', 'ageclassList', 'ageclasses', 'disciplines'));
+
+        return view('admin.competitions.edit', compact('addresses', 'competition', 'organizers',  'additionals' , 'ageclassList', 'ageclasses', 'disciplines'));
     }
 
     /**
@@ -118,14 +116,8 @@ class CompetitionController extends Controller
         }
         $organizers           = $this->competitionService->getOrganizers();
         $competition          = '';
-        $register['external'] = '';
-        $register['internal'] = 'active';
-        $onlyList['list']     = '';
-        $onlyList['not_list'] = 'active';
-        $season['track']      = 'active';
-        $season['indoor']     = '';
-        $season['cross']      = '';
-        return view('admin.competitions.create', compact('organizers', 'competition', 'season', 'additionals', 'register', 'onlyList'));
+
+        return view('admin.competitions.create', compact('organizers', 'competition'));
     }
 
     /**
@@ -144,9 +136,9 @@ class CompetitionController extends Controller
         $competionId = $this->competitionService->storeData($request);
         $errorList = $this->competitionService->getErrorList();
 
-//        if(count($errorList['disciplineError']) && $ignore != 'ignore') {
-//            return Redirect::back()->withInput()->withErrors($errorList['disciplineError']);
-//        }
+        if(count($errorList['disciplineError']) && $ignore != 'ignore') {
+            return Redirect::back()->withInput()->withErrors($errorList['disciplineError']);
+        }
         return redirect('/admin/competitions/' . $competionId);
     }
 

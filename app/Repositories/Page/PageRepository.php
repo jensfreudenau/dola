@@ -17,6 +17,7 @@ class PageRepository extends Repository implements PageRepositoryInterface
 
     public function __construct(Page $model)
     {
+        /** @var page model */
         $this->model = $model;
     }
     /**

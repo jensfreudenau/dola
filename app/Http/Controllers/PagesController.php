@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 
 use App\Repositories\Page\PageRepositoryInterface;
+use App\Services\AgeclassService;
 use App\Services\PageService;
 
 
@@ -13,10 +14,12 @@ use App\Services\PageService;
 class PagesController extends Controller
 {
     protected $pageService;
+    protected $ageclassService;
 
-    public function __construct(PageService $pageService)
+    public function __construct(PageService $pageService, AgeclassService $ageclassService)
     {
         $this->pageService = $pageService;
+        $this->ageclassService = $ageclassService;
     }
 
     /**
@@ -33,7 +36,7 @@ class PagesController extends Controller
 
     public function ageclasses()
     {
-        $ageclasses = $this->pageService->loadAgeclasses();
+        $ageclasses = $this->ageclassService->loadAgeclasses();
         return view('front.pages.ageclasses', compact('ageclasses'));
     }
 }

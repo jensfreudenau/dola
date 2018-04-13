@@ -14,11 +14,13 @@ use Illuminate\Support\Carbon;
 
 class PageService
 {
+    /** @var $ageRange */
     protected $ageRange;
     /**
      * @var AgeclassRepositoryInterface
      */
     protected $ageclassRepository;
+
     /**
      * @var PageRepositoryInterface
      */
@@ -33,33 +35,6 @@ class PageService
     {
         $this->ageclassRepository = $ageclassRepository;
         $this->pageRepository     = $pageRepository;
-    }
-
-    public function loadAgeclasses()
-    {
-        $classes    = $this->ageclassRepository->whereNotNull('order');
-        $ageclasses = [];
-        foreach ($classes as $key => $class) {
-            $ageclasses[$key]['yearRange'] = $this->createBirthyearRange($class->year_range);
-            $ageclasses[$key]['ageRange']  = $class->year_range;
-            $ageclasses[$key]['shortname'] = $class->shortname;
-            $ageclasses[$key]['name']      = $class->name;
-        }
-        return $ageclasses;
-    }
-
-    /**
-     * @param $range
-     * @return string
-     */
-    public function createBirthyearRange($range)
-    {
-        $ageGroup = '';
-        [$rangeStart, $rangeEnd] = explode('-', $range);
-        $ageGroup .= Carbon::now()->year - $rangeEnd;
-        $ageGroup .= '-';
-        $ageGroup .= Carbon::now()->year - $rangeStart;
-        return $ageGroup;
     }
 
     /**

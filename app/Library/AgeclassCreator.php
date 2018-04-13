@@ -8,12 +8,11 @@
 
 namespace App\Library;
 use App\Models\Ageclass;
-class AgeclassCreator extends Dom
+class AgeclassCreator
 {
     protected $domAgeclasses;
     protected $classes = [];
     protected $ageclassCollectionError;
     protected $ageclassCollection;
-
 
 }

@@ -7,9 +7,10 @@
  */
 
 namespace App\Library;
+
 use App\Helpers\Str;
 
-class DisciplineCreator extends Dom
+class DisciplineCreator
 {
     protected $domDisciplines;
     protected $disciplines;
@@ -21,11 +22,10 @@ class DisciplineCreator extends Dom
 
     public function parseDisciplines($body)
     {
-
         $this->setDomDisciplines($body);
         $this->iterateDisciplineCollection();
-
     }
+
     public function iterateDisciplineCollection()
     {
         $rows = $this->domDisciplines->getElementsByTagName('tr');
@@ -38,14 +38,14 @@ class DisciplineCreator extends Dom
         }
     }
 
-    protected function fillDisciplineList($col)
+    protected function fillDisciplineList($discipline)
     {
-        if (strpos($col, '/')) {
-            [$firstArg, $secondArg] = explode('/', $col);
+        if (strpos($discipline, '/')) {
+            [$firstArg, $secondArg] = explode('/', $discipline);
             $this->disciplines[] = $this->prepareDisciplineData($firstArg, true);
             $this->disciplines[] = $this->prepareDisciplineData($secondArg, true);
         } else {
-            $this->disciplines[] = $this->prepareDisciplineData($col, true);
+            $this->disciplines[] = $this->prepareDisciplineData($discipline, true);
         }
         $this->disciplines = array_filter($this->disciplines);
         $this->disciplines = array_unique($this->disciplines);
@@ -54,21 +54,23 @@ class DisciplineCreator extends Dom
     protected function prepareDisciplineData($str, $forList = false)
     {
         $str = (string)Str::from($str)->trim();
-//        $str = $this->checkM($str);
+        $str = $this->checkJumpDisciplines($str);
+        $str = $this->checkRunDiscipline($str);
         $str = $this->checkX($str);
-//        if ($forList) {
-            $str = $this->checkZ($str);
-            $str = $this->checkJumpDisciplines($str);
-//        }
-
+        $str = $this->checkZ($str);
         $str = trim($str);
         return $str;
     }
 
-    protected function checkM($str)
+    /**
+     * @param $str
+     * @return mixed
+     */
+    protected function checkRunDiscipline($str)
     {
-        $pos = strpos($str, 'm');
+        $pos = strpos($str, '0m');
         if ($pos == false) return $str;
+
         $newPos = $pos - 1;
         if ($str[$newPos] != ' ') {
             $str = str_replace('m', ' m', $str);
@@ -112,26 +114,6 @@ class DisciplineCreator extends Dom
             return $jumps[2];
         }
         return $str;
-    }
-
-
-
-    protected function searchDisciplines()
-    {
-        $table = $this->dom->getElementsByTagName('table');
-        $rows  = $table->item(0)->getElementsByTagName('tr');
-        foreach ($rows as $key => $row) {
-            if ($key == 0) {
-                continue;
-            }
-            $cols     = $row->getElementsByTagName('td');
-            foreach ($cols as $dataKey => $col) {
-                if ($dataKey > 0 && ($col->nodeValue != " ")) {
-                    $this->fillDisciplineList($col->nodeValue);
-                }
-            }
-        }
-        return true;
     }
 
     public function getDisciplines()
