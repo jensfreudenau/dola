@@ -258,6 +258,9 @@ li.nav-item {
     font-weight: bold;
     padding: 1px;
 }
+.table table {
+    width: 100%;
+}
 
 .pages_table table td, .pages_table table th {
     border-top: none;
