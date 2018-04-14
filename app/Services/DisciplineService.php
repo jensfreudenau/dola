@@ -88,9 +88,6 @@ class DisciplineService
         $rows = $this->domDisciplines->getElementsByTagName('tr');
         foreach ($rows AS $tr) {
             foreach ($tr->childNodes as $key => $td) {
-                if($td->textContent == '1000m') {
-                    echo "stop";
-                }
                 if ($key == 0) continue;
                 if (strlen($td->textContent) < 3) continue;
                 $this->fillDisciplineList($td->textContent);
@@ -140,6 +137,7 @@ class DisciplineService
     protected function prepareDisciplineData($str, $forList = false)
     {
         $str = (string)Str::from($str)->trim();
+        $str = str_replace('*', '', $str);
         $str = preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $str);
         $str = $this->checkJumpDisciplines($str);
         $str = $this->checkRunDiscipline($str);
