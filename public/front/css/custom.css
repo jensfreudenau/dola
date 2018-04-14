@@ -82,6 +82,11 @@ h1 a.navbar-brand {
     color: #000000;
 }
 
+.card legend {
+    font-size: 1.2rem !important;
+    font-style: italic;
+}
+
 .card li.halle {
     /*border-left: 1px solid #199c18;*/
     border-bottom: 1px solid #199c18;
