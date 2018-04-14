@@ -10,7 +10,7 @@
     </h3>
     <div class="card card-default">
         <div class="card-heading">
-           <h3> {{ $competition->header }}</h3>
+            <h3> {{ $competition->header }}</h3>
         </div>
         <div class="card-body">
             <div class="row">
@@ -78,21 +78,21 @@
                             @endforeach
                         @endif
                         <tr>
-                        <th></th>
-                        <td>
-                            @foreach($competition->Uploads as $upload)
-                                @if($upload->type == config('constants.Additionals'))
-                                    <p class="desc"><a href="{{Storage::url($upload->type . '/'. $competition->season . '/' . $upload->filename )}}" target="_blank">Zusatzinfos</a></p><br />
-                                @endif
-                                @if($upload->type == config('constants.Participators'))
-                                    <p class="desc"><a href="{{Storage::url($upload->type . '/'. $competition->season . '/' . $upload->filename )}}" target="_blank">Teilnehmer</a></p><br />
-                                @endif
-                                @if($upload->type == config('constants.Results'))
-                                    <p class="desc"><a href="{{Storage::url($upload->type . '/'. $competition->season . '/' . $upload->filename )}}" target="_blank">Ergebnisliste</a></p><br />
-                                @endif
+                            <th></th>
+                            <td>
+                                @foreach($competition->Uploads as $upload)
+                                    @if($upload->type == config('constants.Additionals'))
+                                        <p class="desc"><a href="{{Storage::url($upload->type . '/'. $competition->season . '/' . $upload->filename )}}" target="_blank">Zusatzinfos</a></p><br />
+                                    @endif
+                                    @if($upload->type == config('constants.Participators'))
+                                        <p class="desc"><a href="{{Storage::url($upload->type . '/'. $competition->season . '/' . $upload->filename )}}" target="_blank">Teilnehmer</a></p><br />
+                                    @endif
+                                    @if($upload->type == config('constants.Results'))
+                                        <p class="desc"><a href="{{Storage::url($upload->type . '/'. $competition->season . '/' . $upload->filename )}}" target="_blank">Ergebnisliste</a></p><br />
+                                    @endif
 
-                            @endforeach
-                        </td>
+                                @endforeach
+                            </td>
                         </tr>
                         <tr>
                             <td colspan="2">{!!  $competition->timetable_1 !!}</td>
@@ -112,7 +112,9 @@
                                 <th>@lang('quickadmin.announciator.fields.clubname')</th>
                                 <th>@lang('quickadmin.announciator.fields.annunciator')</th>
                                 <th>@lang('quickadmin.participator.fields.name')</th>
-                                <th>@lang('quickadmin.participator.fields.discipline')</th>
+                                @if(!empty($participator->Discipline->shortname))
+                                    <th>@lang('quickadmin.participator.fields.discipline')</th>
+                                @endif
                                 <th>@lang('quickadmin.participator.fields.age_group')</th>
                                 <th>@lang('quickadmin.participator.fields.best_time')</th>
 
@@ -125,12 +127,14 @@
                                         <td>{{$announciator->clubname}}</td>
                                         <td>{{$announciator->name}}</td>
                                         <td>{{$participator->full_name}}</td>
-                                        <td>{{$participator->Discipline->shortname}}</td>
+                                        @if(!empty($participator->Discipline->shortname))
+                                            <td>{{$participator->Discipline->shortname}}</td>
+                                        @endif
                                         <td>{{$participator->Ageclass->shortname}}</td>
                                         <td>{{$participator->best_time}}</td>
                                     </tr>
 
-                                @endforeach
+                            @endforeach
                             @endforeach
                             <tbody>
                         </table>
