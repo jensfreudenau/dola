@@ -28,10 +28,7 @@
             <th>Nachname</th>
             <th>Geb. Jahr</th>
             <th>Altersklasse</th>
-            @if(!empty($participator->Discipline->shortname))
-                <th>Disziplin</th>
-            @endif
-
+            <th>Disziplin</th>
             <th>Bestzeit</th>
         </tr>
         </thead>
@@ -43,8 +40,10 @@
                 <td>{{$participator->lastname }}</td>
                 <td>{{$participator->birthyear }}</td>
                 <td>{{$participator->ageclass->shortname }}</td>
-                @if(!empty($participator->Discipline->shortname))
-                    <td>{{$participator->discipline->shortname }}</td>
+                @if(!empty($participator->discipline))
+                    <td>{{$participator->discipline}}</td>
+                @else
+                    <td>&nbsp;</td>
                 @endif
                 <td>{{$participator->best_time}}</td>
             </tr>

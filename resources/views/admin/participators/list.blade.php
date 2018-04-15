@@ -36,7 +36,7 @@
                                 <td>{{$participator->Announciator->clubname}}</td>
                                 <td>{{$participator->Announciator->name}}</td>
                                 <td>{{$participator->prename}} &nbsp; {{$participator->lastname}}</td>
-                                <td>{{$participator->discipline->shortname}}</td>
+                                <td>{{$participator->discipline}}</td>
                                 <td>{{$participator->ageclass->shortname}}</td>
                             </tr>
                         @endforeach

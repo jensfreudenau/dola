@@ -15,7 +15,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $lastname
  * @property string $birthyear
  * @property string $ageclass_id
- * @property string $discipline_id
+ * @property id $discipline_id
+ * @property string $discipline_cross
  * @property string $best_time
  * @property-read \App\Models\Ageclass $Ageclass
  * @property-read \App\Models\Announciator $Announciator
@@ -59,5 +60,15 @@ class Participator extends Model
     public function getFullNameAttribute()
     {
         return $this->prename . ' ' . $this->lastname;
+    }
+
+    public function getDisciplineAttribute()
+    {
+        if($this->discipline_id == '') {
+            return $this->discipline_cross;
+        }
+        else {
+            return $this->Discipline()->value('shortname');
+        }
     }
 }

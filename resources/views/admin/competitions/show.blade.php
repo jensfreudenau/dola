@@ -112,9 +112,7 @@
                                 <th>@lang('quickadmin.announciator.fields.clubname')</th>
                                 <th>@lang('quickadmin.announciator.fields.annunciator')</th>
                                 <th>@lang('quickadmin.participator.fields.name')</th>
-                                @if(!empty($participator->Discipline->shortname))
-                                    <th>@lang('quickadmin.participator.fields.discipline')</th>
-                                @endif
+                                <th>@lang('quickadmin.participator.fields.discipline')</th>
                                 <th>@lang('quickadmin.participator.fields.age_group')</th>
                                 <th>@lang('quickadmin.participator.fields.best_time')</th>
 
@@ -127,8 +125,10 @@
                                         <td>{{$announciator->clubname}}</td>
                                         <td>{{$announciator->name}}</td>
                                         <td>{{$participator->full_name}}</td>
-                                        @if(!empty($participator->Discipline->shortname))
-                                            <td>{{$participator->Discipline->shortname}}</td>
+                                        @if(!empty($participator->discipline))
+                                            <td>{{$participator->discipline}}</td>
+                                        @else
+                                            <td>&nbsp;</td>
                                         @endif
                                         <td>{{$participator->Ageclass->shortname}}</td>
                                         <td>{{$participator->best_time}}</td>
