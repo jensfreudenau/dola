@@ -136,7 +136,7 @@ class CompetitionController extends Controller
         $competionId = $this->competitionService->storeData($request);
         $errorList = $this->competitionService->getErrorList();
 
-        if(count($errorList['disciplineError']) && $ignore != 'ignore') {
+        if(array_key_exists('disciplineError', $errorList) && $ignore != 'ignore') {
             return Redirect::back()->withInput()->withErrors($errorList['disciplineError']);
         }
         return redirect('/admin/competitions/' . $competionId);

@@ -291,8 +291,8 @@ $(document).ready(function () {
         let parsedData = Papa.parse(result, {
             delimiter: ';'
         });
-        let $table = formDataTable(parsedData);
-        $(tinymce.get('competition-timetable_1').getBody()).html($table);
+        let table = formDataTable(parsedData);
+        $(tinymce.get('competition-timetable_1').getBody()).html(table);
     }
 
     function formDataTable(response) {
@@ -324,31 +324,31 @@ $(document).ready(function () {
     }
 
     function processData(csv) {
-        var allTextLines = csv.split(/\r\n|\n/);
-        var lines = [];
-        var table = '';
+        let allTextLines = csv.split(/\r\n|\n/);
+        let lines = [];
+        let table = '';
+        let data ='';
+        let emptyLineFlag = '';
         // allTextLines.shift();
         let flag = -1;
         for (var i = 0; i < allTextLines.length; i++) {
-            let data = allTextLines[i].split(';');
-
-            let emptyLineFlag = 'kein treffer';
+            data = allTextLines[i].split(';');
+            emptyLineFlag = 'kein treffer';
             for (let j = 0; j < data.length; j++) {
                 if(data[j].trim() != ""){
                     emptyLineFlag = 'treffer';
                 }
             }
             if(emptyLineFlag == 'kein treffer') {
+                console.log('kein treffer');
                 continue;
             }
-
-            let tarr = [];
-            let anfang = allTextLines[i].indexOf("Zeit");
+            let tarr = [];            
             let ende = allTextLines[i].indexOf("Elektr");
-
             if(ende == -1){
                 ende = allTextLines[i].indexOf("Meldungen");
             }
+            let anfang = allTextLines[i].indexOf("Zeit");
             if (anfang === 0) {
                 flag = 1;
                 setClasses(allTextLines[i]);
@@ -359,6 +359,7 @@ $(document).ready(function () {
             if (flag === 1) {
                 table += allTextLines[i] + '\r\n';
             }
+
             for (let j = 0; j < data.length; j++) {
                 if (data[j].search("uszei") > 0) {
                     setAward(data[j]);
@@ -369,7 +370,6 @@ $(document).ready(function () {
                 if (data[j].includes("eldung")) {
                     setMeldungReceiver(data);
                 }
-
                 if (data[j].includes(' den ') || data[j].includes(' am ') ) {
                     let headerline = data[j].split(',');
                     setHeader(headerline[0]);
@@ -403,6 +403,10 @@ function setHeader(header) {
 }
 
 function setStartDate(data) {
+
+    if(data == '') {
+        return false;
+    }
     let startStr = data.toString();
     startStr = startStr.replace(/am/g, "");
     startStr = startStr.replace(/den/g, "");

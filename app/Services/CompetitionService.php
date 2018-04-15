@@ -11,11 +11,9 @@ namespace App\Services;
 use App\Helpers\DateTimeHelper;
 use App\Library\AgeclassCreator;
 use App\Library\DisciplineCreator;
-
 use App\Library\TimetableParser;
 use App\Models\Additional;
 use App\Models\Ageclass;
-
 use App\Traits\ParseDataTrait;
 use App\Models\Announciator;
 use App\Models\Competition;
@@ -32,15 +30,6 @@ use Illuminate\Http\Request;
 
 class CompetitionService
 {
-    /**
-     * @var AgeclassService
-     */
-    private $ageclassService;
-    /**
-     * @var DisciplineService
-     */
-    private $disciplineService;
-
     const TABLE_STYLE = '<table class="table table-sm table-hover">';
     const THEAD_STYLE = '<thead class="thead-inverse">';
     /** @var CompetitionRepositoryInterface @ */
@@ -50,10 +39,18 @@ class CompetitionService
     protected $competitionService;
     protected $ageclassList   = array();
     protected $disciplineList = array();
+    protected $errorList      = array();
     protected $tableStyle     = self::TABLE_STYLE;
     protected $tableHeadStyle = self::THEAD_STYLE;
-    protected $errorList;
     protected $ignoreAgeclasses;
+    /**
+     * @var AgeclassService
+     */
+    private $ageclassService;
+    /**
+     * @var DisciplineService
+     */
+    private $disciplineService;
 
     /**
      * CompetitionService constructor.
@@ -66,13 +63,10 @@ class CompetitionService
     {
         /** @var \App\Repositories\Competition\CompetitionRepository competitionRepository */
         $this->competitionRepository = $competitionRepository;
-
         /** @var \App\Repositories\Additional\AdditionalRepository additionalRepository */
         $this->additionalRepository = $additionalRepository;
-
         /** @var  ageclassService */
         $this->ageclassService = $ageclassService;
-
         /** @var  disciplineService */
         $this->disciplineService = $disciplineService;
     }
@@ -100,28 +94,8 @@ class CompetitionService
         return $archives;
     }
 
-
-
     use ParseDataTrait;
     use StringMarkerTrait;
-
-    /**
-     * @param $timetableRaw
-     * @param $customAgeclasses
-     * @return mixed
-     */
-    protected function storeTimetableData($timetableRaw)
-    {
-        $timetable = new TimetableParser();
-        $timetable->setTimeTableRaw($timetableRaw);
-        $timetable->loadIntoDom();
-        $timetable->createTable();
-        if (!$this->ignoreAgeclasses) {
-            $this->ageclassService->parseAgeclasses($timetable->getHeader());
-        }
-        $this->disciplineService->parseDisciplines($timetable->getTableBody());
-        return $timetable->getTimeTable();
-    }
 
     /**
      * @param $id
@@ -153,12 +127,11 @@ class CompetitionService
             $newTimetable = $this->storeTimetableData($request->timetable_1);
             $request->merge(array('timetable_1' => $newTimetable));
         }
-        if(!$competitionId) {
+        if (!$competitionId) {
             $competitionId = $this->competitionRepository->create($request->all())->id;
             /** @var Competition $competition */
             $competition = $this->find($competitionId);
-        }
-        else {
+        } else {
             /** @var Competition $competition */
             $competition = $this->find($competitionId);
             $competition->update($request->all());
@@ -176,11 +149,26 @@ class CompetitionService
         if (!empty($errorList['disciplineError'])) {
             Log::debug('disciplineError');
         }
-        return true;
-
+        return $competitionId;
     }
 
-
+    /**
+     * @param $timetableRaw
+     * @param $customAgeclasses
+     * @return mixed
+     */
+    protected function storeTimetableData($timetableRaw)
+    {
+        $timetable = new TimetableParser();
+        $timetable->setTimeTableRaw($timetableRaw);
+        $timetable->loadIntoDom();
+        $timetable->createTable();
+        if (!$this->ignoreAgeclasses) {
+            $this->ageclassService->parseAgeclasses($timetable->getHeader());
+        }
+        $this->disciplineService->parseDisciplines($timetable->getTableBody());
+        return $timetable->getTimeTable();
+    }
 
     public function find($competition_id)
     {
