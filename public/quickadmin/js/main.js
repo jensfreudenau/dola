@@ -237,6 +237,7 @@ $(document).ready(function () {
     };
 
     Dropzone.options.participators = {
+
         params:{"type":"participators"},
         paramName: "uploader",
         init: function() {
@@ -248,46 +249,38 @@ $(document).ready(function () {
                     location.reload();
                 }
             });
-            this.on("removedfile", function(file) {
-                if (!file.serverId) {
-                    return;
-                }
-                $.post('https://dola.local/admin/competitions/delete_file/1');
-            });
         }
     };
 
     Dropzone.options.resultsets = {
-        maxFilesize: 10, // Mb
+
         params:{"type":"resultsets"},
         paramName: "uploader",
-        sending: function (file, xhr, formData) {
-        },
-        success: function (file, response) {
-        },
-        error: function (file, error) {
-            console.error(error);
-        },
-        accept: function (file, done) {
-            location.reload();
-            done();
+        init: function() {
+            this.on("success", function(file, response) {
+                file.serverId = response;
+            });
+            this.on("complete", function (file) {
+                if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                    location.reload();
+                }
+            });
         }
     };
 
     Dropzone.options.additionals = {
-        maxFilesize: 10, // Mb
+
         params:{"type":"additionals"},
         paramName: "uploader",
-        sending: function (file, xhr, formData) {
-        },
-        success: function (file, response) {
-        },
-        error: function (file, error) {
-            console.error(error);
-        },
-        accept: function (file, done) {
-            location.reload();
-            done();
+        init: function() {
+            this.on("success", function(file, response) {
+                file.serverId = response;
+            });
+            this.on("complete", function (file) {
+                if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                    location.reload();
+                }
+            });
         }
     };
 
