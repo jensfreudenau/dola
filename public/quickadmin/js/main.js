@@ -237,19 +237,23 @@ $(document).ready(function () {
     };
 
     Dropzone.options.participators = {
-        maxFilesize: 10, // Mb
         params:{"type":"participators"},
         paramName: "uploader",
-        sending: function (file, xhr, formData) {
-        },
-        success: function (file, response) {
-        },
-        error: function (file, error) {
-            console.error(error);
-        },
-        accept: function (file, done) {
-            location.reload();
-            done();
+        init: function() {
+            this.on("success", function(file, response) {
+                file.serverId = response;
+            });
+            this.on("complete", function (file) {
+                if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                    location.reload();
+                }
+            });
+            this.on("removedfile", function(file) {
+                if (!file.serverId) {
+                    return;
+                }
+                $.post('https://dola.local/admin/competitions/delete_file/1');
+            });
         }
     };
 

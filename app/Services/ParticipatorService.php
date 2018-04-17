@@ -30,6 +30,7 @@ class ParticipatorService
     /**
      * @param $request
      * @param $announciatorId
+     * @param $season
      */
     public function create($request, $announciatorId, $season)
     {
@@ -68,6 +69,7 @@ class ParticipatorService
 
     /**
      * convert participator information into seltec reading
+     * @param $competition
      */
     public function listParticipatorForSeltec($competition)
     {

@@ -44,18 +44,24 @@ trait FileUploadTrait
      * File upload trait used in controllers to upload files
      * @param Request $request
      * @param $path
-     * @return Request
+     * @return array
      */
     public function saveFiles(Request $request, $path)
     {
+        $response = [];
         $finalRequest = $request;
         foreach ($request->all() as $key => $value) {
             if ($request->hasFile($key)) {
                 $filename = $request->file($key)->getClientOriginalName();
                 Storage::putFileAs($path, $request->file('uploader'), $filename);
                 $finalRequest = new Request(array_merge($finalRequest->all(), [$key => $filename]));
+
+                $files = Storage::allFiles($path);
+                $response[]['size']=Storage::size($files[0]);
+                $response[]['name']=$filename;
             }
         }
+
         return $finalRequest;
     }
 

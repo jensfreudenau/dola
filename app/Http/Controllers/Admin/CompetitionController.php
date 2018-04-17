@@ -13,12 +13,14 @@ use App\Http\Requests\Admin\UpdateCompetitionsRequest;
 use App\Repositories\Competition\CompetitionRepositoryInterface;
 use App\Services\CompetitionService;
 use App\Traits\StringMarkerTrait;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpKernel\Log\Logger;
 
 class CompetitionController extends Controller
 {
@@ -92,7 +94,6 @@ class CompetitionController extends Controller
     }
 
     use FileUploadTrait;
-
     public function uploader(Request $request, $id)
     {
         if (!Gate::allows('competition_access')) {
@@ -101,11 +102,27 @@ class CompetitionController extends Controller
         $competition                = $this->competitionService->find($id);
         $path                       = 'public/' . $request->type . '/' . $competition->season;
         $uploads                    = $this->saveFiles($request, $path);
+
         $requests                   = $request->all();
         $requests['competition_id'] = $id;
         $requests['type']           = $request->type;
         $requests['filename']       = $uploads->uploader;
         Upload::create($requests);
+
+//        $files = Storage::allFiles('public/participators/bahn');
+//        $result  = array();
+//        if ( false!==$files ) {
+//            foreach ( $files as $file ) {
+//                if ( '.'!=$file && '..'!=$file) {
+//                    $obj['name'] = basename($file);
+//                    $obj['size'] = Storage::size($file);
+//                    $result[] = $obj;
+//                }
+//            }
+//        }
+        return response()->json(
+            $uploads
+        );
         return 'done';
     }
 
@@ -165,8 +182,16 @@ class CompetitionController extends Controller
         }
         $uploadedFile = Upload::findOrFail($id);
         $competition  = $this->competitionService->find($uploadedFile->competition_id);
-        Storage::delete('public/' . $uploadedFile->type . '/' . $competition->season . '/' . $uploadedFile->filename);
-        $uploadedFile->delete();
+        try {
+            Storage::delete('public/' . $uploadedFile->type . '/' . $competition->season . '/' . $uploadedFile->filename);
+        } catch (Exception $exception) {
+            Log::error($exception);
+        }
+        try {
+            $uploadedFile->delete();
+        } catch (Exception $exception) {
+            Log::error($exception);
+        }
         return redirect()->route('admin.competitions.edit', $competition->id);
     }
 
