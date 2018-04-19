@@ -102,28 +102,14 @@ class CompetitionController extends Controller
         $competition                = $this->competitionService->find($id);
         $path                       = 'public/' . $request->type . '/' . $competition->season;
         $uploads                    = $this->saveFiles($request, $path);
-
         $requests                   = $request->all();
         $requests['competition_id'] = $id;
         $requests['type']           = $request->type;
         $requests['filename']       = $uploads->uploader;
         Upload::create($requests);
-
-//        $files = Storage::allFiles('public/participators/bahn');
-//        $result  = array();
-//        if ( false!==$files ) {
-//            foreach ( $files as $file ) {
-//                if ( '.'!=$file && '..'!=$file) {
-//                    $obj['name'] = basename($file);
-//                    $obj['size'] = Storage::size($file);
-//                    $result[] = $obj;
-//                }
-//            }
-//        }
         return response()->json(
             $uploads
         );
-        return 'done';
     }
 
     public function create()

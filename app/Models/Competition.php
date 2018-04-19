@@ -19,7 +19,7 @@ class Competition extends BaseModel
 {
     use FormAccessible;
     use StringMarkerTrait;
-    protected $fillable       = ['organizer_id', 'start_date', 'timetable_1', 'submit_date', 'header', 'info', 'season', 'classes', 'award', 'register', 'only_list'];
+    protected $fillable       = ['organizer_id', 'start_date', 'timetable_1', 'submit_date', 'header', 'info', 'season', 'classes', 'award', 'register', 'only_list', 'ignore_ageclasses', 'ignore_disciplines'];
 
 
     public function __construct(array $attributes = [])

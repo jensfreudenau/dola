@@ -25,12 +25,14 @@
 </div>
 @if (!$disabled)
     <div class="form-group">
+        {!! Form::label('ignore_disciplines', Lang::get('quickadmin.competitions.ignore_disciplines')) !!}
+        {{ Form::checkbox('ignore_disciplines') }}<br>
         {!! Form::label('disciplines', Lang::get('quickadmin.competitions.fields.disciplines')) !!}
         {{ Form::select('disciplines[]', $disciplines, array_pluck($competition->disciplines, 'id'), ['multiple', 'class'=>'form-control select2']) }}
     </div>
     <div class="form-group">
-        {!! Form::label('custom_ageclasses', Lang::get('quickadmin.competitions.custom_ageclasses')) !!}
-            {{ Form::checkbox('custom_ageclasses') }}<br>
+        {!! Form::label('ignore_ageclasses', Lang::get('quickadmin.competitions.ignore_ageclasses')) !!}
+            {{ Form::checkbox('ignore_ageclasses') }}<br>
         {!! Form::label('ageclasses', Lang::get('quickadmin.competitions.fields.classes')) !!}
         {!! Form::select('ageclasses[]', $ageclasses, array_pluck($competition->ageclasses, 'id'), ['multiple', 'class'=>'form-control select2']) !!}
     </div>
@@ -47,9 +49,9 @@
 </div>
 <div class="form-group">
     {!! Form::label('season', Lang::get('quickadmin.season')) !!}<br>
-    {{ Form::radio('season', 'bahn',0,['required']) }} @lang('quickadmin.competitions.track')
-    {{ Form::radio('season', 'halle') }} @lang('quickadmin.competitions.indoor')
-    {{ Form::radio('season', 'cross') }} @lang('quickadmin.competitions.cross')
+    {{ Form::radio('season', 'bahn',0,['required', 'id'=>'bahn']) }} @lang('quickadmin.competitions.track')
+    {{ Form::radio('season', 'halle',0,['required', 'id'=>'halle']) }} @lang('quickadmin.competitions.indoor')
+    {{ Form::radio('season', 'cross',0,['required', 'id'=>'cross']) }} @lang('quickadmin.competitions.cross')
 </div>
 <div class="form-group">
     {!! Form::label('timetable_1', Lang::get('quickadmin.timetable'). '1') !!}

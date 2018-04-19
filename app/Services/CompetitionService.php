@@ -37,12 +37,13 @@ class CompetitionService
     /** @var AdditionalRepositoryInterface @ */
     protected $additionalRepository;
     protected $competitionService;
-    protected $ageclassList   = array();
-    protected $disciplineList = array();
-    protected $errorList      = array();
-    protected $tableStyle     = self::TABLE_STYLE;
-    protected $tableHeadStyle = self::THEAD_STYLE;
-    protected $ignoreAgeclasses;
+    protected $ageclassList      = array();
+    protected $disciplineList    = array();
+    protected $errorList         = array();
+    protected $tableStyle        = self::TABLE_STYLE;
+    protected $tableHeadStyle    = self::THEAD_STYLE;
+    protected $ignoreAgeclasses  = false;
+    protected $ignoreDisciplines = false;
     /**
      * @var AgeclassService
      */
@@ -122,7 +123,8 @@ class CompetitionService
      */
     public function storeData(Request $request, $competitionId = false)
     {
-        $this->ignoreAgeclasses = $request->has('custom_ageclasses');
+        $this->ignoreAgeclasses = $request->has('ignore_ageclasses');
+        $this->ignoreDisciplines = $request->has('ignore_disciplines');
         if ($request->has('timetable_1')) {
             $newTimetable = $this->storeTimetableData($request->timetable_1);
             $request->merge(array('timetable_1' => $newTimetable));
@@ -141,7 +143,12 @@ class CompetitionService
         } else {
             $this->ageclassService->syncAgeClasses($competition);
         }
-        $this->disciplineService->syncDisciplines($competition);
+        if ($this->ignoreDisciplines) {
+            $competition->Disciplines()->sync($request->disciplines);
+        } else {
+            $this->disciplineService->syncDisciplines($competition);
+        }
+
         $this->saveAdditionals($request->all(), $competition);
         if (!empty($errorList['ageclassError'])) {
             Log::debug('ageclassError');
@@ -166,7 +173,9 @@ class CompetitionService
         if (!$this->ignoreAgeclasses) {
             $this->ageclassService->parseAgeclasses($timetable->getHeader());
         }
-        $this->disciplineService->parseDisciplines($timetable->getTableBody());
+        if (!$this->ignoreDisciplines) {
+            $this->disciplineService->parseDisciplines($timetable->getTableBody());
+        }
         return $timetable->getTimeTable();
     }
 

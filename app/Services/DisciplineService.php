@@ -99,10 +99,10 @@ class DisciplineService
     {
         if (strpos($discipline, '/')) {
             [$firstArg, $secondArg] = explode('/', $discipline);
-            $this->disciplines[] = $this->prepareDisciplineData($firstArg, true);
-            $this->disciplines[] = $this->prepareDisciplineData($secondArg, true);
+            $this->disciplines[] = $this->prepareDisciplineData($firstArg);
+            $this->disciplines[] = $this->prepareDisciplineData($secondArg);
         } else {
-            $this->disciplines[] = $this->prepareDisciplineData($discipline, true);
+            $this->disciplines[] = $this->prepareDisciplineData($discipline);
         }
         $this->disciplines = array_filter($this->disciplines);
         $this->disciplines = array_unique($this->disciplines);
@@ -134,7 +134,7 @@ class DisciplineService
         return $str;
     }
 
-    protected function prepareDisciplineData($str, $forList = false)
+    protected function prepareDisciplineData($str)
     {
         $str = (string)Str::from($str)->trim();
         $str = str_replace('*', '', $str);

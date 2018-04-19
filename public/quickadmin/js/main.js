@@ -171,26 +171,7 @@ $(document).ready(function () {
         format: "dd.mm.yyyy",
         language: 'de-DE'
     });
-    tinyMCE.init({
-        mode: "textareas",
-        themes: "modern",
-        skin: "custom",
-        removeformat: [
-            {selector: 'b,strong,em,i,font,u,strike', remove : 'all', split : true, expand : false, block_expand: true, deep : true},
-            {selector: 'span', attributes : ['style', 'class'], remove : 'empty', split : true, expand : false, deep : true},
-            {selector: '*', attributes : ['style', 'class'], split : false, expand : false, deep : true}
-        ],
-        content_css: '/adminlte/css/tinymce_custom.css',
-        plugins: [
-            "advlist autolink lists link image charmap anchor searchreplace visualblocks code fullscreen insertdatetime media table contextmenu"
-        ],
-        relative_urls: false,
-        convert_urls: false,
-        forced_root_block: "",
-        remove_script_host: false,
-//            document_base_url: "http://",
-        toolbar: "undo redo paste | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media code table",
-    });
+
 
     Dropzone.options.csvuploader = {
         maxFilesize: 10, // Mb+
@@ -218,9 +199,9 @@ $(document).ready(function () {
         success: function (file, response) {
             console.log('success');
         },
-        error: function(file, response) {
+        error: function (file, response) {
             console.log('acceerrorpte');
-            if($.type(response) === "string")
+            if ($.type(response) === "string")
                 var message = response; //dropzone sends it's own error messages in string
             else
                 var message = response.message;
@@ -235,13 +216,12 @@ $(document).ready(function () {
             return _results;
         },
     };
-
     Dropzone.options.participators = {
 
-        params:{"type":"participators"},
+        params: {"type": "participators"},
         paramName: "uploader",
-        init: function() {
-            this.on("success", function(file, response) {
+        init: function () {
+            this.on("success", function (file, response) {
                 file.serverId = response;
             });
             this.on("complete", function (file) {
@@ -254,10 +234,10 @@ $(document).ready(function () {
 
     Dropzone.options.resultsets = {
 
-        params:{"type":"resultsets"},
+        params: {"type": "resultsets"},
         paramName: "uploader",
-        init: function() {
-            this.on("success", function(file, response) {
+        init: function () {
+            this.on("success", function (file, response) {
                 file.serverId = response;
             });
             this.on("complete", function (file) {
@@ -269,11 +249,10 @@ $(document).ready(function () {
     };
 
     Dropzone.options.additionals = {
-
-        params:{"type":"additionals"},
+        params: {"type": "additionals"},
         paramName: "uploader",
-        init: function() {
-            this.on("success", function(file, response) {
+        init: function () {
+            this.on("success", function (file, response) {
                 file.serverId = response;
             });
             this.on("complete", function (file) {
@@ -284,17 +263,9 @@ $(document).ready(function () {
         }
     };
 
-    function parsedData(result) {
-        let parsedData = Papa.parse(result, {
-            delimiter: ';'
-        });
-        let table = formDataTable(parsedData);
-        $(tinymce.get('competition-timetable_1').getBody()).html(table);
-    }
-
     function formDataTable(response) {
         let th = '';
-        let firstColumn = response.data[0];
+        let firstColumn = response.data[1];
         response.data.shift();
         let table = $('<table>');
         let thead = $('<thead>').appendTo(table);
@@ -308,7 +279,7 @@ $(document).ready(function () {
         let tbody = $('<tbody>').appendTo(table);
 
         $(allData).each(function (j) {
-            if(allData[j].length == 1 || allData[j].length == 0) {
+            if (allData[j].length == 1 || allData[j].length == 0) {
                 return;
             }
             tr = $('<tr>').appendTo(tbody);
@@ -322,133 +293,81 @@ $(document).ready(function () {
 
     function processData(csv) {
         let allTextLines = csv.split(/\r\n|\n/);
-        let lines = [];
-        let table = '';
-        let data ='';
-        let emptyLineFlag = '';
-        // allTextLines.shift();
-        let flag = -1;
-        for (var i = 0; i < allTextLines.length; i++) {
-            data = allTextLines[i].split(';');
-            emptyLineFlag = 'kein treffer';
-            for (let j = 0; j < data.length; j++) {
-                if(data[j].trim() != ""){
-                    emptyLineFlag = 'treffer';
-                }
-            }
-            if(emptyLineFlag == 'kein treffer') {
-                console.log('kein treffer');
-                continue;
-            }
-            let tarr = [];            
-            let ende = allTextLines[i].indexOf("Elektr");
-            if(ende == -1){
-                ende = allTextLines[i].indexOf("Meldungen");
-            }
-            let anfang = allTextLines[i].indexOf("Zeit");
-            if (anfang === 0) {
-                flag = 1;
-                setClasses(allTextLines[i]);
-            }
-            if (ende == 0 && flag == 1) {
-                flag = -1;
-            }
-            if (flag === 1) {
-                table += allTextLines[i] + '\r\n';
-            }
+        let table = csv.substring(csv.lastIndexOf("#start"), csv.lastIndexOf("#ende"));
+        for (let i = 0; i < allTextLines.length; i++) {
+            let rowCsv = allTextLines[i].replace(/;/g, "");
 
-            for (let j = 0; j < data.length; j++) {
-                if (data[j].search("uszei") > 0) {
-                    setAward(data[j]);
-                }
-                if (data[j].search("eldeschl") > 0) {
-                    setMeldeschluss(data[j]);
-                }
-                if (data[j].includes("eldung")) {
-                    setMeldungReceiver(data);
-                }
-                if (data[j].includes(' den ') || data[j].includes(' am ') ) {
-                    let headerline = data[j].split(',');
-                    setHeader(headerline[0]);
-                    setRadioSeason(headerline[0]);
-                    setStartDate(headerline[1]);
-                }
-                tarr.push(data[j]);
+            if (rowCsv.search("szeichnung") > 0) {
+                setAward(rowCsv);
             }
-            lines.push(tarr);
+            if (rowCsv.search("ldeschlu") > 0) {
+                setMeldeschluss(rowCsv);
+            }
+            if (rowCsv.includes('den') && rowCsv.includes('am')) {
+                let headerline = rowCsv.split('den');
+                setHeader(headerline[0]);
+                setRadioSeason(rowCsv);
+                setStartDate(headerline[1]);
+            }
         }
-        parsedData(table);
-
+        parseTableData(table);
         return true;
     }
+
+    function parseTableData(result) {
+        let parsedData = Papa.parse(result, {
+            delimiter: ';'
+        });
+        $(tinyMCE.get('competition-timetable_1').getBody()).html(formDataTable(parsedData));
+    }
+
+    function setRadioSeason(headerline) {
+        if (headerline.includes("Halle")) {
+            $("#halle").prop("checked", true);
+        }
+        if (headerline.includes("Stadion")) {
+            $("#bahn").prop("checked", true);
+        }
+    }
+
+    function setHeader(header) {
+        let headerline = header.split('am');
+        $('#competition-headline').val(headerline[0]);
+    }
+
+    function setStartDate(rawStartDate) {
+        let rawStartDateArr = [];
+        if (rawStartDate.includes(',')) {
+            rawStartDateArr = rawStartDate.split(',');
+        }
+        let startStr = rawStartDateArr[0].toString();
+        startStr = startStr.replace(/am/g, "");
+        startStr = startStr.replace(/den/g, "");
+        if (!moment($.trim(startStr), ['DD. MMMM YYYY', 'DD.MMMM YYYY', 'DD.MM.YYYY'], true).isValid()) {
+            return false;
+        }
+        let germanDate = moment(startStr, ['DD. MMMM YYYY', 'DD.MMMM YYYY', 'DD.MM.YYYY']);
+        $('#competition-start_date').val(germanDate.format('DD.MM.YYYY'));
+    }
+
+    function setAward(ausszeichnungStr) {
+        let ausszeichnung = ausszeichnungStr.split(':');
+        $('#competition-award').val($.trim(ausszeichnung[1]));
+    }
+
+    function setMeldeschluss(meldeschlussStr) {
+        let meldeschlussArr =[];
+        if (meldeschlussStr.includes(':')) {
+            meldeschlussArr = meldeschlussStr.split(':');
+        }
+        else {
+            return false;
+        }
+        let meldeschluss = meldeschlussArr[1].replace(/\s/g, '');
+        let germanDate = moment(meldeschluss, ['DD. MMMM YYYY', 'DD.MMMM YYYY', 'DD.MM.YYYY']);
+        $('#competition-submit_date').val(germanDate.format('DD.MM.YYYY'));
+    }
 });
-
-function setRadioSeason(headerline) {
-    let season = headerline.indexOf("Halle");
-    if (season > 0) {
-        $('input:radio[name="season"][value=halle]').click();
-    }
-    season = headerline.indexOf("Stadion");
-    if (season > 0) {
-        $('input:radio[name="season"][value=stadion]').click();
-    }
-}
-
-function setHeader(header) {
-    let headerline = header.split('am');
-    $('#competition-headline').val(headerline[0]);
-}
-
-function setStartDate(data) {
-
-    if(data == '') {
-        return false;
-    }
-    let startStr = data.toString();
-    startStr = startStr.replace(/am/g, "");
-    startStr = startStr.replace(/den/g, "");
- 
-    if (!moment($.trim(startStr), ['DD. MMMM YYYY', 'DD.MMMM YYYY', 'DD.MM.YYYY'], true).isValid()) {
-        return false;
-    }
-    let germanDate = moment(startStr, ['DD. MMMM YYYY', 'DD.MMMM YYYY', 'DD.MM.YYYY']);
-
-    $('#competition-start_date').val(germanDate.format('DD.MM.YYYY'));
-}
-
-function setMeldeschluss(data) {
-    let meldeschluss = data.split(':');
-    let meldeschlussStr = meldeschluss[1].replace(/\s/g, '');
-    let germanDate = moment(meldeschlussStr, ['DD.MMMM YYYY', 'DD.MM.YYYY']);
-    $('#competition-submit_date').val(germanDate.format('DD.MM.YYYY'));
-}
-
-function setClasses(allTextLines) {
-    let classes = allTextLines.split(';');
-    let classStr = classes.join();
-    classStr = classStr.replace(/Zeit/g, "");
-    classStr = classStr.replace(/[*]/g, "");
-    classStr = classStr.replace(/[,]/g, ", ");
-    if (classStr.substring(0, 1) == ',') {
-        classStr = classStr.substring(1);
-    }
-    $('#competition-classes').val($.trim(classStr));
-}
-
-function setMeldungReceiver(data) {
-    let meldungName = data[1].split(',');
-    let name = $.trim(meldungName[0]);
-
-    $("#addresses_id option").each(function (a, b) {
-        if ($(this).html() == name) $(this).attr("selected", "selected");
-        $(this).change();
-    });
-}
-
-function setAward(data) {
-    let ausszeichnung = data.split(':');
-    $('#competition-award').val($.trim(ausszeichnung[1]));
-}
 
 
 function processAjaxTables() {
@@ -474,3 +393,23 @@ function processAjaxTables() {
     });
 
 }
+tinyMCE.init({
+    mode: "textareas",
+    themes: "modern",
+    skin: "custom",
+    removeformat: [
+        {selector: 'b,strong,em,i,font,u,strike', remove: 'all', split: true, expand: false, block_expand: true, deep: true},
+        {selector: 'span', attributes: ['style', 'class'], remove: 'empty', split: true, expand: false, deep: true},
+        {selector: '*', attributes: ['style', 'class'], split: false, expand: false, deep: true}
+    ],
+    content_css: '/adminlte/css/tinymce_custom.css',
+    plugins: [
+        "advlist autolink lists link image charmap anchor searchreplace visualblocks code fullscreen insertdatetime media table contextmenu"
+    ],
+    relative_urls: false,
+    convert_urls: false,
+    forced_root_block: "",
+    remove_script_host: false,
+//            document_base_url: "http://",
+    toolbar: "undo redo paste | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media code table",
+});
