@@ -1,4 +1,14 @@
 <?php
+Route::get('halle', function(){ 
+    return Redirect::to('/indoor', 301); 
+});
+Route::get('bahn', function(){ 
+    return Redirect::to('/track', 301); 
+});
+Route::get('php/{url}', function(){ 
+    return Redirect::to('/', 301); 
+});
+
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index');
 Route::post('competitions', 'CompetitionsController@create');
@@ -19,11 +29,10 @@ Route::get('/announciators/create/{competition_id?}', 'AnnounciatorsController@c
 Route::post('/announciators/store', 'AnnounciatorsController@store')->name('announciators/store');
 
 Route::get('/records/record', 'RecordsController@index')->name('records.record');
-Route::get('/records/{id}', 'RecordsController@record');
+Route::get('/records/{mnemonic}', 'RecordsController@record');
 Route::get('/records/best/{sex}', 'RecordsController@best');
 Route::get('/pages/altersklassen', 'PagesController@ageclasses');
 Route::get('/pages/{mnemonic}', 'PagesController@show');
-
 
 // Authentication Routes...
 $this->get('login', 'Auth\LoginController@showLoginForm')->name('auth.login');

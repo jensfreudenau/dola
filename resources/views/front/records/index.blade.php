@@ -6,7 +6,7 @@
         <h3>Frauen</h3>
         <div class="list-group">
             @forelse($females as $female)
-                <a href="{{$female->id}}" class="list-group-item">{{$female->header}}</a>
+                <a href="{{$female->mnemonic}}" class="list-group-item">{{$female->header}}</a>
             @empty
                 <p class="desc">keine Rekorde.</p>
             @endforelse
@@ -14,7 +14,7 @@
         <h3>M&auml;nner</h3>
         <div class="list-group mb-10">
             @forelse($males as $male)
-                <a href="{{$male->id}}" class="list-group-item">{{$male->header}}</a>
+                <a href="{{$male->mnemonic}}" class="list-group-item">{{$male->header}}</a>
             @empty
                 <p class="desc">keine Rekorde.</p>
             @endforelse
@@ -23,7 +23,7 @@
         <h3>Frauen</h3>
         <div class="list-group">
             @forelse($kreisFemales as $kreisFemale)
-                <a href="{{$kreisFemale->id}}" class="list-group-item">{{$kreisFemale->header}}</a>
+                <a href="{{$kreisFemale->mnemonic}}" class="list-group-item">{{$kreisFemale->header}}</a>
             @empty
                 <p class="desc">keine Rekorde.</p>
             @endforelse
@@ -31,7 +31,7 @@
         <h3>M&auml;nner</h3>
         <div class="list-group">
             @forelse($kreisMales as $kreisMale)
-                <a href="{{$kreisMale->id}}" class="list-group-item">{{$kreisMale->header}}</a>
+                <a href="{{$kreisMale->mnemonic}}" class="list-group-item">{{$kreisMale->header}}</a>
             @empty
                 <p class="desc">keine Rekorde.</p>
             @endforelse

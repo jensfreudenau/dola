@@ -137,6 +137,15 @@ abstract class Repository implements RepositoryInterface
         return $this->model->findOrFail($id);
     }
 
+    /**
+     * @param [findByMnemonic description]
+     * @return [type] [description]
+     */
+    public function findByMnemonic($mnemonic)
+    {
+        return $this->model->where('mnemonic', '=', $mnemonic)->first();
+    }
+
     public function order($field, $direction)
     {
         return $this->model->orderBy($field, $direction)->get();

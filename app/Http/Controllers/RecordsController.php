@@ -35,12 +35,12 @@ class RecordsController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param $id
+     * @param $mnemonic
      * @return \Illuminate\View\View
      */
-    public function record($id)
+    public function record($mnemonic)
     {
-        $record = $this->recordRepository->findById($id);
+        $record = $this->recordRepository->findByMnemonic($mnemonic);
         return view('front.records.detail', compact('record'));
     }
 
