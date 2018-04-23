@@ -68,7 +68,7 @@ class AnnounciatorService
         $participators = $this->participatorService->getParticipators();
 
         //Teilnehmer Informationen für seltec generieren
-        $this->participatorService->listParticipatorForSeltec($this->competition, $participators);
+        $this->participatorService->listParticipatorForSeltec($this->competition);
         //email abschicken mit Teilnehmerliste
         $this->sendEmailWithCsvFile($this->participatorService->getSeltecCollection(), $this->competition, $participators);
         //email an Melder schicken

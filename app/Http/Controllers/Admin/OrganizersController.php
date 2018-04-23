@@ -9,8 +9,7 @@ use App\Repositories\Organizer\OrganizerRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\StoreTeamsRequest;
-use App\Http\Requests\Admin\UpdateTeamsRequest;
+
 
 class OrganizersController extends Controller
 {
@@ -57,7 +56,7 @@ class OrganizersController extends Controller
      * @param StoreTeamsRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTeamsRequest $request)
+    public function store(Request $request)
     {
         if (!Gate::allows('organizer_create')) {
             return abort(401);
@@ -94,7 +93,7 @@ class OrganizersController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTeamsRequest $request, $id)
+    public function update(Request $request, $id)
     {
         if (!Gate::allows('organizer_edit')) {
             return abort(401);

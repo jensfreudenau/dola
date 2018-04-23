@@ -46,7 +46,7 @@ class CompetitionRepository extends Repository implements CompetitionRepositoryI
      */
     public function getElapsed()
     {
-        $competitions = $this->model->orderBy('start_date', 'desc')->whereDate('start_date', '<', date('Y-m-d'))->get();
+        $competitions = $this->model->orderBy('start_date', 'desc')->whereDate('start_date', '<=', date('Y-m-d'))->get();
         foreach ($competitions as $competition) {
             $competition->ageclasses = $competition->reduceClasses();
         }
