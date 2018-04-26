@@ -1,5 +1,6 @@
 let ageclassesOption = '';
 let disciplinesOption = '';
+ 
 $(document).ready(function () {
     /* Load positions into postion <selec> */
     $("#competition_id").change(function () {
@@ -27,6 +28,9 @@ $(document).ready(function () {
     $("#addParticipant").click(function () {
         let ageclassSelect;
         let disciplineSelect;
+        let clubnameColl = $("input[name='clubname[]']").map(function(){return $(this).val();}).get();     
+        let clubname = clubnameColl[counter-1]; 
+
         if(disciplinesOption.length) {
             disciplineSelect = '<select name=discipline[]  class="discipline_select form-control" required placeholder = "Disziplin*" style="width: 100%;">' + disciplinesOption + '</select></div></div>';
         }
@@ -53,6 +57,9 @@ $(document).ready(function () {
             '<div class="form-group">' +
             '<div class="input-group">' +
             '<input class="form-control" name="jahrgang[]" placeholder="Jahrgang*" type="text" required></div></div>' +
+            '<div class="form-group">' +
+            '<div class="input-group">' +
+            '<input class="form-control" name="clubname[]" value= "'+clubname+'" placeholder="Verein" type="text"></div> </div>' +             
             '<div class="form-group">' +
             '<div class="input-group">'+
              ageclassSelect +

@@ -17,6 +17,7 @@
                 <tr>
                     <th>Vorname</th>
                     <th>Nachname</th>
+                    <th>Verein</th>
                     <th>Geb. Jahr</th>
                     <th>Altersklasse</th>
                     <th>@lang('quickadmin.participator.fields.discipline')</th>
@@ -27,8 +28,9 @@
                 @foreach($list['announciator']->Participator as $participator)
                     <tr>
                         <td>{{$participator->prename}}</td>
-                        <td>{{$participator['lastname'] }}</td>
-                        <td>{{$participator['birthyear'] }}</td>
+                        <td>{{$participator->lastname }}</td>
+                        <td>{{$participator->clubname }}</td>
+                        <td>{{$participator->birthyear }}</td>
                         <td>{{$participator->ageclass->shortname }}</td>
                         @if(!empty($participator->discipline))
                             <td>{{$participator->discipline}}</td>

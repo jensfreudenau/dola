@@ -47,6 +47,9 @@ class ParticipatorService
         foreach ($request->ageclass as $key => $item) {
             $participators[$key]['ageclass_id'] = $item;
         }
+        foreach ($request->clubname as $key => $item) {
+            $participators[$key]['clubname'] = $item;
+        }
         foreach ($request->discipline as $key => $item) {
             if($season == 'cross') {
                 $participators[$key]['discipline_cross'] = $item;
@@ -77,7 +80,7 @@ class ParticipatorService
             $this->seltecCollection[$key]['BIB']        = 1;
             $this->seltecCollection[$key]['Code']       = '';
             $this->seltecCollection[$key]['Event']      = $competition->header;
-            $this->seltecCollection[$key]['Team']       = $participator->Announciator->clubname;
+            $this->seltecCollection[$key]['Team']       = $participator->clubname;
             $this->seltecCollection[$key]['telephone']  = $participator->Announciator->telephone;
             $this->seltecCollection[$key]['street']     = $participator->Announciator->street;
             $this->seltecCollection[$key]['city']       = $participator->Announciator->city;

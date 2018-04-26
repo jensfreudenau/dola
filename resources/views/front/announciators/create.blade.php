@@ -39,11 +39,6 @@
         </div>
         <div class="form-group">
             <div class="input-group">
-                {!! Form::text('clubname', null, ['id'=> 'clubname', 'class' => 'form-control', 'placeholder' => 'Verein']) !!}
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="input-group">
                 <div class="panel">
                     <fieldset>
                         <div class="form-group">
@@ -90,6 +85,11 @@
                 <div class="form-group">
                     <div class="input-group">
                         {!! Form::select('ageclass[]', $ageclasses , null, ['class' => 'form-control required', 'placeholder' => 'Altersklasse*','style'=>'width: 100%', 'required']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        {!! Form::text('clubname[]', null, ['class' => 'form-control', 'placeholder' => 'Verein']) !!}
                     </div>
                 </div>
                 <div class="form-group">

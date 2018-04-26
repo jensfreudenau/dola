@@ -35,7 +35,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Participator extends Model
 {
-    protected $fillable = ['prename', 'lastname', 'birthyear', 'ageclass_id', 'discipline_id','discipline_cross', 'best_time', 'announciator_id'];
+    protected $fillable = ['prename', 'lastname', 'birthyear', 'clubname', 'ageclass_id', 'discipline_id','discipline_cross', 'best_time', 'announciator_id'];
 
     public function Announciator()
     {

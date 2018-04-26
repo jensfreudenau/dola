@@ -39,7 +39,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Announciator extends Model
 {
-    protected $fillable = ['competition_id', 'name', 'clubname', 'street', 'city', 'email', 'telephone', 'resultlist'];
+    protected $fillable = ['competition_id', 'name', 'street', 'city', 'email', 'telephone', 'resultlist'];
 
 
     public function Competition()

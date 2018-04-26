@@ -60,7 +60,6 @@ class AnnounciatorService
         //wk finden
         $this->competition = $this->competitionService->find($request->competition_id);
 
-
         //melder registrieren
         $this->announciator = $this->announciatorRepository->create($request->all());
         //teilnehmer abhängig vom Melder registrieren

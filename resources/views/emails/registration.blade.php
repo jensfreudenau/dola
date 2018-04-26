@@ -9,8 +9,6 @@
     <dd>{{ $announciator->telephone }}</dd>
     <dt>Email:</dt>
     <dd>{{ $announciator->email }}</dd>
-    <dt>Verein:</dt>
-    <dd>{{ $announciator->clubname }}</dd>
     @if($announciator->resultlist)
         <dt>es ist eine Ergebnisliste angefordert worden:</dt>
         <dd></dd>
@@ -26,6 +24,7 @@
         <tr>
             <th>Vorname</th>
             <th>Nachname</th>
+            <th>Verein</th>
             <th>Geb. Jahr</th>
             <th>Altersklasse</th>
             <th>Disziplin</th>
@@ -38,6 +37,7 @@
             <tr>
                 <td>{{$participator->prename}}</td>
                 <td>{{$participator->lastname }}</td>
+                <td>{{$participator->clubname }}</td>
                 <td>{{$participator->birthyear }}</td>
                 <td>{{$participator->ageclass->shortname }}</td>
                 @if(!empty($participator->discipline))

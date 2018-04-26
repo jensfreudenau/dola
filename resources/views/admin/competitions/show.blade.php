@@ -122,7 +122,7 @@
                             @foreach($announciators as $announciator)
                                 @foreach($announciator->participator as $participator)
                                     <tr>
-                                        <td>{{$announciator->clubname}}</td>
+                                        <td>{{$participator->clubname}}</td>
                                         <td>{{$announciator->name}}</td>
                                         <td>{{$participator->full_name}}</td>
                                         @if(!empty($participator->discipline))

@@ -26,7 +26,6 @@
                             <th>@lang('quickadmin.participator.fields.name')</th>
                             <th>@lang('quickadmin.participator.fields.discipline')</th>
                             <th>@lang('quickadmin.participator.fields.age_group')</th>
-                            <th>@lang('quickadmin.participator.fields.age_group')</th>
                             <th>@lang('quickadmin.participator.fields.best_time')</th>
                         </tr>
                         </thead>
@@ -34,7 +33,7 @@
                         <tbody>
                         @foreach($competition->Participators as $participator)
                             <tr>
-                                <td>{{$participator->Announciator->clubname}}</td>
+                                <td>{{$participator->clubname}}</td>
                                 <td>{{$participator->Announciator->name}}</td>
                                 <td>{{$participator->prename}} &nbsp; {{$participator->lastname}}</td>
                                 <td>{{$participator->discipline}}</td>
