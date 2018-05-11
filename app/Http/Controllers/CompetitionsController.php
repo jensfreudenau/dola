@@ -67,6 +67,7 @@ class CompetitionsController extends Controller
         if (Request::wantsJson()) {
             $competition->name= $competition->organizer->address->name;
             $competition->classes= $competition->Disciplines;
+            $competition->uploads= $competition->Uploads;
             return response()->json($competition);
         }
 
