@@ -32,7 +32,7 @@
             @if($additionals)
                 @foreach($additionals as $additional)
                     <dt class="col-sm-3">{{$additional->key}}</dt>
-                    <dd class="col-sm-9">{{$additional->value}}</dd>
+                    <dd class="col-sm-9">{!! $additional->value !!}</dd>
                 @endforeach
             @endif
             <dt class="col-sm-3">Haftung:</dt>
