@@ -40,6 +40,10 @@ class RecordsController extends Controller
      */
     public function record($mnemonic)
     {
+        if(is_numeric($mnemonic))
+        {
+            return redirect('/records/record',301);
+        }
         $record = $this->recordRepository->findByMnemonic($mnemonic);
         return view('front.records.detail', compact('record'));
     }
