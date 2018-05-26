@@ -59,9 +59,12 @@ class RecordsController extends Controller
             $bests  = Best::where('sex', '=', 'f')->orderBy('year', 'desc')->get();
             $header = 'Frauen';
         }
-        if ($request->sex == 'male') {
+        elseif ($request->sex == 'male') {
             $bests  = Best::where('sex', '=', 'm')->orderBy('year', 'desc')->get();
             $header = 'M&auml;nner';
+        }
+        else {
+            return redirect('/records/record',301);
         }
         return view('front.records.best', compact('bests', 'header'));
     }
