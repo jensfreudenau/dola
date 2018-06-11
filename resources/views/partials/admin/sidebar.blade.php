@@ -83,12 +83,6 @@
                 </li>
             @endcan
 
-            @can('competition_access')
-                <li class="{{ $request->segment(2) == 'pages' ? 'active' : '' }}">
-                    <a href="{{ route('admin.pages.index') }}"> <i class="fa fa-file-text-o"></i> <span class="title">@lang('quickadmin.pages.title')</span> </a>
-                </li>
-            @endcan
-
             <li class="{{ $request->segment(1) == 'change_password' ? 'active' : '' }}">
                 <a href="{{ route('auth.change_password') }}"> <i class="fa fa-key"></i> <span class="title">Change password</span> </a>
             </li>
