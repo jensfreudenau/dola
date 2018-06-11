@@ -18,8 +18,9 @@ class AuthServiceProvider extends ServiceProvider
     ];
     
     const SUPERADMIN = 1;
-    const USER = 2;
-    
+    const ADVANCEDUSER = 2;
+    const SIMPLEUSER = 3;
+
     /**
      * Register any authentication / authorization services.
      *
@@ -73,98 +74,98 @@ class AuthServiceProvider extends ServiceProvider
 
         // Auth gates for: Teams
         Gate::define('organizer_access', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER, self::SIMPLEUSER]);
         });
         Gate::define('organizer_create', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER]);
         });
         Gate::define('organizer_edit', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER]);
         });
         Gate::define('organizer_view', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER, self::SIMPLEUSER]);
         });
         Gate::define('organizer_delete', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER]);
         });
 
         // Auth gates for: Page
         Gate::define('page_access', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER, self::SIMPLEUSER]);
         });
         Gate::define('page_edit', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER]);
         });
         
         // Auth gates for: Participators
         Gate::define('participator_access', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER, self::SIMPLEUSER]);
         });
         Gate::define('participator_create', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER]);
         });
         Gate::define('participator_edit', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER]);
         });
         Gate::define('participator_view', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER, self::SIMPLEUSER]);
         });
         Gate::define('participator_delete', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER]);
         });
 
         // Auth gates for: Games
         Gate::define('record_access', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER, self::SIMPLEUSER]);
         });
         Gate::define('record_create', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER]);
         });
         Gate::define('record_edit', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER]);
         });
         Gate::define('record_view', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER, self::SIMPLEUSER]);
         });
         Gate::define('record_delete', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER]);
         });
 
         // Auth gates for: Address
         Gate::define('address_access', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER, self::SIMPLEUSER]);
         });
         Gate::define('address_create', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER]);
         });
         Gate::define('address_edit', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER]);
         });
         Gate::define('address_view', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER, self::SIMPLEUSER]);
         });
         Gate::define('address_delete', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER]);
         });
 
         // Auth gates for: Competition
         Gate::define('competition_access', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER, self::SIMPLEUSER]);
         });
         Gate::define('competition_create', function ($user) {
             return in_array($user->role_id, [self::SUPERADMIN]);
         });
         Gate::define('competition_edit', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER]);
         });
         Gate::define('competition_view', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER, self::SIMPLEUSER]);
         });
         Gate::define('competition_delete', function ($user) {
             return in_array($user->role_id, [self::SUPERADMIN]);
         });
         Gate::define('competition_delete_file', function ($user) {
-            return in_array($user->role_id, [self::SUPERADMIN, self::USER]);
+            return in_array($user->role_id, [self::SUPERADMIN, self::ADVANCEDUSER]);
         });
 
     }
