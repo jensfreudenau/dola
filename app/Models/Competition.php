@@ -2,25 +2,30 @@
 
 namespace App\Models;
 
+use App\Traits\RecordsActivity;
 use App\Traits\StringMarkerTrait;
 use Carbon\Carbon;
 use Collective\Html\Eloquent\FormAccessible;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-
+use Illuminate\Support\Facades\Auth;
+use Prettus\Repository\Traits\TransformableTrait;
 
 /**
  * App\Models\Competition
  *
  */
-class Competition extends BaseModel
+class Competition extends Model
 {
     use FormAccessible;
     use StringMarkerTrait;
+    use RecordsActivity;
+    use TransformableTrait;
     protected $fillable       = ['organizer_id', 'start_date', 'timetable_1', 'submit_date', 'header', 'info', 'season', 'classes', 'award', 'register', 'only_list', 'ignore_ageclasses', 'ignore_disciplines'];
-
+    protected $with =['uploads'];
 
     public function __construct(array $attributes = [])
     {
@@ -31,6 +36,15 @@ class Competition extends BaseModel
     public static function boot()
     {
         parent::boot();
+        static::creating(function ($model) {
+            $user              = Auth::user();
+            $model->created_by = $user->id;
+            $model->updated_by = $user->id;
+        });
+        static::updating(function ($model) {
+            $user              = Auth::user();
+            $model->updated_by = $user->id;
+        });
     }
 
     /**
@@ -79,11 +93,6 @@ class Competition extends BaseModel
     public function Disciplines()
     {
         return $this->belongsToMany(Discipline::class);
-    }
-
-    public function getAgeclassListAttribute()
-    {
-        return $this->ageclasses->pluck('shortname', 'id')->toArray();
     }
 
 
@@ -173,5 +182,11 @@ class Competition extends BaseModel
         } else {
             return null;
         }
+    }
+
+
+    public function getAgeclassListAttribute()
+    {
+        return $this->ageclasses->pluck('shortname', 'id')->toArray();
     }
 }

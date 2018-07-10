@@ -16,10 +16,11 @@ Route::get('competitions/comps/{competition_id}', 'CompetitionsController@comps'
 
 Route::get('/track', 'CompetitionsController@track')->name('bahn');
 Route::get('/indoor', 'CompetitionsController@indoor')->name('halle');
-Route::get('/cross', 'CompetitionsController@cross');
+Route::get('/cross', 'CompetitionsController@cross')->name('strasse');
+Route::get('/details/{competition_id}', 'CompetitionsController@details');
+
 Route::get('/archive', 'CompetitionsController@archive');
 
-Route::get('/details/{competition_id}', 'CompetitionsController@details');
 Route::get('/showByClubId/{competition_id}', 'CompetitionsController@showByClubId');
 
 Route::get('/table', 'TableController@index');
@@ -67,7 +68,6 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], 
     Route::post('competitions/participators/{competition_id}', 'Admin\CompetitionController@participators')->name('competitions.participators');
     Route::delete('competitions/delete_file/{upload_id}', 'Admin\CompetitionController@delete_file')->name('competitions.delete_file');
     Route::resource('competitions', 'Admin\CompetitionController');
-
     Route::post('competitions_mass_destroy', ['uses' => 'Admin\CompetitionController@massDestroy', 'as' => 'competitions.mass_destroy']);
     Route::get('records/uploads', ['uses' => 'Admin\RecordController@uploads', 'as' => 'records.uploads']);
     Route::get('records/bestsindex', ['uses' => 'Admin\RecordController@bestsindex', 'as' => 'records.bestsindex']);
@@ -78,6 +78,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], 
     Route::post('addresses_mass_destroy', ['uses' => 'Admin\AddressesController@massDestroy', 'as' => 'addresses.mass_destroy']);
     Route::resource('pages', 'Admin\PagesController');
     Route::post('pages_mass_destroy', ['uses' => 'Admin\PagesController@massDestroy', 'as' => 'pages.mass_destroy']);
+    Route::get('profiles/{user}', 'Admin\ProfilesController@show')->name('activity');
 });
 
 

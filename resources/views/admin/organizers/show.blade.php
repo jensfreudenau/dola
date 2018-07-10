@@ -2,7 +2,12 @@
 
 @section('content')
     <h3 class="page-title">@lang('quickadmin.organizers.title')</h3>
-
+    <span><a href="{{ route('admin.organizers.index') }}" class="btn btn-default">@lang('quickadmin.qa_back_to_list')</a></span>
+    <span>
+        @can('organizer_edit')
+            <a href="{{ route('admin.organizers.edit',[$organizer->id]) }}" class="btn btn-sm btn-info">@lang('quickadmin.qa_edit')</a>
+        @endcan
+    </span>
     <div class="card card-default">
 
 

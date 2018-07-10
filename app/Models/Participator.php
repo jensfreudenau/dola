@@ -2,6 +2,7 @@
 
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * App\Models\Participator
@@ -37,6 +38,20 @@ class Participator extends Model
 {
     protected $fillable = ['prename', 'lastname', 'birthyear', 'clubname', 'ageclass_id', 'discipline_id','discipline_cross', 'best_time', 'announciator_id'];
 
+    public static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            $user              = Auth::user();
+            $model->created_by = $user->id;
+            $model->updated_by = $user->id;
+        });
+        static::updating(function ($model) {
+            $user              = Auth::user();
+            $model->updated_by = $user->id;
+        });
+    }
+
     public function Announciator()
     {
         return $this->belongsTo(Announciator::class, 'announciator_id');
@@ -62,7 +77,7 @@ class Participator extends Model
         return $this->prename . ' ' . $this->lastname;
     }
 
-    public function getDisciplineAttribute()
+    public function getDisciplineShortNameAttribute()
     {
         if($this->discipline_id == '') {
             return $this->discipline_cross;

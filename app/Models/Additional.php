@@ -1,7 +1,10 @@
 <?php
 
 namespace App\Models;
+use App\Traits\RecordsActivity;
 use Collective\Html\Eloquent\FormAccessible;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * App\Models\Additional
@@ -25,8 +28,21 @@ use Collective\Html\Eloquent\FormAccessible;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Additional whereUpdatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Additional whereValue($value)
  */
-class Additional extends BaseModel
+class Additional extends Model
 {
-    use FormAccessible;
+    use FormAccessible, RecordsActivity;
     protected $fillable = ['key', 'value', 'mnemonic', 'competition_id'];
+    public static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            $user              = Auth::user();
+            $model->created_by = $user->id;
+            $model->updated_by = $user->id;
+        });
+        static::updating(function ($model) {
+            $user              = Auth::user();
+            $model->updated_by = $user->id;
+        });
+    }
 }

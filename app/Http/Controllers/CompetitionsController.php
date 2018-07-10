@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Services\CompetitionService;
 use Illuminate\Support\Facades\Request;
 
-
 class CompetitionsController extends Controller
 {
-    protected $competitionRepository;
+    /** @var CompetitionService */
+    protected $competitionService;
 
     public function __construct(CompetitionService $competitionService)
     {
@@ -25,9 +24,7 @@ class CompetitionsController extends Controller
     {
         $season       = 'Bahn';
         $competitions = $this->competitionService->findBySeason($season);
-        foreach ($competitions as $competition) {
-            $competition->ageclasses =$competition->reduceClasses();
-        }
+
         return view('front.competitions.list', compact('competitions', 'season'));
     }
 
@@ -40,9 +37,7 @@ class CompetitionsController extends Controller
     {
         $season       = 'Halle';
         $competitions = $this->competitionService->findBySeason($season);
-        foreach ($competitions as $competition) {
-            $competition->ageclasses =$competition->reduceClasses();
-        }
+
         return view('front.competitions.list', compact('competitions', 'season'));
     }
 
@@ -54,10 +49,8 @@ class CompetitionsController extends Controller
     public function cross()
     {
         $competitions = $this->competitionService->findBySeason('cross');
-        foreach ($competitions as $competition) {
-            $competition->ageclasses =$competition->reduceClasses();
-        }
         $season       = 'Strasse';
+
         return view('front.competitions.list', compact('competitions', 'season'));
     }
 
@@ -65,20 +58,21 @@ class CompetitionsController extends Controller
     {
         $competition = $this->competitionService->find($id);
         if (Request::wantsJson()) {
-            $competition->name= $competition->organizer->address->name;
-            $competition->classes= $competition->Disciplines;
-            $competition->uploads= $competition->Uploads;
+            $competition->name    = $competition->organizer->address->name;
+            $competition->classes = $competition->Disciplines;
+            $competition->uploads = $competition->Uploads;
+
             return response()->json($competition);
         }
-
         $additionals = app()->make('CompetitionService')->getAdditionals($id);
+
         return view('front.competitions.details', compact('competition', 'additionals'));
     }
-
 
     public function archive()
     {
         $archives = $this->competitionService->getArchive();
+
         return view('front.competitions.archive', compact('archives'));
     }
 
@@ -89,6 +83,7 @@ class CompetitionsController extends Controller
             $competition->Disciplines;
             $competition->Ageclasses;
         }
+
         return response()->json($competitions);
     }
 }

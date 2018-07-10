@@ -125,8 +125,8 @@
                                         <td>{{$participator->clubname}}</td>
                                         <td>{{$announciator->name}}</td>
                                         <td>{{$participator->full_name}}</td>
-                                        @if(!empty($participator->discipline))
-                                            <td>{{$participator->discipline}}</td>
+                                        @if(!empty($participator->DisciplineShortName))
+                                            <td>{{$participator->DisciplineShortName}}</td>
                                         @else
                                             <td>&nbsp;</td>
                                         @endif

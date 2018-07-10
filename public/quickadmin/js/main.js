@@ -177,7 +177,7 @@ $(document).ready(function () {
         maxFilesize: 10, // Mb+
         autoProcessQueue: false,
         accept: function (file, done) {
-            var reader = new FileReader();
+            let reader = new FileReader();
             reader.addEventListener("loadend", function (event) {
                 event.preventDefault();
                 processData(event.target.result);
@@ -200,11 +200,12 @@ $(document).ready(function () {
             console.log('success');
         },
         error: function (file, response) {
-            console.log('acceerrorpte');
+            message = '';
+            console.log(response);
             if ($.type(response) === "string")
-                var message = response; //dropzone sends it's own error messages in string
+                message = response; //dropzone sends it's own error messages in string
             else
-                var message = response.message;
+                message = response.message;
             file.previewElement.classList.add("dz-error");
             _ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
             _results = [];
@@ -336,11 +337,15 @@ $(document).ready(function () {
     }
 
     function setStartDate(rawStartDate) {
-        let rawStartDateArr = [];
+        let startStr = '';
         if (rawStartDate.includes(',')) {
+            let rawStartDateArr = [];
             rawStartDateArr = rawStartDate.split(',');
+            startStr = rawStartDateArr[0];
         }
-        let startStr = rawStartDateArr[0].toString();
+        else {
+            startStr = rawStartDate;
+        }
         startStr = startStr.replace(/am/g, "");
         startStr = startStr.replace(/den/g, "");
         if (!moment($.trim(startStr), ['DD. MMMM YYYY', 'DD.MMMM YYYY', 'DD.MM.YYYY'], true).isValid()) {

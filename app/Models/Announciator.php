@@ -2,6 +2,7 @@
 
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * App\Models\Announciator
@@ -41,6 +42,19 @@ class Announciator extends Model
 {
     protected $fillable = ['competition_id', 'name', 'street', 'city', 'email', 'telephone', 'resultlist'];
 
+    public static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            $user              = Auth::user();
+            $model->created_by = $user->id;
+            $model->updated_by = $user->id;
+        });
+        static::updating(function ($model) {
+            $user              = Auth::user();
+            $model->updated_by = $user->id;
+        });
+    }
 
     public function Competition()
     {

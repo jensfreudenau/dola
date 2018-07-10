@@ -5,21 +5,24 @@
         {!! Form::open(['method' => 'POST', 'route' => ['announciators/store']]) !!}
         <div class="form-group">
             {!! Form::label('competition_id', Lang::get('quickadmin.competitions.title'), ['class' => 'control-label']) !!}
-            {!! Form::select('competition_id', $competitionselect, ( $competition ? $competition->id: null), ['id'=> 'competition_id', 'class' => 'competition_select form-control','style'=>'width: 100%']) !!}
+            {!! Form::select('competition_id', $competitionselect, ($competition ? $competition->id: null), ['id'=> 'competition_id', 'class' => 'competition_select form-control','style'=>'width: 100%']) !!}
         </div>
         <div class="form-group">
             <div class="input-group">
-                <input class="form-control" placeholder="Datum" id="start_date" name="start_date" disabled value="{{ $competition ?  $competition->start_date : null}}">
+                <input class="form-control" placeholder="Datum" id="start_date" name="start_date" disabled
+                       value="{{ $competition ?  $competition->start_date : null}}">
             </div>
         </div>
         <div class="form-group">
             <div class="input-group">
-                <input class="form-control" placeholder="Titel" id="header" name="header" disabled required value="{{ $competition ?  $competition->header : null}}">
+                <input class="form-control" placeholder="Titel" id="header" name="header" disabled required
+                       value="{{ $competition ?  $competition->header : null}}">
             </div>
         </div>
         <div class="form-group">
             <div class="input-group">
-                <input class="form-control" placeholder="Veranstalter" disabled id="organizer_name" name="organizer_name" value="{{ $competition ?  $competition->organizer->name : null}}">
+                <input class="form-control" placeholder="Veranstalter" disabled id="organizer_name"
+                       name="organizer_name" value="{{ $competition ?  $competition->organizer->name : null}}">
             </div>
         </div>
         <div class="form-group">
@@ -43,13 +46,15 @@
                     <fieldset>
                         <div class="form-group">
                             <div class="col-xs-12">
-                                Bitte Ihre Anschrift angeben, wenn Sie eine Ergebnisliste w&uuml;nschen. <br> Beachten Sie auch die Wettkampfbedingungen.
+                                Bitte Ihre Anschrift angeben, wenn Sie eine Ergebnisliste w&uuml;nschen. <br>
+                                Beachten Sie auch die Wettkampfbedingungen.
                             </div>
                         </div>
                         <legend>Ergebnisliste</legend>
                         <div class="form-group">
                             <label>
-                                {{Form::checkbox('resultlist', '1', false, ['id'=>"resultBoxShowHide",'class'=>"minimal-red"])}} Ja, ich möchte eine Ergebnisliste </label>
+                                {{Form::checkbox('resultlist', '1', false, ['id'=>"resultBoxShowHide",'class'=>"minimal-red"])}}
+                                Ja, ich möchte eine Ergebnisliste </label>
                         </div>
                         <div class="form-group" id="resultBox" style="display:none;">
                             <div class="input-group">
@@ -84,7 +89,11 @@
                 </div>
                 <div class="form-group">
                     <div class="input-group">
-                        {!! Form::select('ageclass[]', $ageclasses , null, ['class' => 'form-control required', 'placeholder' => 'Altersklasse*','style'=>'width: 100%', 'required']) !!}
+                        @if (@empty($ageclasses))
+                            {!! Form::text('ageclass[]', null, ['required',  'class' => 'form-control', 'placeholder' => 'Altersklasse*']) !!}
+                        @else
+                            {!! Form::select('ageclass[]', $ageclasses , null, ['class' => 'form-control required', 'placeholder' => 'Altersklasse*','style'=>'width: 100%', 'required']) !!}
+                        @endif
                     </div>
                 </div>
                 <div class="form-group">
@@ -94,7 +103,7 @@
                 </div>
                 <div class="form-group">
                     <div class="input-group">
-                        @if ($competition->season == 'cross' || @empty($disciplines))
+                        @if (@empty($competition) || $competition->season == 'cross' || @empty($disciplines))
                             {!! Form::text('discipline[]', null, ['required',  'class' => 'form-control', 'placeholder' => 'Disziplin*']) !!}
                         @else
                             {!! Form::select('discipline[]', $disciplines , null, ['required', 'class' => 'discipline_select form-control', 'placeholder' => 'Disziplin*', 'style'=>'width: 100%']) !!}
@@ -132,7 +141,9 @@
             <script type="text/javascript">
                 let ageclasses = {!! json_encode($ageclasses) !!};
                 let disciplines = {!! json_encode($disciplines) !!};
+                        @if (@empty(!$ageclasses))
                 let season = {!! json_encode($competition->season) !!};
+                @endif
             </script>
             <script type="text/javascript" src="{{ url('/') }}/front/js/add_participator.js"></script>
         @stop

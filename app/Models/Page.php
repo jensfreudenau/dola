@@ -1,6 +1,11 @@
 <?php
 
 namespace App\Models;
+
+use App\Traits\RecordsActivity;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+
 /**
  * App\Models\Page
  *
@@ -21,8 +26,9 @@ namespace App\Models;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Page whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Page whereUpdatedBy($value)
  */
-class Page extends BaseModel
+class Page extends Model
 {
+    use RecordsActivity;
     /**
      * The database table used by the model.
      *
@@ -48,5 +54,14 @@ class Page extends BaseModel
     public static function boot()
     {
         parent::boot();
+        static::creating(function ($model) {
+            $user              = Auth::user();
+            $model->created_by = $user->id;
+            $model->updated_by = $user->id;
+        });
+        static::updating(function ($model) {
+            $user              = Auth::user();
+            $model->updated_by = $user->id;
+        });
     }
 }

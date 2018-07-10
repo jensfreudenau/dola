@@ -37,12 +37,12 @@ class CompetitionService
     /** @var AdditionalRepositoryInterface @ */
     protected $additionalRepository;
     protected $competitionService;
-    protected $ageclassList      = array();
-    protected $disciplineList    = array();
-    protected $errorList         = array();
-    protected $tableStyle        = self::TABLE_STYLE;
-    protected $tableHeadStyle    = self::THEAD_STYLE;
-    protected $ignoreAgeclasses  = false;
+    protected $ageclassList = array();
+    protected $disciplineList = array();
+    protected $errorList = array();
+    protected $tableStyle = self::TABLE_STYLE;
+    protected $tableHeadStyle = self::THEAD_STYLE;
+    protected $ignoreAgeclasses = false;
     protected $ignoreDisciplines = false;
     /**
      * @var AgeclassService
@@ -60,8 +60,12 @@ class CompetitionService
      * @param AgeclassService $ageclassService
      * @param DisciplineService $disciplineService
      */
-    public function __construct(CompetitionRepositoryInterface $competitionRepository, AdditionalRepositoryInterface $additionalRepository, AgeclassService $ageclassService, DisciplineService $disciplineService)
-    {
+    public function __construct(
+        CompetitionRepositoryInterface $competitionRepository,
+        AdditionalRepositoryInterface $additionalRepository,
+        AgeclassService $ageclassService,
+        DisciplineService $disciplineService
+    ) {
         /** @var \App\Repositories\Competition\CompetitionRepository competitionRepository */
         $this->competitionRepository = $competitionRepository;
         /** @var \App\Repositories\Additional\AdditionalRepository additionalRepository */
@@ -82,6 +86,7 @@ class CompetitionService
         if ($additionals) {
             return $additionals->get();
         }
+
         return false;
     }
 
@@ -89,9 +94,10 @@ class CompetitionService
     {
         $archives = array();
         foreach ($this->competitionRepository->seasons as $season) {
-            $files             = Storage::files('public/' . Config::get('constants.Results') . '/' . $season);
+            $files             = Storage::files('public/'.Config::get('constants.Results').'/'.$season);
             $archives[$season] = DateTimeHelper::listdir_by_date($files);
         }
+
         return $archives;
     }
 
@@ -107,10 +113,11 @@ class CompetitionService
     {
         foreach ($values as $value) {
             Additional::updateOrCreate(
-                ['competition_id' => $id,
-                 'key'            => $value['key'],
-                 'value'          => $value['value'],
-                 'mnemonic'       => $season,
+                [
+                    'competition_id' => $id,
+                    'key' => $value['key'],
+                    'value' => $value['value'],
+                    'mnemonic' => $season,
                 ]
             );
         }
@@ -123,9 +130,9 @@ class CompetitionService
      */
     public function storeData(Request $request, $competitionId = false)
     {
-        $this->ignoreAgeclasses = $request->has('ignore_ageclasses');
+        $this->ignoreAgeclasses  = $request->has('ignore_ageclasses');
         $this->ignoreDisciplines = $request->has('ignore_disciplines');
-        if ($request->has('timetable_1')) {
+        if ($request->has('timetable_1') && !empty($request->timetable_1)) {
             $newTimetable = $this->storeTimetableData($request->timetable_1);
             $request->merge(array('timetable_1' => $newTimetable));
         }
@@ -148,7 +155,6 @@ class CompetitionService
         } else {
             $this->disciplineService->syncDisciplines($competition);
         }
-
         $this->saveAdditionals($request->all(), $competition);
         if (!empty($errorList['ageclassError'])) {
             Log::debug('ageclassError');
@@ -156,6 +162,7 @@ class CompetitionService
         if (!empty($errorList['disciplineError'])) {
             Log::debug('disciplineError');
         }
+
         return $competitionId;
     }
 
@@ -176,12 +183,13 @@ class CompetitionService
         if (!$this->ignoreDisciplines) {
             $this->disciplineService->parseDisciplines($timetable->getTableBody());
         }
+
         return $timetable->getTimeTable();
     }
 
-    public function find($competition_id)
+    public function find($competitionId)
     {
-        return $this->competitionRepository->find($competition_id);
+        return $this->competitionRepository->find($competitionId);
     }
 
     /**
@@ -193,11 +201,14 @@ class CompetitionService
         if (!empty($submitData['keyvalue'])) {
             foreach ($submitData['keyvalue'] as $key => $keyVal) {
                 Additional::updateOrCreate(
-                    ['id'             => $key,
-                     'competition_id' => $competition->id],
-                    ['key'      => $keyVal['key'],
-                     'value'    => $keyVal['value'],
-                     'mnemonic' => $competition->season,
+                    [
+                        'id' => $key,
+                        'competition_id' => $competition->id,
+                    ],
+                    [
+                        'key' => $keyVal['key'],
+                        'value' => $keyVal['value'],
+                        'mnemonic' => $competition->season,
                     ]
                 );
             }
@@ -210,7 +221,11 @@ class CompetitionService
      */
     public function findBySeason($season)
     {
-        return $this->competitionRepository->order('start_date', 'asc')->where('season', strtolower($season));
+        $competitions = $this->competitionRepository->order('start_date', 'asc')->where('season', strtolower($season));
+        foreach ($competitions as $competition) {
+            $competition->ageclasses = $competition->reduceClasses();
+        }
+        return $competitions;
     }
 
     public function findByClubId($id)
@@ -220,12 +235,18 @@ class CompetitionService
 
     public function getSelectFirst()
     {
-        return Competition::where('submit_date', '>=', date('Y-m-d'))->where('register', '=', 0)->orderBy('start_date', 'asc')->limit(1)->get();
+        return Competition::where('submit_date', '>=', date('Y-m-d'))->where('register', '=', 0)->orderBy(
+            'start_date',
+            'asc'
+        )->first();
     }
 
     public function getSelectable()
     {
-        return Competition::where('submit_date', '>=', date('Y-m-d'))->where('register', '=', 0)->orderBy('start_date', 'asc')->get()->pluck('header', 'id');
+        return Competition::where('submit_date', '>=', date('Y-m-d'))->where('register', '=', 0)->orderBy(
+            'start_date',
+            'asc'
+        )->get()->pluck('header', 'id');
     }
 
     public function getAnnounciators($id)

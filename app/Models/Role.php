@@ -1,6 +1,9 @@
 <?php
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+
 /**
  * Class Role
  *
@@ -14,7 +17,7 @@ namespace App\Models;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Role whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Role whereUpdatedAt($value)
  */
-class Role extends BaseModel
+class Role extends Model
 {
     protected $fillable = ['title'];
 

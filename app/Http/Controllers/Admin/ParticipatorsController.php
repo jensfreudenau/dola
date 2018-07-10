@@ -86,9 +86,9 @@ class ParticipatorsController extends Controller
         return view('admin.participators.show', compact('participator'));
     }
 
-    public function download($id , ParticipatorService $participatorService)
+    public function download($id, ParticipatorService $participatorService)
     {
         $competition = Competition::findOrFail($id);
-        $participatorService->sendCsvFile($competition->Participators, $competition);
+        return $participatorService->sendCsvFile($competition);
     }
 }
