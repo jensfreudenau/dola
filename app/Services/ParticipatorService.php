@@ -88,7 +88,7 @@ class ParticipatorService
             $this->seltecCollection[$key]['Name']       = $participator->lastname;
             $this->seltecCollection[$key]['Value']      = $participator->best_time;
             $this->seltecCollection[$key]['YOB']        = $participator->birthyear;
-            $this->seltecCollection[$key]['discipline'] = (is_object($participator->discipline) ? $participator->discipline->dlv : $participator->discipline_id);
+            $this->seltecCollection[$key]['discipline'] = (is_object($participator->discipline) ? $participator->discipline->ladv : $participator->discipline_cross);
             $this->seltecCollection[$key]['ageclass']   = (is_object($participator->ageclass) ? $participator->ageclass->dlv : $participator->ageclass_id);
         }
     }
@@ -107,5 +107,29 @@ class ParticipatorService
     public function getParticipators()
     {
         return $this->participators;
+    }
+
+    public function sendCsvFile($competition)
+    {
+        $this->participators = $competition->participators;
+        $this->listParticipatorForSeltec($competition);
+        $headers = [
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0'
+            , 'Content-type' => 'text/csv'
+            , 'Content-Disposition' => 'attachment; filename=participators.csv'
+            , 'Expires' => '0'
+            , 'Pragma' => 'public'
+        ];
+        $list = $this->getSeltecCollection();
+        # add headers for each column in the CSV download
+        array_unshift($list, array_keys($list[0]));
+        $callback = function () use ($list) {
+            $FH = fopen('php://output', 'w');
+            foreach ($list as $row) {
+                fputcsv($FH, $row);
+            }
+            fclose($FH);
+        };
+        return response()->stream($callback, 200, $headers);
     }
 }

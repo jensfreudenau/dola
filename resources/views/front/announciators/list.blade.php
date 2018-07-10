@@ -32,8 +32,8 @@
                         <td>{{$participator->clubname }}</td>
                         <td>{{$participator->birthyear }}</td>
                         <td>{{$participator->ageclass->shortname }}</td>
-                        @if(!empty($participator->discipline))
-                            <td>{{$participator->discipline}}</td>
+                        @if(!empty($participator->DisciplineShortName))
+                            <td>{{$participator->DisciplineShortName}}</td>
                         @else
                             <td>&nbsp;</td>
                         @endif

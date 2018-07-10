@@ -36,7 +36,7 @@
                                 <td>{{$participator->clubname}}</td>
                                 <td>{{$participator->Announciator->name}}</td>
                                 <td>{{$participator->prename}} &nbsp; {{$participator->lastname}}</td>
-                                <td>{{$participator->discipline}}</td>
+                                <td>{{$participator->DisciplineShortName}}</td>
                                 <td>{{$participator->ageclass->shortname}}</td>
                                 <td>{{$participator->best_time}}</td>
                             </tr>

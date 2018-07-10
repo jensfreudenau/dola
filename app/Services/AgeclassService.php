@@ -205,4 +205,22 @@ class AgeclassService
     {
         return $this->ageclassCollection;
     }
+
+    public function getPluck()
+    {
+        Ageclass::orderBy('name', 'asc')->pluck('shortname', 'id')->toArray();
+    }
+
+    /**
+     * @param $competition
+     * return $ageclasses pluck
+     */
+    public function getAgeclassesPluck($competition)
+    {
+        if ($competition == '' || 'cross' == $competition->season) {
+            return $this->getPluck();
+        } else {
+            return $competition->ageclasses->pluck('shortname', 'id')->toArray();
+        }
+    }
 }

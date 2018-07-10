@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\Address\AddressRepositoryInterface;
-use App\Repositories\Address\AgeclassRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Session;
 
 class AddressesController extends Controller
 {
@@ -117,8 +117,8 @@ class AddressesController extends Controller
             return abort(401);
         }
         $this->addressRepository->delete($id);
-        Session::flash('flash_message', 'Page deleted!');
+        Session::flash('flash_message', 'Addresse gelöscht!');
 
-        return redirect('admin/pages');
+        return redirect('admin/addresses');
     }
 }

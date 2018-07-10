@@ -1,6 +1,10 @@
 <?php
 
 namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+
 /**
  * App\Models\Best
  *
@@ -21,11 +25,20 @@ namespace App\Models;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Best whereUpdatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Best whereYear($value)
  */
-class Best extends BaseModel
+class Best extends Model
 {
     protected $fillable       = ['id', 'sex', 'filename', 'year'];
     public static function boot()
     {
         parent::boot();
+        static::creating(function ($model) {
+            $user              = Auth::user();
+            $model->created_by = $user->id;
+            $model->updated_by = $user->id;
+        });
+        static::updating(function ($model) {
+            $user              = Auth::user();
+            $model->updated_by = $user->id;
+        });
     }
 }

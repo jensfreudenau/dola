@@ -11,6 +11,8 @@ namespace App\Services;
 use App\Helpers\Str;
 use App\Models\Discipline;
 use DOMDocument;
+use function GuzzleHttp\Promise\exception_for;
+use Mockery\Exception;
 
 /**
  * @property DOMDocument dom
@@ -71,7 +73,9 @@ class DisciplineService
 
     public function parseDisciplines($body)
     {
-        $this->setDomDisciplines($body);
+        if($body){
+            $this->setDomDisciplines($body);
+        }
         $this->iterateDisciplineCollection();
         foreach ($this->getDisciplines() as $discipline) {
             $this->proofDisciplineCollection($discipline);
@@ -85,14 +89,20 @@ class DisciplineService
 
     public function iterateDisciplineCollection()
     {
-        $rows = $this->domDisciplines->getElementsByTagName('tr');
-        foreach ($rows AS $tr) {
-            foreach ($tr->childNodes as $key => $td) {
-                if ($key == 0) continue;
-                if (strlen($td->textContent) < 3) continue;
-                $this->fillDisciplineList($td->textContent);
+        try {
+            $rows = $this->domDisciplines->getElementsByTagName('tr');
+            foreach ($rows AS $tr) {
+                foreach ($tr->childNodes as $key => $td) {
+                    if ($key == 0) continue;
+                    if (strlen($td->textContent) < 3) continue;
+                    $this->fillDisciplineList($td->textContent);
+                }
             }
+        } catch (Exception $e) {
+            report($e);
+            return false;
         }
+
     }
 
     protected function fillDisciplineList($discipline)
@@ -208,21 +218,8 @@ class DisciplineService
         }
     }
 
-//    protected function searchDisciplines()
-//    {
-//        $table = $this->dom->getElementsByTagName('table');
-//        $rows  = $table->item(0)->getElementsByTagName('tr');
-//        foreach ($rows as $key => $row) {
-//            if ($key == 0) {
-//                continue;
-//            }
-//            $cols = $row->getElementsByTagName('td');
-//            foreach ($cols as $dataKey => $col) {
-//                if ($dataKey > 0 && ($col->nodeValue != " ")) {
-//                    $this->fillDisciplineList($col->nodeValue);
-//                }
-//            }
-//        }
-//        return true;
-//    }
+    public function getPluck($competition)
+    {
+        return $competition->disciplines->pluck('shortname', 'id')->toArray();
+    }
 }

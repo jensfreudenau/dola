@@ -101,15 +101,8 @@ class AnnounciatorService
      */
     public function getCompetionSelectable()
     {
-        return $this->competitionService->getSelectable();
+        $select = $this->competitionService->getSelectable();
+        $select->prepend('Bitte ausw&auml;hlen', 0);
+        return $select;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getSelectFirst()
-    {
-        return $this->competitionService->getSelectFirst();
-    }
-
 }

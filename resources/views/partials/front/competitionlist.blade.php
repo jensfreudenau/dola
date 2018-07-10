@@ -23,7 +23,7 @@
             <p class="desc"><span class="desc_type">Meldeschlu&szlig;: </span>{{ $competition->submit_date}}</p>
         @endif
         @if(!empty(trim($competition->info)))
-            <p class="desc"><span class="desc_type red_font">Info: &nbsp;</span>{{ $competition->info }}</p>
+            <p class="desc"><span class="desc_type red_font">Info: &nbsp;</span>{!! $competition->info !!}</p>
         @endif
         <p class="desc">
             @foreach($competition->Uploads as $upload)
