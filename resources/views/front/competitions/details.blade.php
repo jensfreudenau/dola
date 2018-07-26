@@ -76,7 +76,7 @@
         </div>
 
         <div class="callout callout-success">
-                        <span>Elektronische Zeitnahme. &Auml;nderungen vorbehalten! Ohne Gew&auml;hr.
+                        <span>&Auml;nderungen vorbehalten! Ohne Gew&auml;hr.
                         Die Wettk&auml;mpfe werden nach den g&uuml;ltigen Wettkampfbestimmungen ausgetragen und stehen unter amtlicher Aufsicht.
                         Wir w&uuml;nschen allen Teilnehmern eine gute Anreise und viel Erfolg.</span><br>
         </div>
