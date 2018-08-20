@@ -31,6 +31,9 @@ class PagesController extends Controller
     public function show($mnemonic)
     {
         $page = $this->pageService->findMnemonic($mnemonic);
+        if($page === null) {
+            return redirect('/',301);
+        }
         return view('front.pages.show', compact('page'));
     }
 
