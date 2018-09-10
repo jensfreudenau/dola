@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\CompetitionService;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 
 class CompetitionsController extends Controller
@@ -65,7 +66,9 @@ class CompetitionsController extends Controller
             return response()->json($competition);
         }
         $additionals = app()->make('CompetitionService')->getAdditionals($id);
-
+        if($competition->isEmpty()) {
+            return Redirect::to('/', 301);
+        }
         return view('front.competitions.details', compact('competition', 'additionals'));
     }
 
