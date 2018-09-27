@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Repositories\Competition\CompetitionRepositoryInterface;
-
 use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller

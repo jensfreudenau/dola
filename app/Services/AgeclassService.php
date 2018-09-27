@@ -21,17 +21,17 @@ class AgeclassService
     /**
      * @param $id
      */
-    protected $ageclassCollection      = array();
+    protected $ageclassCollection = array();
     protected $ageclassCollectionError = array();
     protected $domAgeclasses;
-    protected $classes                 = [];
+    protected $classes = [];
     protected $dom;
-    /** @var AgeclassRepositoryInterface  */
+    /** @var AgeclassRepositoryInterface */
     protected $ageclassRepository;
 
     public function __construct(AgeclassRepositoryInterface $ageclassRepository)
     {
-        $this->ageclassRepository = $ageclassRepository;
+        $this->ageclassRepository      = $ageclassRepository;
         $this->dom                     = new DOMDocument();
         $this->dom->preserveWhiteSpace = false;
     }
@@ -96,8 +96,12 @@ class AgeclassService
         if (!empty($this->domAgeclasses)) {
             foreach ($this->domAgeclasses->childNodes AS $tr) {
                 foreach ($tr->childNodes AS $td) {
-                    if ('Zeit' == $td->textContent) continue;
-                    if (strlen($td->textContent) < 3) continue;
+                    if ('Zeit' == $td->textContent) {
+                        continue;
+                    }
+                    if (strlen($td->textContent) < 3) {
+                        continue;
+                    }
                     $class = $this->prepareAgeclassData($td->textContent);
                     $this->fillAgeclassesList($class);
                 }
@@ -105,10 +109,8 @@ class AgeclassService
         }
     }
 
-    /**
-     * @return array
-     */
-    public function loadAgeclasses()
+
+    public function loadAgeclasses() :array
     {
         $classes    = $this->ageclassRepository->whereNotNull('order');
         $ageclasses = [];
@@ -118,6 +120,7 @@ class AgeclassService
             $ageclasses[$key]['shortname'] = $class->shortname;
             $ageclasses[$key]['name']      = $class->name;
         }
+
         return $ageclasses;
     }
 
@@ -133,6 +136,7 @@ class AgeclassService
         if ($str[$pos + 1] == ' ') {
             $str = str_replace('U ', 'U', $str);
         }
+
         return $str;
     }
 
@@ -149,11 +153,12 @@ class AgeclassService
                 $secondClass     = trim($secondClass);
                 $len             = strlen(trim($secondClass));
                 $primaryClass    = substr($class, 0, -$len);
-                $secondClassName = $primaryClass . $secondClass;
+                $secondClassName = $primaryClass.$secondClass;
                 $this->classes[] = $secondClassName;
             }
         }
         $this->classes[] = $class;
+
         return true;
     }
 
@@ -171,10 +176,10 @@ class AgeclassService
     protected function proofAgeclassCollection($ageclassStr)
     {
         $ageclass = Ageclass::where('shortname', '=', $ageclassStr)
-                            ->orWhere('ladv', '=', $ageclassStr)
-                            ->orWhere('name', '=', $ageclassStr)
-                            ->orWhere('rieping', '=', $ageclassStr)
-                            ->select('ladv', 'shortname')->first();
+            ->orWhere('ladv', '=', $ageclassStr)
+            ->orWhere('name', '=', $ageclassStr)
+            ->orWhere('rieping', '=', $ageclassStr)
+            ->select('ladv', 'shortname')->first();
         if (!$ageclass) {
             $this->ageclassCollectionError[] = $ageclassStr;
         } else {

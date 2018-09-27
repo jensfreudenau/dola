@@ -60,7 +60,7 @@ class TimetableParserTest extends TestCase
     {
         $this->timetableParser->setTimeTableRaw($this->tableRaw);
         $this->timetableParser->loadIntoDom();
-        $this->timetableParser->createTable();
+        $this->timetableParser->createHtmlTable();
         $table = $this->timetableParser->getTimeTable();
         $this->assertEquals($this->table, $table);
     }
