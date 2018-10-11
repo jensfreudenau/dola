@@ -19,7 +19,7 @@ use Mockery\Exception;
  */
 class DisciplineService
 {
-    protected $disciplineCollection      = array();
+    protected $disciplineCollection = array();
     protected $disciplineCollectionError = array();
     protected $domDisciplines;
     protected $disciplines;
@@ -27,36 +27,18 @@ class DisciplineService
 
     public function __construct()
     {
-        $this->dom                     = new DOMDocument();
-        $this->dom->preserveWhiteSpace = false;
     }
 
     /**
      * @param $id
      */
-    public function attacheDisciplines($id)
-    {
-        foreach ($this->getProofedDisciplines() as $key => $class) {
-            $discipline = Discipline::where('ladv', '=', $key)->first();
-            $discipline->competitions()->attach($id);
-        }
-    }
-
-    /**
-     * @return array
-     */
-    public function getProofedDisciplines()
-    {
-        return $this->disciplineCollection;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDisciplineCollection(): array
-    {
-        return $this->disciplineCollection;
-    }
+//    public function attacheDisciplines($id)
+//    {
+//        foreach ($this->getProofedDisciplines() as $key => $class) {
+//            $discipline = Discipline::where('ladv', '=', $key)->first();
+//            $discipline->competitions()->attach($id);
+//        }
+//    }
 
     /**
      * @return array
@@ -71,132 +53,14 @@ class DisciplineService
         return ['disciplineError' => $this->disciplineCollectionError];
     }
 
-    public function parseDisciplines($body)
-    {
-        if($body){
-            $this->setDomDisciplines($body);
-        }
-        $this->iterateDisciplineCollection();
-        foreach ($this->getDisciplines() as $discipline) {
-            $this->proofDisciplineCollection($discipline);
-        }
-    }
-
-    public function setDomDisciplines($domDisciplines)
-    {
-        $this->domDisciplines = $domDisciplines;
-    }
-
-    public function iterateDisciplineCollection()
-    {
-        try {
-            $rows = $this->domDisciplines->getElementsByTagName('tr');
-            foreach ($rows AS $tr) {
-                foreach ($tr->childNodes as $key => $td) {
-                    if ($key == 0) continue;
-                    if (strlen($td->textContent) < 3) continue;
-                    $this->fillDisciplineList($td->textContent);
-                }
-            }
-        } catch (Exception $e) {
-            report($e);
-            return false;
-        }
-
-    }
-
-    protected function fillDisciplineList($discipline)
-    {
-        if (strpos($discipline, '/')) {
-            [$firstArg, $secondArg] = explode('/', $discipline);
-            $this->disciplines[] = $this->prepareDisciplineData($firstArg);
-            $this->disciplines[] = $this->prepareDisciplineData($secondArg);
-        } else {
-            $this->disciplines[] = $this->prepareDisciplineData($discipline);
-        }
-        $this->disciplines = array_filter($this->disciplines);
-        $this->disciplines = array_unique($this->disciplines);
-    }
-
-    public function syncDisciplines($competition)
+    public function fillUpDisciplineIds($parsedDisciplinesFromTable): array
     {
         $disciplineIds = [];
-        foreach ($this->getProofedDisciplines() as $disciplineKey => $discipline) {
-            $data            = Discipline::where('ladv', '=', $disciplineKey)->select('id')->get()->toArray();
-            $disciplineIds[] = $data[0]['id'];
+        foreach ($parsedDisciplinesFromTable as $key => $discipline) {
+            $disciplineIds[] = $discipline['id'];
         }
-        $competition->disciplines()->sync($disciplineIds);
-    }
 
-    /**
-     * @param $str
-     * @return mixed
-     */
-    protected function checkRunDiscipline($str)
-    {
-        $pos = strpos($str, '0m');
-        if ($pos == false) return $str;
-
-        $newPos = $pos - 1;
-        if ($str[$newPos] != ' ') {
-            $str = str_replace('m', ' m', $str);
-        }
-        return $str;
-    }
-
-    protected function prepareDisciplineData($str)
-    {
-        $str = (string)Str::from($str)->trim();
-        $str = str_replace('*', '', $str);
-        $str = preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $str);
-        $str = $this->checkJumpDisciplines($str);
-        $str = $this->checkRunDiscipline($str);
-        $str = $this->checkX($str);
-        $str = $this->checkZ($str);
-        $str = trim($str);
-        return $str;
-    }
-
-    protected function checkX($str)
-    {
-        $pos = strpos($str, 'x');
-        if ($pos == false) return $str;
-        if ($str[$pos - 1] != ' '){
-            $str = str_replace('x', ' x', $str);
-        }
-        $pos = strpos($str, 'x');
-        if($str[$pos + 1] != ' ') {
-            $str = str_replace('x', 'x ', $str);
-        }
-        return $str;
-    }
-
-    /**
-     * @param $str
-     * @return mixed
-     */
-    protected function checkZ($str)
-    {
-        if (Str::from($str)->contains('Z')) {
-            return trim((string)Str::from($str)->beforeFirst('Z'));
-        } else {
-            return $str;
-        }
-    }
-
-    protected function checkJumpDisciplines($str)
-    {
-        $jumps = array('Weit', 'Hoch', 'Kugel');
-        if (Str::from($str)->contains($jumps[0])) {
-            return $jumps[0];
-        }
-        if (Str::from($str)->contains($jumps[1])) {
-            return $jumps[1];
-        }
-        if (Str::from($str)->contains($jumps[2])) {
-            return $jumps[2];
-        }
-        return $str;
+        return $disciplineIds;
     }
 
     public function getDisciplines()
@@ -204,22 +68,13 @@ class DisciplineService
         return $this->disciplines;
     }
 
-    protected function proofDisciplineCollection($disciplineStr)
-    {
-        $discipline = Discipline::where('shortname', '=', $disciplineStr)
-                                ->orWhere('ladv', '=', $disciplineStr)
-                                ->orWhere('name', '=', $disciplineStr)
-                                ->orWhere('rieping', '=', $disciplineStr)
-                                ->select('ladv', 'shortname')->first();
-        if (!$discipline) {
-            $this->disciplineCollectionError[] = $disciplineStr;
-        } else {
-            $this->disciplineCollection[$discipline->ladv] = [$discipline->shortname, $disciplineStr];
-        }
-    }
-
     public function getPluck($competition)
     {
         return $competition->disciplines->pluck('shortname', 'id')->toArray();
+    }
+
+    public function getSelectedDisciplines(): array
+    {
+        return Discipline::pluck('shortname', 'id')->toArray();
     }
 }

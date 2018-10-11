@@ -2,10 +2,7 @@
 
 namespace App\Providers;
 
-use App\Repositories\Additional\AdditionalRepository;
-use App\Repositories\Organizer\OrganizerRepository;
-use App\Repositories\PageRepository;
-use App\Repositories\PageRepositoryEloquent;
+use App\Library\HtmlTagCleaner;
 use App\Services\AgeclassService;
 use App\Services\AnnounciatorService;
 use App\Services\CompetitionService;
@@ -58,8 +55,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('PageService', PageService::class);
         $this->app->bind('AgeclassService', AgeclassService::class);
         $this->app->bind('DisciplineService', DisciplineService::class);
-        $this->app->alias('bugsnag.logger', Log::class);
-        $this->app->alias('bugsnag.logger', LoggerInterface::class);
+        $this->app->bind('HtmlTagCleaner', HtmlTagCleaner::class);
+        $this->app->bind('TimetableParser', HtmlTagCleaner::class);
+//        $this->app->alias('bugsnag.logger', LoggerInterface::class);
 
     }
 }

@@ -25,20 +25,14 @@ class AgeclassService
     protected $ageclassCollectionError = array();
     protected $domAgeclasses;
     protected $classes = [];
-    protected $dom;
     /** @var AgeclassRepositoryInterface */
     protected $ageclassRepository;
 
     public function __construct(AgeclassRepositoryInterface $ageclassRepository)
     {
-        $this->ageclassRepository      = $ageclassRepository;
-        $this->dom                     = new DOMDocument();
-        $this->dom->preserveWhiteSpace = false;
+        $this->ageclassRepository = $ageclassRepository;
     }
 
-    /**
-     * @param $id
-     */
     public function attachAgeclasses($id)
     {
         foreach ($this->getProofedAgeclasses() as $key => $class) {
@@ -47,70 +41,22 @@ class AgeclassService
         }
     }
 
-    /**
-     * @return array
-     */
     public function getProofedAgeclasses()
     {
         return $this->ageclassCollection;
     }
 
-    /**
-     * @param $competition
-     */
-    public function syncAgeClasses($competition)
-    {
-        $ageclassIds = [];
-        foreach ($this->getProofedAgeclasses() as $ageclassKey => $ageclass) {
-            $data          = Ageclass::where('ladv', '=', $ageclassKey)->select('id')->get()->toArray();
-            $ageclassIds[] = $data[0]['id'];
-        }
-        $competition->Ageclasses()->sync($ageclassIds);
-    }
+//    public function syncAgeClasses($competition)
+//    {
+//        $ageclassIds = [];
+//        foreach ($this->getProofedAgeclasses() as $ageclassKey => $ageclass) {
+//            $data          = Ageclass::where('ladv', '=', $ageclassKey)->select('id')->get()->toArray();
+//            $ageclassIds[] = $data[0]['id'];
+//        }
+//        $competition->Ageclasses()->sync($ageclassIds);
+//    }
 
-    /**
-     * @param $header
-     */
-    public function parseAgeclasses($header)
-    {
-        $this->setDomAgeclasses($header);
-        $this->iterateAgeclassCollection();
-        foreach ($this->getAgeclasses() as $ageclassList) {
-            $this->proofAgeclassCollection($ageclassList);
-        }
-    }
-
-    /**
-     * @param $domAgeclasses
-     */
-    public function setDomAgeclasses($domAgeclasses)
-    {
-        $this->domAgeclasses = $domAgeclasses;
-    }
-
-    /**
-     *
-     */
-    public function iterateAgeclassCollection()
-    {
-        if (!empty($this->domAgeclasses)) {
-            foreach ($this->domAgeclasses->childNodes AS $tr) {
-                foreach ($tr->childNodes AS $td) {
-                    if ('Zeit' == $td->textContent) {
-                        continue;
-                    }
-                    if (strlen($td->textContent) < 3) {
-                        continue;
-                    }
-                    $class = $this->prepareAgeclassData($td->textContent);
-                    $this->fillAgeclassesList($class);
-                }
-            }
-        }
-    }
-
-
-    public function loadAgeclasses() :array
+    public function loadAgeclasses(): array
     {
         $classes    = $this->ageclassRepository->whereNotNull('order');
         $ageclasses = [];
@@ -124,108 +70,35 @@ class AgeclassService
         return $ageclasses;
     }
 
-    /**
-     * @param $str
-     * @return mixed|null|string|string[]
-     */
-    protected function prepareAgeclassData($str)
-    {
-        $str = trim($str);
-        $str = preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $str);
-        $pos = strpos($str, 'U');
-        if ($str[$pos + 1] == ' ') {
-            $str = str_replace('U ', 'U', $str);
-        }
 
-        return $str;
-    }
 
-    /**
-     * @param $class
-     * @return bool
-     */
-    protected function fillAgeclassesList($class)
-    {
-        $class = str_replace('*', '', $class);
-        if (false !== strpos($class, '/')) {
-            [$class, $secondClass] = explode('/', $class);
-            if ($secondClass) {
-                $secondClass     = trim($secondClass);
-                $len             = strlen(trim($secondClass));
-                $primaryClass    = substr($class, 0, -$len);
-                $secondClassName = $primaryClass.$secondClass;
-                $this->classes[] = $secondClassName;
-            }
-        }
-        $this->classes[] = $class;
-
-        return true;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAgeclasses()
-    {
-        return $this->classes;
-    }
-
-    /**
-     * @param $ageclassStr
-     */
-    protected function proofAgeclassCollection($ageclassStr)
-    {
-        $ageclass = Ageclass::where('shortname', '=', $ageclassStr)
-            ->orWhere('ladv', '=', $ageclassStr)
-            ->orWhere('name', '=', $ageclassStr)
-            ->orWhere('rieping', '=', $ageclassStr)
-            ->select('ladv', 'shortname')->first();
-        if (!$ageclass) {
-            $this->ageclassCollectionError[] = $ageclassStr;
-        } else {
-            $this->ageclassCollection[$ageclass->ladv] = [$ageclass->shortname, $ageclassStr];
-        }
-    }
-
-    /**
-     * @return array
-     */
-    public function getErrorlists()
-    {
-        return ['ageclassError' => $this->ageclassCollectionError];
-    }
-
-    /**
-     * @return array
-     */
     public function getAgeclassCollectionError(): array
     {
         return $this->ageclassCollectionError;
     }
 
-    /**
-     * @return array
-     */
-    public function getAgeclassCollection(): array
+
+
+    protected function getPluck()
     {
-        return $this->ageclassCollection;
+        return Ageclass::orderBy('name', 'asc')->pluck('shortname', 'id')->toArray();
     }
 
-    public function getPluck()
-    {
-        Ageclass::orderBy('name', 'asc')->pluck('shortname', 'id')->toArray();
-    }
-
-    /**
-     * @param $competition
-     * return $ageclasses pluck
-     */
     public function getAgeclassesPluck($competition)
     {
-        if ($competition == '' || 'cross' == $competition->season) {
+        if ($competition === '' || 'cross' === $competition->season) {
             return $this->getPluck();
-        } else {
-            return $competition->ageclasses->pluck('shortname', 'id')->toArray();
         }
+
+        return $competition->ageclasses->pluck('shortname', 'id')->toArray();
+    }
+
+    public function fillUpAgeclassIds($parsedAgeclassesFromTable): array
+    {
+        $ageclassIds = [];
+        foreach ($parsedAgeclassesFromTable as $key => $ageclass) {
+            $ageclassIds[] = $ageclass['id'];
+        }
+        return $ageclassIds;
     }
 }

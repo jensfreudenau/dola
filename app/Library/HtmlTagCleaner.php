@@ -8,14 +8,20 @@
 
 namespace App\Library;
 
+use App\Models\Ageclass;
 use DOMDocument;
 use DOMXPath;
 
 class HtmlTagCleaner
 {
+    public $dom;
     protected $table;
     protected $header;
     protected $body;
+    protected $classes;
+    protected $ageclassCollectionError;
+    protected $ageclassCollection;
+    protected $domAgeclasses;
 
     public function __construct()
     {
@@ -23,10 +29,10 @@ class HtmlTagCleaner
         $this->dom->preserveWhiteSpace = false;
     }
 
-    public function createRawHtml($table)
+    public function createRawHtmlTable($table)
     {
         $this->loadIntoDom($table);
-        $this->createHtml();
+        $this->createHtmlTable();
     }
 
     protected function loadIntoDom($table)
@@ -37,7 +43,7 @@ class HtmlTagCleaner
         $this->body   = $this->dom->getElementsByTagName('tbody')->item(0);
     }
 
-    protected function createHtml()
+    protected function createHtmlTable()
     {
         $this->dom->loadHTML($this->table, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         $xpath = new DOMXPath($this->dom);
@@ -62,4 +68,6 @@ class HtmlTagCleaner
     {
         return $this->table;
     }
+
+
 }

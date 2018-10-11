@@ -7,6 +7,7 @@ use App\Models\Competition;
 use App\Models\Address;
 use App\Models\Organizer;
 use App\Models\Upload;
+use App\Services\DisciplineService;
 use App\Traits\FileUploadTrait;
 use App\Http\Requests\Admin\StoreCompetitionsRequest;
 use App\Http\Requests\Admin\UpdateCompetitionsRequest;
@@ -27,22 +28,26 @@ class CompetitionController extends Controller
     protected $competitionRepository;
     protected $competitionService;
     protected $competionsErrorList;
+    protected $disciplineService;
 
     /**
      * CompetitionController constructor.
      * @param CompetitionRepositoryInterface $competitionRepository
      * @param CompetitionService $competitionService
+     * @param DisciplineService $disciplineService
      */
-    public function __construct(CompetitionRepositoryInterface $competitionRepository, CompetitionService $competitionService)
+    public function __construct(CompetitionRepositoryInterface $competitionRepository, CompetitionService $competitionService, DisciplineService $disciplineService)
     {
         $this->competitionRepository = $competitionRepository;
         $this->competitionService    = $competitionService;
+        $this->disciplineService     = $disciplineService;
     }
 
     public function index()
     {
         $future  = $this->competitionRepository->getFutured();
         $elapsed = $this->competitionRepository->getElapsed();
+
         return view('admin.competitions.index', compact('future', 'elapsed'));
     }
 
@@ -60,6 +65,7 @@ class CompetitionController extends Controller
         $competition->timetable_1 = $this->markFounded($competition->timetable_1, $ageclasses);
         $competition->timetable_1 = $this->markFounded($competition->timetable_1, $disciplines);
         $announciators            = $this->competitionService->getAnnounciators($id);
+
         return view('admin.competitions.show', compact('competition', 'additionals', 'disciplines', 'announciators'));
     }
 
@@ -71,11 +77,11 @@ class CompetitionController extends Controller
         $addresses   = Address::get()->pluck('name', 'id');
         $ageclasses  = Ageclass::get()->pluck('shortname', 'id')->toArray();
         $organizers  = Organizer::get()->pluck('name', 'id')->prepend('Please select', '');
-        $disciplines = $this->competitionService->getSelectedDisciplines();
+        $disciplines = $this->disciplineService->getSelectedDisciplines();
         $competition = $this->competitionService->find($id);
         $additionals = $this->competitionService->getAdditionals($id);
 
-        return view('admin.competitions.edit', compact('addresses', 'competition', 'organizers',  'additionals' , 'ageclassList', 'ageclasses', 'disciplines'));
+        return view('admin.competitions.edit', compact('addresses', 'competition', 'organizers', 'additionals', 'ageclassList', 'ageclasses', 'disciplines'));
     }
 
     /**
@@ -90,23 +96,26 @@ class CompetitionController extends Controller
             return abort(401);
         }
         $this->competitionService->storeData($request, $id);
-        return redirect('/admin/competitions/' . $id);
+
+        return redirect('/admin/competitions/'.$id);
     }
 
     use FileUploadTrait;
+
     public function uploader(Request $request, $id)
     {
         if (!Gate::allows('competition_access')) {
             return abort(401);
         }
         $competition                = $this->competitionService->find($id);
-        $path                       = 'public/' . $request->type . '/' . $competition->season;
+        $path                       = 'public/'.$request->type.'/'.$competition->season;
         $uploads                    = $this->saveFiles($request, $path);
         $requests                   = $request->all();
         $requests['competition_id'] = $id;
         $requests['type']           = $request->type;
         $requests['filename']       = $uploads->uploader;
         Upload::create($requests);
+
         return response()->json(
             $uploads
         );
@@ -117,8 +126,8 @@ class CompetitionController extends Controller
         if (!Gate::allows('competition_create')) {
             return abort(401);
         }
-        $organizers           = $this->competitionService->getOrganizers();
-        $competition          = '';
+        $organizers  = $this->competitionService->getOrganizers();
+        $competition = '';
 
         return view('admin.competitions.create', compact('organizers', 'competition'));
     }
@@ -135,14 +144,14 @@ class CompetitionController extends Controller
         if (!Gate::allows('competition_create')) {
             return abort(401);
         }
-        $ignore = $request->get('ignore_error');
+        $ignore      = $request->get('ignore_error');
         $competionId = $this->competitionService->storeData($request);
-        $errorList = $this->competitionService->getErrorList();
-
-        if(array_key_exists('disciplineError', $errorList) && $ignore != 'ignore') {
+        $errorList   = $this->competitionService->getErrorList();
+        if (array_key_exists('disciplineError', $errorList) && $ignore != 'ignore') {
             return Redirect::back()->withInput()->withErrors($errorList['disciplineError']);
         }
-        return redirect('/admin/competitions/' . $competionId);
+
+        return redirect('/admin/competitions/'.$competionId);
     }
 
     /**
@@ -158,6 +167,7 @@ class CompetitionController extends Controller
             return abort(401);
         }
         $this->competitionRepository->delete($id);
+
         return redirect()->route('admin.competitions.index');
     }
 
@@ -169,7 +179,7 @@ class CompetitionController extends Controller
         $uploadedFile = Upload::findOrFail($id);
         $competition  = $this->competitionService->find($uploadedFile->competition_id);
         try {
-            Storage::delete('public/' . $uploadedFile->type . '/' . $competition->season . '/' . $uploadedFile->filename);
+            Storage::delete('public/'.$uploadedFile->type.'/'.$competition->season.'/'.$uploadedFile->filename);
         } catch (Exception $exception) {
             Log::error($exception);
         }
@@ -178,6 +188,7 @@ class CompetitionController extends Controller
         } catch (Exception $exception) {
             Log::error($exception);
         }
+
         return redirect()->route('admin.competitions.edit', $competition->id);
     }
 

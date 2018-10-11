@@ -8,8 +8,10 @@
 
 namespace Tests\Unit;
 
+use App\Library\HtmlTagCleaner;
 use App\Library\TimetableParser;
 use DOMDocument;
+use Mockery;
 use Tests\TestCase;
 
 class TimetableParserTest extends TestCase
@@ -25,13 +27,14 @@ class TimetableParserTest extends TestCase
     {
         $this->tableRaw = '<table><thead><tr><td class="removethis">head</td></tr></thead><tbody><tr><td class="removethis">body</td></tr></tbody></table>';
         $this->table = '<table><thead><tr><td>head</td></tr></thead><tbody><tr><td>body</td></tr></tbody></table>';
-
-        $this->timetableParser = new TimetableParser();
+        $htmlTagCleaner = new HtmlTagCleaner();
+        $this->invokeMethod($htmlTagCleaner, 'createRawHtml',[$this->tableRaw]);
+        $this->timetableParser = new TimetableParser($htmlTagCleaner);
     }
     public function testGetTableHeader()
     {
-        $this->timetableParser->setTimeTableRaw($this->tableRaw);
-        $this->timetableParser->loadIntoDom();
+
+        $this->timetableParser->proceed($this->tableRaw);
         $actualHeader = $this->timetableParser->getHeader();
 
         $dom = new DOMDocument();
@@ -44,8 +47,8 @@ class TimetableParserTest extends TestCase
 
     public function testGetTableBody()
     {
-        $this->timetableParser->setTimeTableRaw($this->tableRaw);
-        $this->timetableParser->loadIntoDom();
+        $this->timetableParser->proceed($this->tableRaw);
+
         $actualBody = $this->timetableParser->getTableBody();
 
         $dom = new DOMDocument();
@@ -58,9 +61,7 @@ class TimetableParserTest extends TestCase
 
     public function testCreateTable()
     {
-        $this->timetableParser->setTimeTableRaw($this->tableRaw);
-        $this->timetableParser->loadIntoDom();
-        $this->timetableParser->createHtmlTable();
+        $this->timetableParser->proceed($this->tableRaw);
         $table = $this->timetableParser->getTimeTable();
         $this->assertEquals($this->table, $table);
     }

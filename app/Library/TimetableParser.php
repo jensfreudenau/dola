@@ -7,45 +7,34 @@
  */
 
 namespace App\Library;
-use DOMDocument;
-use DOMXPath;
+
 
 class TimetableParser
 {
-    public    $ageclass;
-    public    $discipline;
-    protected $dom;
+    public $ageclass;
+    public $discipline;
+
     protected $theader;
     protected $tbody;
     protected $timeTable;
     protected $ignoreAgeClasses;
+    /**
+     * @var htmlTagCleaner
+     */
+    private $htmlTagCleaner;
 
     /**
      * TimetableParser constructor.
+     * @param HtmlTagCleaner $htmlTagCleaner
      */
-    public function __construct()
+    public function __construct(HtmlTagCleaner $htmlTagCleaner)
     {
-        $this->dom                     = new DOMDocument();
-        $this->dom->preserveWhiteSpace = false;
+        $this->htmlTagCleaner = $htmlTagCleaner;
     }
 
-    public function loadIntoDom()
+    public function proceed($table)
     {
-        $this->timeTable = preg_replace(array('/\r/', '/\n/'), '', $this->timeTable);
-        $this->dom->loadHTML(mb_convert_encoding($this->timeTable, 'HTML-ENTITIES', 'UTF-8'));
-        $this->theader = $this->dom->getElementsByTagName('thead')->item(0);
-        $this->tbody   = $this->dom->getElementsByTagName('tbody')->item(0);
-    }
-
-    public function createTable()
-    {
-        $this->dom->loadHTML($this->timeTable, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-        $xpath = new DOMXPath($this->dom);
-        $nodes = $xpath->query('//@*');
-        foreach ($nodes as $node) {
-            $node->parentNode->removeAttribute($node->nodeName);
-        }
-        $this->timeTable =  $this->dom->saveHTML();
+        $this->htmlTagCleaner->createRawHtmlTable($table);
     }
 
     /**
@@ -53,7 +42,7 @@ class TimetableParser
      */
     public function getHeader()
     {
-        return $this->theader;
+        return $this->htmlTagCleaner->getHeader();
     }
 
     /**
@@ -61,7 +50,7 @@ class TimetableParser
      */
     public function getTableBody()
     {
-        return $this->tbody;
+        return $this->htmlTagCleaner->dom->getElementsByTagName('tbody')->item(0);
     }
 
     /**
@@ -69,7 +58,7 @@ class TimetableParser
      */
     public function getTimeTable()
     {
-        return trim(str_replace(PHP_EOL, ' ', $this->timeTable));
+        return trim(str_replace(PHP_EOL, ' ', $this->htmlTagCleaner->getTable()));
     }
 
     public function setTimeTableRaw($timeTable)
