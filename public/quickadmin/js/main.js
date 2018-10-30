@@ -277,6 +277,7 @@ $(document).ready(function () {
         });
 
         let allData = response.data;
+        allData.shift();
         let tbody = $('<tbody>').appendTo(table);
 
         $(allData).each(function (j) {
@@ -298,7 +299,8 @@ $(document).ready(function () {
         for (let i = 0; i < allTextLines.length; i++) {
             let rowCsv = allTextLines[i].replace(/;/g, "");
 
-            if (rowCsv.search("szeichnung") > 0) {
+            if (rowCsv.search("szeichnungen:") > 0 || rowCsv.search("szeichnung") > 0) {
+                console.log(rowCsv);
                 setAward(rowCsv);
             }
             if (rowCsv.search("ldeschlu") > 0) {
@@ -355,13 +357,16 @@ $(document).ready(function () {
         $('#competition-start_date').val(germanDate.format('DD.MM.YYYY'));
     }
 
-    function setAward(ausszeichnungStr) {
-        let ausszeichnung = ausszeichnungStr.split(':');
-        $('#competition-award').val($.trim(ausszeichnung[1]));
+    function setAward(auszeichnungStr) {
+        let searchString = 'szeichnung';
+        let str = auszeichnungStr.split(searchString)[1];
+        let auszeichnung = str.substring(str.indexOf(':') + 1);
+
+        $('#competition-award').val($.trim(auszeichnung));
     }
 
     function setMeldeschluss(meldeschlussStr) {
-        let meldeschlussArr =[];
+        let meldeschlussArr = [];
         if (meldeschlussStr.includes(':')) {
             meldeschlussArr = meldeschlussStr.split(':');
         }
