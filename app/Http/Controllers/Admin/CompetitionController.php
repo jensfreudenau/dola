@@ -9,8 +9,6 @@ use App\Models\Organizer;
 use App\Models\Upload;
 use App\Services\DisciplineService;
 use App\Traits\FileUploadTrait;
-use App\Http\Requests\Admin\StoreCompetitionsRequest;
-use App\Http\Requests\Admin\UpdateCompetitionsRequest;
 use App\Repositories\Competition\CompetitionRepositoryInterface;
 use App\Services\CompetitionService;
 use App\Traits\StringMarkerTrait;

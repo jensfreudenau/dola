@@ -55,8 +55,7 @@ class AnnounciatorService
      * @param $request
      * @return Announciator
      */
-    public function processAnnouncement($request)
-    {
+    public function processAnnouncement($request): Announciator {
         //wk finden
         $this->competition = $this->competitionService->find($request->competition_id);
 
