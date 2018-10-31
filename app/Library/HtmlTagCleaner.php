@@ -54,12 +54,12 @@ class HtmlTagCleaner
         $this->table = $this->dom->saveHTML();
     }
 
-    public function getHeader(): object
+    public function getHeader()
     {
         return $this->header;
     }
 
-    public function getBody(): object
+    public function getBody()
     {
         return $this->body;
     }

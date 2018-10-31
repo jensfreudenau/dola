@@ -20,7 +20,7 @@ class AgeclassParser
     protected $ageclasses;
     protected $preparedAgeclasses;
 
-    public function proceed($header)
+    public function proceed($header): void
     {
         $this->setDomAgeclasses($header);
         $this->domToAgeclasses();
@@ -56,10 +56,10 @@ class AgeclassParser
     {
         foreach ($this->domAgeclasses->childNodes AS $tr) {
             foreach ($tr->childNodes AS $td) {
-                if ('Zeit' == $td->textContent) {
+                if ('Zeit' === $td->textContent) {
                     continue;
                 }
-                if (strlen($td->textContent) < 3) {
+                if (\strlen($td->textContent) < 3) {
                     continue;
                 }
                 $class = $this->prepareAgeclassData($td->textContent);
