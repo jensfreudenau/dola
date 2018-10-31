@@ -103,7 +103,7 @@
                     <h3 class="text-green">Anzahl Teilnehmer: {{$competition->Participators->count()}}</h3>
                     <span>
                             <a href="{{ url('admin/participators/download',[$competition->id]) }}" class="btn btn-sm btn-info">@lang('quickadmin.qa_csv_download')</a>
-                        </span>
+                    </span>
                     <div class="card-body table-responsive">
 
                         <table class="table table-bordered table-striped datatable">

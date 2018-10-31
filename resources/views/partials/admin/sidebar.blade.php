@@ -7,6 +7,7 @@
             <li class="{{ $request->segment(1) == 'home' ? 'active' : '' }}">
                 <a href="{{ url('/admin') }}"> <i class="fa fa-wrench"></i> <span class="title">@lang('quickadmin.qa_dashboard')</span> </a>
             </li>
+
             @can('user_management_access')
                 <li class="treeview">
                     <a href="#"> <i class="fa fa-users"></i> <span class="title">@lang('quickadmin.user-management.title')</span> <span class="pull-right-container">
@@ -89,6 +90,9 @@
 
             <li>
                 <a href="#logout" onclick="$('#logout').submit();"> <i class="fa fa-arrow-left"></i> <span class="title">@lang('quickadmin.qa_logout')</span> </a>
+            </li>
+            <li class="">
+                <a href="{{ url('/') }}" target="_blank"> <i class="fa fa-wrench"></i> <span class="title">Website</span> </a>
             </li>
         </ul>
     </section>

@@ -24,6 +24,8 @@
                                     <canvas id="lineChart_{{$key}}" width="400" height="250"></canvas>
                                 </div>
                                 <a href="{{ route('admin.competitions.edit',[$competition->id]) }}" class="btn btn-primary">@lang('quickadmin.qa_edit')</a>
+                                <a href="{{ route('admin.competitions.show',[$competition->id]) }}" class="btn btn-elegant">@lang('quickadmin.qa_view')</a>
+                                <a href="{{ route('admin.participators.listing',[$competition->id]) }}" class="btn btn-success">@lang('quickadmin.participator.title')</a>
                             </div>
                         </div>
                         @if(($key % 2) == 1) </div> @endif

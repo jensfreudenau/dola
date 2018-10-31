@@ -10,13 +10,17 @@
     </h2>
     <div class="card card-default">
         <div class="card-heading">
-           <h2>{{ $competition->header }}</h2>
+            <h2>{{ $competition->header }}</h2>
         </div>
         <div class="card-body">
             <div class="row">
 
 
                 <h4 class="text-green">Anzahl Teilnehmer: {{$competition->Participators->count()}}</h4>
+
+                <span>
+                    <a href="{{ url('admin/participators/download',[$competition->id]) }}" class="btn btn-sm btn-info">@lang('quickadmin.qa_csv_download')</a>
+                </span>
                 <div class="card-body table-responsive">
                     <table class="table table-striped datatable">
                         <thead>
