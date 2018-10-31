@@ -178,7 +178,8 @@ class Competition extends Model
     protected function createMysqlFormat($input)
     {
         if (!empty($input)) {
-            return Carbon::createFromFormat(config('app.date_locale_format'), $input)->format('Y-m-d');
+            $date = Carbon::parse($input)->format('d.m.Y');
+            return Carbon::createFromFormat(config('app.date_locale_format'), $date)->format('Y-m-d');
         } else {
             return null;
         }
