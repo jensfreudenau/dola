@@ -57,7 +57,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('DisciplineService', DisciplineService::class);
         $this->app->bind('HtmlTagCleaner', HtmlTagCleaner::class);
         $this->app->bind('TimetableParser', HtmlTagCleaner::class);
-//        $this->app->alias('bugsnag.logger', LoggerInterface::class);
+        $this->app->alias('bugsnag.logger', \Illuminate\Contracts\Logging\Log::class);
+        $this->app->alias('bugsnag.logger', LoggerInterface::class);
 
     }
 }

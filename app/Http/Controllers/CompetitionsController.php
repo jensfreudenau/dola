@@ -58,6 +58,9 @@ class CompetitionsController extends Controller
     public function details($id)
     {
         $competition = $this->competitionService->find($id);
+        if(null === $competition) {
+            return Redirect::to('/', 301);
+        }
         if (Request::wantsJson()) {
             $competition->name    = $competition->organizer->address->name;
             $competition->classes = $competition->Disciplines;
@@ -67,9 +70,6 @@ class CompetitionsController extends Controller
         }
         $additionals = app()->make('CompetitionService')->getAdditionals($id);
 
-        if(null == $competition) {
-            return Redirect::to('/', 301);
-        }
         return view('front.competitions.details', compact('competition', 'additionals'));
     }
 
