@@ -138,13 +138,7 @@
         {!! Form::close() !!}
         @endsection
         @section('page-script')
-            <script type="text/javascript">
-                let ageclasses = {!! json_encode($ageclasses) !!};
-                let disciplines = {!! json_encode($disciplines) !!};
-                        @if (@empty(!$ageclasses))
-                let season = {!! json_encode($competition->season) !!};
-                @endif
-            </script>
+
             <script type="text/javascript" src="{{ url('/') }}/front/js/add_participator.js"></script>
         @stop
     </div>

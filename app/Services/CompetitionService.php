@@ -13,7 +13,6 @@ use App\Library\AgeclassParser;
 use App\Library\DisciplineParser;
 use App\Library\TimetableParser;
 use App\Models\Additional;
-use App\Traits\ParseDataTrait;
 use App\Models\Announciator;
 use App\Models\Competition;
 use App\Models\Discipline;
@@ -21,7 +20,9 @@ use App\Models\Organizer;
 use App\Repositories\Additional\AdditionalRepositoryInterface;
 use App\Repositories\Competition\CompetitionRepositoryInterface;
 use App\Traits\StringMarkerTrait;
+use Config;
 use Illuminate\Http\Request;
+use Storage;
 
 class CompetitionService
 {
@@ -111,7 +112,6 @@ class CompetitionService
         return $archives;
     }
 
-    use ParseDataTrait;
     use StringMarkerTrait;
 
     /**
@@ -161,13 +161,6 @@ class CompetitionService
             $this->ageclassParser->proceed($this->timetableParser->getHeader());
             $this->disciplineParser->proceed($this->timetableParser->getTableBody());
         }
-//        if (!$this->ignoreAgeclasses) {
-//        $this->ageclassService->parseAgeclasses($this->timetableParser->getHeader());
-//        }
-//        if (!$this->ignoreDisciplines) {
-//
-//            $this->disciplineService->storeDisciplines($this->timetableParser->getTableBody());
-//        }
         return $this->timetableParser->getTimeTable();
     }
 
