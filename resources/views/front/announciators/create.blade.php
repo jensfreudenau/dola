@@ -71,57 +71,62 @@
         </div>
         <hr>
         <div id='participantGroup'>
-            <div class="participant1">
-                <div class="form-group">
-                    <div class="input-group">
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
                         {!! Form::text('vorname[]',  null, ['id'=> '', 'class' => 'form-control required', 'placeholder' => 'Vorname*', 'required']) !!}
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="input-group">
+
+                    <div class="form-group col-md-6">
                         {!! Form::text('nachname[]',  null, ['id'=> '', 'class' => 'form-control', 'placeholder' => 'Nachname*', 'required']) !!}
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="input-group">
+                <div class="form-row" id="agegroup0">
+                    <div class="form-group col-md-6">
+                        @if (@empty($ageclasses))
+                            {!! Form::text('ageclass[]', null, ['required', 'class' => 'form-control ageclass', 'placeholder' => 'Altersklasse*']) !!}
+                        @else
+                            {!! Form::select('ageclass[]', $ageclasses , null, ['id'=> 'ageclass', 'class' => 'form-control ageclass', 'placeholder' => 'Altersklasse*','style'=>'width: 100%', 'required']) !!}
+                        @endif
+                    </div>
+                    <div class="form-group col-md-6">
                         {!! Form::text('jahrgang[]', null, ['id'=> 'year', 'class' => 'form-control', 'placeholder' => 'Jahrgang*', 'required']) !!}
                     </div>
+
+
                 </div>
+
+                <div class="form-row" id="disciplines0">
+                        <div class="form-group col-md-5">
+                            @if (@empty($competition) || $competition->season == 'cross' || @empty($disciplines))
+                                {!! Form::text('discipline[0][]', null, [ 'required', 'id'=> 'disciplineGroup_0', 'class' => 'form-control', 'placeholder' => 'Disziplin*']) !!}
+                            @else
+                                {!! Form::select('discipline[0][]', $disciplines , null, ['required', 'id'=> 'disciplineGroup_0', 'class' => 'discipline_select form-control', 'placeholder' => 'Disziplin*', 'style'=>'width: 100%']) !!}
+                            @endif
+                        </div>
+                        <div class="form-group col-md-6" id="besttimeGroup0">
+                            <div class="input-group besttime">
+                                {!! Form::text('bestzeit[0][]', null, ['id'=> '', 'id'=> 'besttimeGroup_0', 'class' => 'form-control', 'placeholder' => 'Bestleistung']) !!}
+                            </div>
+                        </div>
+                        <div class="form-group col-md-1">
+                            {!! Form::button('<i class="fa fa-plus" aria-hidden="true"></i>', array('id'=> 'addDiscipline_0', 'class' => 'btn-lg btn-outline-success addDiscipline')) !!}
+                        </div>
+                </div>
+
                 <div class="form-group">
-                    <div class="input-group">
-                        @if (@empty($ageclasses))
-                            {!! Form::text('ageclass[]', null, ['required',  'class' => 'form-control', 'placeholder' => 'Altersklasse*']) !!}
-                        @else
-                            {!! Form::select('ageclass[]', $ageclasses , null, ['class' => 'form-control required', 'placeholder' => 'Altersklasse*','style'=>'width: 100%', 'required']) !!}
-                        @endif
-                    </div>
+                    {!! Form::text('clubname[]', null, ['class' => 'form-control', 'placeholder' => 'Verein']) !!}
                 </div>
-                <div class="form-group">
-                    <div class="input-group">
-                        {!! Form::text('clubname[]', null, ['class' => 'form-control', 'placeholder' => 'Verein']) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="input-group">
-                        @if (@empty($competition) || $competition->season == 'cross' || @empty($disciplines))
-                            {!! Form::text('discipline[]', null, ['required',  'class' => 'form-control', 'placeholder' => 'Disziplin*']) !!}
-                        @else
-                            {!! Form::select('discipline[]', $disciplines , null, ['required', 'class' => 'discipline_select form-control', 'placeholder' => 'Disziplin*', 'style'=>'width: 100%']) !!}
-                        @endif
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="input-group">
-                        {!! Form::text('bestzeit[]', null, ['id'=> '', 'class' => 'form-control', 'placeholder' => 'Bestleistung']) !!}
-                    </div>
-                </div>
-            </div>
+                <hr>
+
         </div>
+
         <div class="row">
             <div class="col-md-8">
                 <div class="form-group">
                     <div class="input-group">
-                        {!! Form::button('<i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Teilnehmer hinzufügen', array('id'=> 'addParticipant', 'class' => 'btn btn-outline-dark')) !!}
+                        {!! Form::button('<i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Teilnehmer hinzufügen', array('id'=> 'addParticipant', 'class' => 'btn-sm btn-outline-dark')) !!}
+
                     </div>
                 </div>
             </div>
@@ -138,8 +143,15 @@
         {!! Form::close() !!}
         @endsection
         @section('page-script')
-
+            <script type="text/javascript">
+                let ageclasses = {!! json_encode($ageclasses) !!};
+                let disciplines = {!! json_encode($disciplines) !!};
+                        @if (@empty(!$competition))
+                let season = {!! json_encode($competition->season) !!};
+                @endif
+            </script>
             <script type="text/javascript" src="{{ url('/') }}/front/js/add_participator.js"></script>
         @stop
     </div>
+
 

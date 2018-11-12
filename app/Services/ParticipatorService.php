@@ -10,8 +10,7 @@ namespace App\Services;
 
 use App\Repositories\Participator\ParticipatorRepositoryInterface;
 
-class ParticipatorService
-{
+class ParticipatorService {
     /**
      * @var ParticipatorRepositoryInterface
      */
@@ -22,8 +21,7 @@ class ParticipatorService
     protected $participators;
     protected $seltecCollection = [];
 
-    public function __construct(ParticipatorRepositoryInterface $participatorRepository)
-    {
+    public function __construct(ParticipatorRepositoryInterface $participatorRepository) {
         $this->participatorRepository = $participatorRepository;
     }
 
@@ -32,50 +30,44 @@ class ParticipatorService
      * @param $announciatorId
      * @param $season
      */
-    public function create($request, $announciatorId, $season)
-    {
-        $participators = [];
-        foreach ($request->vorname as $key => $item) {
-            $participators[$key]['prename'] = $item;
-        }
-        foreach ($request->nachname as $key => $item) {
-            $participators[$key]['lastname'] = $item;
-        }
-        foreach ($request->jahrgang as $key => $item) {
-            $participators[$key]['birthyear'] = $item;
-        }
-        foreach ($request->ageclass as $key => $item) {
-            $participators[$key]['ageclass_id'] = $item;
-        }
-        foreach ($request->clubname as $key => $item) {
-            $participators[$key]['clubname'] = $item;
-        }
-        foreach ($request->discipline as $key => $item) {
-            if($season == 'cross') {
-                $participators[$key]['discipline_cross'] = $item;
-                $participators[$key]['discipline_id'] = null;
-            }
-            else {
-                $participators[$key]['discipline_cross'] = null;
-                $participators[$key]['discipline_id'] = $item;
-            }
-        }
-        foreach ($request->bestzeit as $key => $item) {
-            $participators[$key]['best_time'] = $item;
-        }
+    public function create($request, $announciatorId, $season) {
+        $participators = $this->createParticipatorPerDiscipline($request, $season);
 
         foreach ($participators as $participator) {
             $participator['announciator_id'] = $announciatorId;
-            $this->participators[] = $this->participatorRepository->create($participator);
+            $this->participators[]           = $this->participatorRepository->create($participator);
         }
+    }
+
+    private function createParticipatorPerDiscipline($request, $season): array {
+        foreach ($request->discipline as $disciplineKey => $discipline) {
+            foreach ($discipline as $keyDisci => $disciplineId) {
+                $participator[$keyDisci]['prename']     = $request->vorname[$disciplineKey];
+                $participator[$keyDisci]['lastname']    = $request->nachname[$disciplineKey];
+                $participator[$keyDisci]['birthyear']   = $request->jahrgang[$disciplineKey];
+                $participator[$keyDisci]['ageclass_id'] = $request->ageclass[$disciplineKey];
+                $participator[$keyDisci]['clubname']    = $request->clubname[$disciplineKey];
+
+                if ($season == 'cross') {
+                    $participator[$keyDisci]['discipline_cross'] = $disciplineId;
+                    $participator[$keyDisci]['discipline_id']    = null;
+                } else {
+                    $participator[$keyDisci]['discipline_cross'] = null;
+                    $participator[$keyDisci]['discipline_id']    = $disciplineId;
+                }
+                $participator[$keyDisci]['best_time'] = $request->bestzeit[$disciplineKey][$keyDisci];
+                $participators[]                      = $participator[$keyDisci];
+            }
+        }
+
+        return $participators;
     }
 
     /**
      * convert participator information into seltec reading
      * @param $competition
      */
-    public function listParticipatorForSeltec($competition)
-    {
+    public function listParticipatorForSeltec($competition) {
         foreach ($this->participators as $key => $participator) {
             $this->seltecCollection[$key]['BIB']        = 1;
             $this->seltecCollection[$key]['Code']       = '';
@@ -96,31 +88,28 @@ class ParticipatorService
     /**
      * @return array seltecCollection
      */
-    public function getSeltecCollection()
-    {
+    public function getSeltecCollection() {
         return $this->seltecCollection;
     }
 
     /**
      * @return mixed
      */
-    public function getParticipators()
-    {
+    public function getParticipators() {
         return $this->participators;
     }
 
-    public function sendCsvFile($competition)
-    {
+    public function sendCsvFile($competition) {
         $this->participators = $competition->participators;
         $this->listParticipatorForSeltec($competition);
         $headers = [
-            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0'
-            , 'Content-type' => 'text/csv'
+                'Cache-Control'     => 'must-revalidate, post-check=0, pre-check=0'
+            , 'Content-type'        => 'text/csv'
             , 'Content-Disposition' => 'attachment; filename=participators.csv'
-            , 'Expires' => '0'
-            , 'Pragma' => 'public'
+            , 'Expires'             => '0'
+            , 'Pragma'              => 'public',
         ];
-        $list = $this->getSeltecCollection();
+        $list    = $this->getSeltecCollection();
         # add headers for each column in the CSV download
         array_unshift($list, array_keys($list[0]));
         $callback = function () use ($list) {
@@ -130,6 +119,7 @@ class ParticipatorService
             }
             fclose($FH);
         };
+
         return response()->stream($callback, 200, $headers);
     }
 }

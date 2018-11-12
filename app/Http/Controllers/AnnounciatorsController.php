@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\Ageclass;
+use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use App\Services\AgeclassService;
 use App\Services\AnnounciatorService;
 use App\Services\CompetitionService;
@@ -11,11 +10,11 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Redirect;
-use Session;
 
 class AnnounciatorsController extends Controller
 {
     protected $announciatorService;
+    protected $competitionRepository;
     /**
      * @var AgeclassService
      */
@@ -51,7 +50,7 @@ class AnnounciatorsController extends Controller
     {
         $competition = '';
         $disciplines = '';
-        if (false != $id) {
+        if (false !== $id) {
             $competition = $this->competitionService->find($id);
             $disciplines = $this->disciplineService->getPluck($competition);
         }
@@ -78,16 +77,17 @@ class AnnounciatorsController extends Controller
             $cookie       = Cookie::make('announciators_id', $announciator->id);
 
             return redirect()->action('AnnounciatorsController@listParticipator')->withCookie($cookie);
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
+            Bugsnag::notifyException($exception);
             if ($request->wantsJson()) {
                 return response()->json(
                     [
                         'error' => true,
-                        'message' => $e->getMessageBag(),
+                        'message' => $exception->getMessageBag(),
                     ]
                 );
             }
-            $message = $e->getMessage();
+            $message = $exception->getMessage();
 
             return Redirect::back()->withInput()->withErrors(array('user_name' => $message));
         }

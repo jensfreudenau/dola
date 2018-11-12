@@ -84,7 +84,7 @@ class AgeclassService
         return Ageclass::orderBy('name', 'asc')->pluck('shortname', 'id')->toArray();
     }
 
-    public function getAgeclassesPluck($competition)
+    public function getAgeclassesPluck($competition = '')
     {
         if ($competition === '' || 'cross' === $competition->season) {
             return $this->getPluck();
