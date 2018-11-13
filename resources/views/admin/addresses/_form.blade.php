@@ -20,6 +20,6 @@
 </div>
 <div class="form-group">
     {!! Form::label('email', Lang::get('quickadmin.addresses.fields.email')) !!}
-    {!! Form::email('email', null, ['id'=> 'address-email', 'class'=>'form-control']) !!}
+    {!! Form::email('email', null, ['id'=> 'address-email', 'class'=>'form-control', 'required']) !!}
 </div>
 
