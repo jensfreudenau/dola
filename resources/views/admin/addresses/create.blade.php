@@ -8,7 +8,7 @@
         <div class="col-sm-10">
             <div class="card card-default">
                 <div class="card-heading">
-                    Adresse anlegen
+                    <h4>@lang('quickadmin.qa_create')</h4>
                 </div>
                 <div class="card-body">
                     @include('common.errors')

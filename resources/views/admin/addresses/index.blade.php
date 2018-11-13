@@ -45,15 +45,15 @@
                                 @can('address_edit')
                                     <a href="{{ route('admin.addresses.edit',[$address->id]) }}" class="btn btn-sm btn-info">@lang('quickadmin.qa_edit')</a>
                                 @endcan
-                                @can('address_delete')
-                                    {!! Form::open(array(
-                                        'style' => 'display: inline-block;',
-                                        'method' => 'DELETE',
-                                        'onsubmit' => "return confirm('".trans("quickadmin.qa_are_you_sure")."');",
-                                        'route' => ['admin.addresses.destroy', $address->id])) !!}
-                                    {!! Form::submit(trans('quickadmin.qa_delete'), array('class' => 'btn btn-sm btn-danger')) !!}
-                                    {!! Form::close() !!}
-                                @endcan
+                                {{--@can('address_delete')--}}
+                                    {{--{!! Form::open(array(--}}
+                                        {{--'style' => 'display: inline-block;',--}}
+                                        {{--'method' => 'DELETE',--}}
+                                        {{--'onsubmit' => "return confirm('".trans("quickadmin.qa_are_you_sure")."');",--}}
+                                        {{--'route' => ['admin.addresses.destroy', $address->id])) !!}--}}
+                                    {{--{!! Form::submit(trans('quickadmin.qa_delete'), array('class' => 'btn btn-sm btn-danger')) !!}--}}
+                                    {{--{!! Form::close() !!}--}}
+                                {{--@endcan--}}
                             </td>
                         </tr>
                     @endforeach

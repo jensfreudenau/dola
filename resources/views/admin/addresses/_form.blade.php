@@ -1,5 +1,5 @@
-<div class="form-group">
-    {!! Form::label('name', Lang::get('quickadmin.addresses.fields.name')) !!}
+<div class="form-group required">
+    {!! Form::label('name', Lang::get('quickadmin.addresses.fields.name'), ['class' => 'control-label' ]) !!}
     {!! Form::text('name', null, ['id'=> 'address-name', 'class'=>'form-control', 'required']) !!}
 </div>
 <div class="form-group">
@@ -18,8 +18,7 @@
     {!! Form::label('city', Lang::get('quickadmin.addresses.fields.city')) !!}
     {!! Form::text('city', null, ['id'=> 'address-city', 'class'=>'form-control']) !!}
 </div>
-<div class="form-group">
-    {!! Form::label('email', Lang::get('quickadmin.addresses.fields.email')) !!}
+<div class="form-group required">
+    {!! Form::label('email', Lang::get('quickadmin.addresses.fields.email'), ['class' => 'control-label' ])!!}
     {!! Form::email('email', null, ['id'=> 'address-email', 'class'=>'form-control', 'required']) !!}
 </div>
-

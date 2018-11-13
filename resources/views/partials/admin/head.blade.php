@@ -38,3 +38,4 @@
 <link href="{{ url('adminlte/css/extend.css') }}" rel="stylesheet">
 <link href="{{ url('adminlte/css/dropzone.css') }}" rel="stylesheet">
 <link href="{{ url('quickadmin/css/tagsinput.css') }}" rel="stylesheet">
+<link href="{{ url('quickadmin/css/custom.css') }}" rel="stylesheet">
