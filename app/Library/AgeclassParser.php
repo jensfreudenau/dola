@@ -30,7 +30,7 @@ class AgeclassParser
     /**
      * @return array
      */
-    public function getAgeclasses(): array
+    public function getAgeclasses()
     {
         return $this->ageclasses;
     }
