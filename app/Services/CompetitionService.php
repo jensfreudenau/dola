@@ -140,7 +140,10 @@ class CompetitionService
      */
     public function storeData(Request $request, $competitionId = false)
     {
-        $timetable = $this->extractDataFromTimetable($request);
+        $timetable = '';
+        if(trim($request->timetable_1) !== ''){
+            $timetable = $this->extractDataFromTimetable($request);
+        }
         $request->merge(array('timetable_1' => $timetable));
         $this->storeCompetition($request->all(), $competitionId);
         $this->storeAgeclasses($request->ageclasses, $request->has('ignore_ageclasses'));
