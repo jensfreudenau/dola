@@ -13,11 +13,8 @@
                 <div class="card-body">
                     <!-- Display Validation Errors -->
                     @include('common.errors')
-
-
-
                     {{ Form::open(['url'=>'admin/records/beststore', 'enctype'=>'multipart/form-data', 'class'=>'dropzone', 'id' => 'recorduploader']) }}
-                    
+                    <h3>erst das Jahr eingeben!</h3>
                     <div class="form-group">
                         {!! Form::label('year', Lang::get('quickadmin.records.fields.year')) !!}
                         {!! Form::text('year', null, ['id'=> 'record-year', 'class'=>'form-control', 'required']) !!}
