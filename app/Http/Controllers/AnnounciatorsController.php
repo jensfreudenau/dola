@@ -52,6 +52,9 @@ class AnnounciatorsController extends Controller
         $disciplines = '';
         if (false !== $id) {
             $competition = $this->competitionService->find($id);
+            if(null === $competition) {
+                return Redirect::to('/', 301);
+            }
             $disciplines = $this->disciplineService->getPluck($competition);
         }
         $ageclasses        = $this->ageclassService->getAgeclassesPluck($competition);
