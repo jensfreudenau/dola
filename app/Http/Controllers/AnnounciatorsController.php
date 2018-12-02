@@ -53,7 +53,7 @@ class AnnounciatorsController extends Controller
         if (false !== $id) {
             $competition = $this->competitionService->find($id);
             if(null === $competition) {
-                return Redirect::to('/announciators/create', 301);
+                return Redirect::to('/', 301);
             }
             $disciplines = $this->disciplineService->getPluck($competition);
         }
