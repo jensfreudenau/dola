@@ -59,7 +59,7 @@ class CompetitionsController extends Controller
     {
         $competition = $this->competitionService->find($id);
         if(null === $competition) {
-            return Redirect::to('announciators/create', 301);
+            return Redirect::to('/', 301);
         }
         if (Request::wantsJson()) {
             $competition->name    = $competition->organizer->address->name;
