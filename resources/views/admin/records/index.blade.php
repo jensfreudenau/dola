@@ -10,9 +10,6 @@
     @endcan
 
     <div class="card card-default">
-        <div class="card-heading">
-            @lang('quickadmin.records.title')
-        </div>
 
         <div class="card-body table-responsive">
             <table class="table table-striped datatable">

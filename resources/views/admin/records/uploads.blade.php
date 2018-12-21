@@ -8,7 +8,7 @@
         <div class="col-sm-10">
             <div class="card card-default">
                 <div class="card-heading">
-                    Create Records
+                    <h2>Bestenliste hochladen</h2>
                 </div>
                 <div class="card-body">
                     <!-- Display Validation Errors -->

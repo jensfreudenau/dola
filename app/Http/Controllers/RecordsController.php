@@ -56,11 +56,17 @@ class RecordsController extends Controller
     public function best(Request $request)
     {
         if ($request->sex == 'female') {
-            $bests  = Best::where('sex', '=', 'f')->orderBy('year', 'desc')->get();
+            $bestYears  = Best::select('year')->where('sex', '=', 'f')->orderBy('year', 'desc')->distinct('year')->get();
+            foreach ($bestYears as $bestYear) {
+                $bests[]  = Best::select('year', 'filename')->where('sex', '=', 'f')->where('year', '=', $bestYear['year'])->orderBy('created_at', 'desc')->first();
+            }
             $header = 'Frauen';
         }
         elseif ($request->sex == 'male') {
-            $bests  = Best::where('sex', '=', 'm')->orderBy('year', 'desc')->get();
+            $bestYears  = Best::select('year')->where('sex', '=', 'm')->orderBy('year', 'desc')->distinct('year')->get();
+            foreach ($bestYears as $bestYear) {
+                $bests[]  = Best::select('year', 'filename')->where('sex', '=', 'm')->where('year', '=', $bestYear['year'])->orderBy('created_at', 'desc')->first();
+            }
             $header = 'M&auml;nner';
         }
         else {

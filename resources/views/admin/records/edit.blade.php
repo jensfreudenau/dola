@@ -8,13 +8,13 @@
         <div class="col-sm-12">
             <div class="card card-default">
                 <div class="card-heading">
-                    <h2>Update Records</h2>
+                    <h2>Recorde bearbeiten</h2>
+                </div><div class=" float-right col-mb-2">
+                    <a href="{{ route('admin.records.index') }}" class="btn btn-default">@lang('quickadmin.qa_back_to_list')</a>
                 </div>
 
                 <div class="card-body">
-                    <div class="float-right mb-2">
-                        <a href="{{ route('admin.records.index') }}" class="btn btn-default">@lang('quickadmin.qa_back_to_list')</a>
-                    </div>
+
                     <!-- Display Validation Errors -->
                     @include('common.errors')
                     {!! Form::model($record, ['method' => 'PUT', 'route' => ['admin.records.update', $record->id]]) !!}
