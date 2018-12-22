@@ -30,8 +30,8 @@ Route::get('/announciators/create/{competition_id?}', 'AnnounciatorsController@c
 Route::post('/announciators/store', 'AnnounciatorsController@store')->name('announciators/store');
 
 Route::get('/records/record', 'RecordsController@index')->name('records.record');
+Route::get('/records/best', 'RecordsController@best');
 Route::get('/records/{mnemonic}', 'RecordsController@record');
-Route::get('/records/best/{sex}', 'RecordsController@best');
 Route::get('/pages/altersklassen', 'PagesController@ageclasses');
 Route::get('/pages/{mnemonic}', 'PagesController@show');
 

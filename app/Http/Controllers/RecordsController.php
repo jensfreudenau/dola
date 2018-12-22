@@ -53,25 +53,16 @@ class RecordsController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function best(Request $request)
+    public function best()
     {
-        if ($request->sex == 'female') {
             $bestYears  = Best::select('year')->where('sex', '=', 'f')->orderBy('year', 'desc')->distinct('year')->get();
             foreach ($bestYears as $bestYear) {
-                $bests[]  = Best::select('year', 'filename')->where('sex', '=', 'f')->where('year', '=', $bestYear['year'])->orderBy('created_at', 'desc')->first();
+                $bestsFemale[]  = Best::select('year', 'filename')->where('sex', '=', 'f')->where('year', '=', $bestYear['year'])->orderBy('created_at', 'desc')->first();
             }
-            $header = 'Frauen';
-        }
-        elseif ($request->sex == 'male') {
             $bestYears  = Best::select('year')->where('sex', '=', 'm')->orderBy('year', 'desc')->distinct('year')->get();
             foreach ($bestYears as $bestYear) {
-                $bests[]  = Best::select('year', 'filename')->where('sex', '=', 'm')->where('year', '=', $bestYear['year'])->orderBy('created_at', 'desc')->first();
+                $bestsMale[]  = Best::select('year', 'filename')->where('sex', '=', 'm')->where('year', '=', $bestYear['year'])->orderBy('created_at', 'desc')->first();
             }
-            $header = 'M&auml;nner';
-        }
-        else {
-            return redirect('/records/record',301);
-        }
-        return view('front.records.best', compact('bests', 'header'));
+        return view('front.records.best', compact('bestsFemale','bestsMale'));
     }
 }

@@ -25,8 +25,7 @@
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Statistik </a>
                 <div class="dropdown-menu" aria-labelledby="statistik">
                     <a class="dropdown-item" href="/records/record">Kreisrekorde</a>
-                    <a class="dropdown-item" href="/records/best/female">Frauen Bestenliste</a>
-                    <a class="dropdown-item" href="/records/best/male">M&auml;nner Bestenliste</a>
+                    <a class="dropdown-item" href="/records/best">Bestenlisten</a>
                 </div>
             </li>
             <li class="nav-item dropdown">
