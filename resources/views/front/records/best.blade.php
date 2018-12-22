@@ -3,7 +3,6 @@
 <div class="card card-default mb-5 p-3">
     <h2>Bestenliste</h2>
     <div class="row">
-
         <div class="col-sm-6">
             <table class="table table-sm">
                 <thead>
@@ -23,7 +22,6 @@
                     <td><p class="desc">keine Bestenliste.</p></td>
                 </tr>
                 @endforelse
-
                 </tbody>
             </table>
         </div>
