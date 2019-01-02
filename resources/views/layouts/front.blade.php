@@ -18,21 +18,23 @@
     </script>
 </head>
 
-<body id="main-image">
+<body>
 @include('partials.front.navbar')
 <div class="container">
-    <div class="jumbotron jumbotron-flex">
-        <div class="col-sm-12 mx-auto">
-            @yield('content')
+        <div class="jumbotron jumbotron-flex">
+            <div class="col-sm-12 mx-auto">
+                @yield('content')
+            </div>
         </div>
-    </div>
+    <div id="mesh"></div>
 </div>
 
-
+    
 <!-- Scripts -->
 
 @include('partials.footer')
 @include('partials.front.javascripts')
 @yield('page-script')
+</div>
 </body>
 </html>
