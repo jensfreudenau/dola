@@ -145,7 +145,7 @@ class CompetitionService
             $timetable = $this->extractDataFromTimetable($request);
         }
         $request->merge(array('timetable_1' => $timetable));
-        $this->storeCompetition($request->all(), $competitionId);
+        $competitionId = $this->storeCompetition($request->all(), $competitionId);
         $this->storeAgeclasses($request->ageclasses, $request->has('ignore_ageclasses'));
         $this->storeDisciplines($request->disciplines, $request->has('ignore_disciplines'));
         $this->storeAdditionals($request->all());
@@ -163,6 +163,7 @@ class CompetitionService
             $this->timetableParser->proceed($request->timetable_1);
             $this->ageclassParser->proceed($this->timetableParser->getHeader());
             $this->disciplineParser->proceed($this->timetableParser->getTableBody());
+            $this->errorList['disciplineError'] = $this->disciplineParser->getDisciplineCollectionError();
         }
         return $this->timetableParser->getTimeTable();
     }
@@ -264,7 +265,11 @@ class CompetitionService
         }
     }
 
-    protected function storeCompetition($data, $competitionId = null): void
+    public function delete($id) {
+        $this->competitionRepository->delete($id);
+    }
+
+    protected function storeCompetition($data, $competitionId = null)
     {
         if (!$competitionId) {
             $competitionId = $this->competitionRepository->create($data)->id;
@@ -275,5 +280,6 @@ class CompetitionService
             $this->competition = $this->find($competitionId);
             $this->competition->update($data);
         }
+        return $competitionId;
     }
 }

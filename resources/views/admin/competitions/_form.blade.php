@@ -24,28 +24,28 @@
     {!! Form::text('award', null, ['id'=> 'competition-award', 'class'=>'form-control']) !!}
 </div>
 @if (!$disabled)
-    <div class="form-group">
-        {!! Form::label('ignore_disciplines', Lang::get('quickadmin.competitions.ignore_disciplines')) !!}
-        {{ Form::checkbox('ignore_disciplines') }}<br>
-        {!! Form::label('disciplines', Lang::get('quickadmin.competitions.fields.disciplines')) !!}
-        {{ Form::select('disciplines[]', $disciplines, array_pluck($competition->disciplines, 'id'), ['multiple', 'class'=>'form-control select2']) }}
-    </div>
-    <div class="form-group">
-        {!! Form::label('ignore_ageclasses', Lang::get('quickadmin.competitions.ignore_ageclasses')) !!}
-            {{ Form::checkbox('ignore_ageclasses') }}<br>
-        {!! Form::label('ageclasses', Lang::get('quickadmin.competitions.fields.classes')) !!}
-        {!! Form::select('ageclasses[]', $ageclasses, array_pluck($competition->ageclasses, 'id'), ['multiple', 'class'=>'form-control select2']) !!}
-    </div>
+<div class="form-group">
+    {!! Form::label('ignore_disciplines', Lang::get('quickadmin.competitions.ignore_disciplines')) !!}
+    {{ Form::checkbox('ignore_disciplines') }}<br>
+    {!! Form::label('disciplines', Lang::get('quickadmin.competitions.fields.disciplines')) !!}
+    {{ Form::select('disciplines[]', $disciplines, array_pluck($competition->disciplines, 'id'), ['multiple', 'class'=>'form-control select2']) }}
+</div>
+<div class="form-group">
+    {!! Form::label('ignore_ageclasses', Lang::get('quickadmin.competitions.ignore_ageclasses')) !!}
+    {{ Form::checkbox('ignore_ageclasses') }}<br>
+    {!! Form::label('ageclasses', Lang::get('quickadmin.competitions.fields.classes')) !!}
+    {!! Form::select('ageclasses[]', $ageclasses, array_pluck($competition->ageclasses, 'id'), ['multiple', 'class'=>'form-control select2']) !!}
+</div>
 @endif
 <div class="form-group">
     {!! Form::label('register', Lang::get('quickadmin.competitions.register')) !!}<br>
-    {{ Form::radio('register', 1, 0) }} @lang('quickadmin.competitions.external_register')
-    {{ Form::radio('register', 0, 0) }} @lang('quickadmin.competitions.intern_register')
+    {{ Form::radio('register', 0, 0,['required', 'id'=>'external_register']) }} @lang('quickadmin.competitions.external_register')
+    {{ Form::radio('register', 0, 0,['required', 'id'=>'intern_register']) }} @lang('quickadmin.competitions.intern_register')
 </div>
 <div class="form-group">
     {!! Form::label('only_list', Lang::get('quickadmin.competitions.only_list')) !!}<br>
-    {{ Form::radio('only_list', 1, true) }} @lang('quickadmin.competitions.list')
-    {{ Form::radio('only_list', 0, false) }} @lang('quickadmin.competitions.show')
+    {{ Form::radio('only_list', 0, 0,['required', 'id'=>'list']) }} @lang('quickadmin.competitions.list')
+    {{ Form::radio('only_list', 0, 0,['required', 'id'=>'show']) }} @lang('quickadmin.competitions.show')
 </div>
 <div class="form-group">
     {!! Form::label('season', Lang::get('quickadmin.season')) !!}<br>

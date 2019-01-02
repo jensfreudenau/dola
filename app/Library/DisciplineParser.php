@@ -54,6 +54,10 @@ class DisciplineParser
         return $this->disciplines;
     }
 
+    public function getDisciplineCollectionError() {
+        return $this->disciplineCollectionError;
+    }
+
     protected function proof() :void
     {
         foreach ($this->preparedDisciplines as $discipline) {
@@ -76,7 +80,8 @@ class DisciplineParser
 
     protected function prepareDisciplineData($str)
     {
-        $str = (string)Str::from($str)->trim();
+        $str = (string)Str::from($str)->trim(' ');
+        $str = (string)Str::from($str)->replace('.');
         $str = $this->checkJumpDisciplines($str);
         $str = $this->checkRunDiscipline($str);
         $str = $this->checkX($str);
@@ -143,7 +148,7 @@ class DisciplineParser
         $discipline = Discipline::where('shortname', '=', $disciplineStr)
             ->orWhere('ladv', '=', $disciplineStr)
             ->orWhere('name', '=', $disciplineStr)
-            ->orWhere('rieping', '=', $disciplineStr)
+            ->orWhere('rieping', 'LIKE', "{$disciplineStr}%")
             ->select('id', 'ladv', 'shortname', 'rieping')->first();
         if (!$discipline) {
             $this->disciplineCollectionError[] = $disciplineStr;

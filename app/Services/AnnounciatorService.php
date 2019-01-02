@@ -76,23 +76,23 @@ class AnnounciatorService
     }
 
     /**
-     * @param $id
+     * @param $announciatorId
      * @return array
      */
-    public function listParticipators($id)
+    public function listParticipators($announciatorId)
     {
-        $announciator = $this->announciatorRepository->find($id);
+        $announciator = $this->announciatorRepository->find($announciatorId);
         $competition = $this->competitionService->find($announciator->competition_id);
         return (['announciator' => $announciator, 'competition' => $competition]);
     }
 
     /**
-     * @param $id
+     * @param $competitionId
      * @return mixed
      */
-    public function findCompetition($id)
+    public function findCompetition($competitionId)
     {
-        return $this->competitionService->find($id);
+        return $this->competitionService->find($competitionId);
     }
 
     /**
