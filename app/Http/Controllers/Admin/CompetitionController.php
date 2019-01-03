@@ -26,7 +26,7 @@ class CompetitionController extends Controller
     protected $competitionRepository;
     protected $competitionService;
     protected $competionsErrorList;
-//    protected $disciplineService;
+    protected $disciplineService;
 
     /**
      * CompetitionController constructor.
@@ -38,7 +38,7 @@ class CompetitionController extends Controller
     {
         $this->competitionRepository = $competitionRepository;
         $this->competitionService    = $competitionService;
-//        $this->disciplineService     = $disciplineService;
+        $this->disciplineService     = $disciplineService;
     }
 
     public function index()
