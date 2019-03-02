@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Prettus\Repository\Traits\TransformableTrait;
 
@@ -24,8 +25,10 @@ class Competition extends Model
     use StringMarkerTrait;
     use RecordsActivity;
     use TransformableTrait;
+    use SoftDeletes;
     protected $fillable       = ['organizer_id', 'start_date', 'timetable_1', 'submit_date', 'header', 'info', 'season', 'classes', 'award', 'register', 'only_list', 'ignore_ageclasses', 'ignore_disciplines'];
     protected $with =['uploads'];
+    protected $softDelete = true;
 
     public function __construct(array $attributes = [])
     {
