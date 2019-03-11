@@ -30,6 +30,7 @@
                 @if($upload->type == config('constants.Additionals'))
                     <a href="storage/{{$upload->type}}/{{$competition->season}}/{{$upload->filename}}" target="_blank">Zusatzinfos&nbsp;<i class="fa fa-external-link"></i></a>
                 @endif
+            {{Carbon\Carbon::parse($upload->created_at)->format('d.m.Y H:i:s')}}
                 @if($upload->type == config('constants.Participators'))
                     <p class="desc"><a href="storage/{{$upload->type}}/{{$competition->season}}/{{$upload->filename}}" target="_blank">Teilnehmer&nbsp;<i class="fa fa-external-link"></i></a></p>
                 @endif

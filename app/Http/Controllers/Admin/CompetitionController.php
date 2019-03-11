@@ -14,6 +14,7 @@ use App\Services\CompetitionService;
 use App\Traits\StringMarkerTrait;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
@@ -79,7 +80,7 @@ class CompetitionController extends Controller
         $competition = $this->competitionService->find($id);
         $additionals = $this->competitionService->getAdditionals($id);
 
-        return view('admin.competitions.edit', compact('addresses', 'competition', 'organizers', 'additionals', 'ageclassList', 'ageclasses', 'disciplines'));
+        return view('admin.competitions.edit', compact('addresses', 'competition', 'organizers', 'additionals', 'ageclasses', 'disciplines'));
     }
 
     /**
@@ -145,7 +146,8 @@ class CompetitionController extends Controller
         $ignore      = $request->get('ignore_error');
         $competionId = $this->competitionService->storeData($request);
         $errorList   = $this->competitionService->getErrorList();
-        if (array_key_exists('disciplineError', $errorList) && $ignore != 'ignore') {
+        $firstError = Arr::first($errorList['disciplineError']);
+        if ($firstError != '' && $ignore != 'ignore') {
             $this->competitionService->delete($competionId);
             return Redirect::back()->withInput()->withErrors($errorList['disciplineError']);
         }

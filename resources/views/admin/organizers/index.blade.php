@@ -1,20 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
-    <h3 class="page-title">@lang('quickadmin.organizers.title')</h3>
-    @can('organizer_create')
-    <p>
-        <a href="{{ route('admin.organizers.create') }}" class="btn btn-success">@lang('quickadmin.qa_add_new')</a>
-        
-    </p>
-    @endcan
+
 
     <div class="card card-default">
-        <div class="card-heading">
-            @lang('quickadmin.qa_list')
-        </div>
+
 
         <div class="card-body table-responsive">
+            <h3 class="page-title">@lang('quickadmin.organizers.title')</h3>
+
+            <div class="card-heading">
+                @can('organizer_create')
+                    <p>
+                        <a href="{{ route('admin.organizers.create') }}" class="btn btn-success">@lang('quickadmin.qa_add_new')</a>
+
+                    </p>
+                @endcan
+            </div>
             <table class="table table-striped {{ count($organizers) > 0 ? 'datatable' : '' }} @can('organizer_delete') dt-select @endcan">
                 <thead>
                     <tr>

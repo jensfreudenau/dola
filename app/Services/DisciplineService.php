@@ -56,10 +56,11 @@ class DisciplineService
     public function fillUpDisciplineIds($parsedDisciplinesFromTable): array
     {
         $disciplineIds = [];
-        foreach ($parsedDisciplinesFromTable as $key => $discipline) {
-            $disciplineIds[] = $discipline['id'];
+        if (is_array($parsedDisciplinesFromTable)) {
+            foreach ($parsedDisciplinesFromTable as $key => $discipline) {
+                $disciplineIds[] = $discipline['id'];
+            }
         }
-
         return $disciplineIds;
     }
 

@@ -1,6 +1,6 @@
 <tr>
     <td>
-        {{ $uploads->filename }}
+        {{ $uploads->filename }} &nbsp; {{Carbon\Carbon::parse($uploads->created_at)->format('d.m.Y')}}
     </td>
     <td>
 

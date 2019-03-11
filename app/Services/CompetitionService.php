@@ -20,6 +20,7 @@ use App\Models\Organizer;
 use App\Repositories\Additional\AdditionalRepositoryInterface;
 use App\Repositories\Competition\CompetitionRepositoryInterface;
 use App\Traits\StringMarkerTrait;
+use Carbon\Carbon;
 use Config;
 use Illuminate\Http\Request;
 use Storage;
@@ -108,6 +109,28 @@ class CompetitionService
             $files             = Storage::files('public/'.Config::get('constants.Results').'/'.$season);
             $archives[$season] = DateTimeHelper::listdir_by_date($files);
         }
+        if (date('Y') >= 2018) {
+            $files        = [];
+            $competitions = Competition::onlyTrashed()
+                    ->where('only_list', 0)
+                    ->orderBy('start_date')
+                    ->get();
+            foreach ($competitions as $competition) {
+                if ($competition->uploads !== '') {
+                    foreach ($competition->uploads as $upload) {
+                        if ($upload->type == 'resultsets') {
+                            $uploadedFile['file'] = 'public/'.Config::get('constants.Results').'/'.$competition->season.'/'.$upload->filename;
+                            $uploadedFile['date'] = $competition->start_date;
+                            $files[] = $uploadedFile;
+
+                        }
+                    }
+                }
+
+                $year = Carbon::parse($competition->start_date)->format('Y');
+                $archives[$competition->season][$year] = $files;
+            }
+        }
 
         return $archives;
     }
@@ -161,8 +184,12 @@ class CompetitionService
     {
         if ($request->has('timetable_1') && !empty($request->timetable_1)) {
             $this->timetableParser->proceed($request->timetable_1);
-            $this->ageclassParser->proceed($this->timetableParser->getHeader());
-            $this->disciplineParser->proceed($this->timetableParser->getTableBody());
+            if(!$request->has('ignore_ageclasses')){
+                $this->ageclassParser->proceed($this->timetableParser->getHeader());
+            }
+            if(!$request->has('ignore_disciplines')){
+                $this->disciplineParser->proceed($this->timetableParser->getTableBody());
+            }
             $this->errorList['disciplineError'] = $this->disciplineParser->getDisciplineCollectionError();
         }
         return $this->timetableParser->getTimeTable();

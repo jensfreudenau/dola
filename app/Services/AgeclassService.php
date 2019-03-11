@@ -13,14 +13,9 @@ use App\Models\Ageclass;
 use App\Repositories\Ageclass\AgeclassRepositoryInterface;
 use DOMDocument;
 
-/**
- * @property DOMDocument dom
- */
 class AgeclassService
 {
-    /**
-     * @param $id
-     */
+  
     protected $ageclassCollection = array();
     protected $ageclassCollectionError = array();
     protected $domAgeclasses;
@@ -32,7 +27,10 @@ class AgeclassService
     {
         $this->ageclassRepository = $ageclassRepository;
     }
-
+    
+    /**
+     * @param $id
+     */
     public function attachAgeclasses($id)
     {
         foreach ($this->getProofedAgeclasses() as $key => $class) {
@@ -96,8 +94,10 @@ class AgeclassService
     public function fillUpAgeclassIds($parsedAgeclassesFromTable): array
     {
         $ageclassIds = [];
-        foreach ($parsedAgeclassesFromTable as $key => $ageclass) {
-            $ageclassIds[] = $ageclass['id'];
+        if (is_array($parsedAgeclassesFromTable)) {
+            foreach ($parsedAgeclassesFromTable as $key => $ageclass) {
+                $ageclassIds[] = $ageclass['id'];
+            }
         }
         return $ageclassIds;
     }

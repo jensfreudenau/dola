@@ -21,8 +21,8 @@ class CreateUsersTable extends Migration {
 			$table->integer('role_id')->unsigned()->nullable()->index('41905_59314b1a6c90f');
 			$table->string('remember_token', 191)->nullable();
 			$table->timestamps();
-			$table->string('last_login', 191);
-			$table->string('last_logout', 191);
+			$table->string('last_login', 191)->nullable();
+			$table->string('last_logout', 191)->nullable();
 		});
 	}
 
