@@ -30,7 +30,7 @@ class OrganizersController extends Controller
         if (!Gate::allows('organizer_access')) {
             return abort(401);
         }
-        $organizers = $this->organizerRepository->all();
+        $organizers = $this->organizerRepository->getAll();
         return view('admin.organizers.index', compact('organizers'));
     }
 
@@ -44,8 +44,7 @@ class OrganizersController extends Controller
         if (!Gate::allows('organizer_create')) {
             return abort(401);
         }
-        $organizer = $this->organizerRepository->all();
-
+        $organizer = $this->organizerRepository->getAll();
         $addresses = Address::get()->pluck('name', 'id')->prepend('Please select', '');
         return view('admin.organizers.create', compact('addresses', 'organizer'));
     }
