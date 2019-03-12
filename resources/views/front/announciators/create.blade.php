@@ -110,7 +110,7 @@
                             </div>
                         </div>
                         <div class="form-group col-md-1">
-                            {!! Form::button('<i class="fa fa-plus" aria-hidden="true"></i>', array('id'=> 'addDiscipline_0', 'class' => 'btn-lg btn-outline-success addDiscipline')) !!}
+                            {!! Form::button('<i class="fa fa-plus" aria-hidden="true"></i>', array('id'=> 'addDiscipline_0', 'class' => 'btn-lg btn-custom-add addDiscipline')) !!}
                         </div>
                 </div>
 

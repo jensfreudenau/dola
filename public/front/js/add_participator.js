@@ -90,7 +90,7 @@ $(document).ready(function () {
             '<input class="form-control" name="bestzeit[' + countering + '][]" placeholder="Bestleistung" type="text">' +
             '</div>' +
             '<div class="form-group col-md-1 discipline_' + countering+ '_' + disciplineCounter + '">'+
-            '<button type="button" id="remove_' + countering + '_' + disciplineCounter + '" class="remove_discipline btn-outline-danger btn-lg" aria-label="Close"><i class="fa fa-trash-o"></i><span aria-hidden="true"></span></button>'+
+            '<button type="button" id="remove_' + countering + '_' + disciplineCounter + '" class="remove_discipline btn-custom-delete btn-lg" aria-label="Close"><i class="fa fa-trash-o"></i><span aria-hidden="true"></span></button>'+
             '</div>'
         ).appendTo('#'+disciplineGroupId);
         disciplineCounter++;
@@ -128,7 +128,7 @@ $(document).ready(function () {
             '<input class="form-control" name="bestzeit[' + counter + '][]" placeholder="Bestleistung" type="text">' +
             '</div>' +
             '<div class="form-group col-md-1">'+
-                '<button id="addDiscipline_' + counter + '" name="addDiscipline" class="btn-lg btn-outline-success addDiscipline" type="button"><i class="fa fa-plus" aria-hidden="true"></i></button>'+
+                '<button id="addDiscipline_' + counter + '" name="addDiscipline" class="btn-lg btn-custom-add addDiscipline" type="button"><i class="fa fa-plus" aria-hidden="true"></i></button>'+
             '</div>' +
             '</div> ' +
 
