@@ -45,12 +45,12 @@
 
 <div class="form-group">
     {!! Form::label('register', Lang::get('quickadmin.competitions.register')) !!}<br>
-    {{ Form::radio('register', 0, 0,['required', 'id'=>'external_register']) }} @lang('quickadmin.competitions.external_register')
+    {{ Form::radio('register', 1, 0,['required', 'id'=>'external_register']) }} @lang('quickadmin.competitions.external_register')
     {{ Form::radio('register', 0, 0,['required', 'id'=>'intern_register']) }} @lang('quickadmin.competitions.intern_register')
 </div>
 <div class="form-group">
     {!! Form::label('only_list', Lang::get('quickadmin.competitions.only_list')) !!}<br>
-    {{ Form::radio('only_list', 0, 0,['required', 'id'=>'list']) }} @lang('quickadmin.competitions.list')
+    {{ Form::radio('only_list', 1, 0,['required', 'id'=>'list']) }} @lang('quickadmin.competitions.list')
     {{ Form::radio('only_list', 0, 0,['required', 'id'=>'show']) }} @lang('quickadmin.competitions.show')
 </div>
 <div class="form-group">
