@@ -80,7 +80,7 @@ class ParticipatorService {
             $this->seltecCollection[$key]['Name']       = $participator->lastname;
             $this->seltecCollection[$key]['Value']      = $participator->best_time;
             $this->seltecCollection[$key]['YOB']        = $participator->birthyear;
-            $this->seltecCollection[$key]['discipline'] = (is_object($participator->discipline) ? $participator->discipline->ladv : $participator->discipline_cross);
+            $this->seltecCollection[$key]['discipline'] = (is_object($participator->discipline) ? $participator->discipline->dlv : $participator->discipline_cross);
             $this->seltecCollection[$key]['ageclass']   = (is_object($participator->ageclass) ? $participator->ageclass->dlv : $participator->ageclass_id);
         }
     }
