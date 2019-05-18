@@ -10,6 +10,7 @@ namespace App\Helpers;
 
 class Utils
 {
+    public const CHARSET_DEFAULT = 'UTF-8';
     public static function after($ext, $inthat)
     {
         if (!is_bool(strpos($inthat, $ext)))
@@ -49,6 +50,22 @@ class Utils
         $rev_pos = strpos(strrev($instr), strrev($needle));
         if ($rev_pos === false) return false;
         else return strlen($instr) - $rev_pos - strlen($needle);
+    }
+
+    /**
+     * Returns the first character or the specified number of characters from the start of this string
+     *
+     * @param $string
+     * @param int|null $length the number of characters to return from the start (optional)
+     * @return string
+     */
+    public static function first($string, $length = null): string
+    {
+        if ($length === null) {
+            $length = 1;
+        }
+
+        return mb_substr($string, 0, $length, self::CHARSET_DEFAULT);
     }
 
 }
