@@ -8,6 +8,7 @@
 
 namespace App\Services;
 
+use App\Helpers\Utils;
 use App\Repositories\Participator\ParticipatorRepositoryInterface;
 
 class ParticipatorService {
@@ -67,21 +68,25 @@ class ParticipatorService {
      * convert participator information into seltec reading
      * @param $competition
      */
-    public function listParticipatorForSeltec($competition) {
+    public function listParticipatorForSeltec($competition)
+    {
         foreach ($this->participators as $key => $participator) {
-            $this->seltecCollection[$key]['BIB']        = 1;
-            $this->seltecCollection[$key]['Code']       = '';
-            $this->seltecCollection[$key]['Event']      = $competition->header;
-            $this->seltecCollection[$key]['Team']       = $participator->clubname;
-            $this->seltecCollection[$key]['telephone']  = $participator->Announciator->telephone;
-            $this->seltecCollection[$key]['street']     = $participator->Announciator->street;
-            $this->seltecCollection[$key]['city']       = $participator->Announciator->city;
-            $this->seltecCollection[$key]['Forename']   = $participator->prename;
-            $this->seltecCollection[$key]['Name']       = $participator->lastname;
-            $this->seltecCollection[$key]['Value']      = $participator->best_time;
-            $this->seltecCollection[$key]['YOB']        = $participator->birthyear;
-            $this->seltecCollection[$key]['discipline'] = (is_object($participator->discipline) ? $participator->discipline->dlv : $participator->discipline_cross);
-            $this->seltecCollection[$key]['ageclass']   = (is_object($participator->ageclass) ? $participator->ageclass->ladv : $participator->ageclass_id);
+            $this->seltecCollection[$key]['Forename']         = $participator->prename;
+            $this->seltecCollection[$key]['Name']             = $participator->lastname;
+            $this->seltecCollection[$key]['BIB']              = 1;
+            $this->seltecCollection[$key]['Team']             = $participator->clubname;
+            $this->seltecCollection[$key]['Ageclass']         = (is_object($participator->ageclass) ? $participator->ageclass->ladv : $participator->ageclass_id);
+            $this->seltecCollection[$key]['Sex']              = is_object($participator->ageclass) ? Utils::first($participator->ageclass->ladv) : '';
+            $this->seltecCollection[$key]['Discipline']       = (is_object($participator->discipline) ? $participator->discipline->dlv : $participator->discipline_cross);
+            $this->seltecCollection[$key]['Value']            = $participator->best_time;
+            $this->seltecCollection[$key]['Event']            = $competition->header;
+            $this->seltecCollection[$key]['AnnounciatorName'] = $participator->Announciator->name;
+            $this->seltecCollection[$key]['Email']            = $participator->Announciator->email;
+            $this->seltecCollection[$key]['Telephone']        = $participator->Announciator->telephone;
+            $this->seltecCollection[$key]['Street']           = $participator->Announciator->street;
+            $this->seltecCollection[$key]['City']             = $participator->Announciator->city;
+            $this->seltecCollection[$key]['Code']             = '';
+            $this->seltecCollection[$key]['YOB']              = $participator->birthyear;
         }
     }
 
