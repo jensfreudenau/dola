@@ -188,9 +188,10 @@ $(document).ready(function () {
         }
     };
     Dropzone.options.fileuploader = {
+
         maxFilesize: 10, // Mb+
         autoProcessQueue: false,
-        accept: function (file, done) {
+        accept: function (file, done) {            
             done();
         },
         sending: function (file, xhr, formData) {
@@ -199,7 +200,7 @@ $(document).ready(function () {
         success: function (file, response) {
             console.log('success');
         },
-        error: function (file, response) {
+        error: function (file, response) {             
             message = '';
             console.log(response);
             if ($.type(response) === "string")
@@ -254,11 +255,13 @@ $(document).ready(function () {
         paramName: "uploader",
         init: function () {
             this.on("success", function (file, response) {
-                file.serverId = response;
+                file.serverId = response;                
             });
             this.on("complete", function (file) {
+                
                 if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
-                    location.reload();
+
+                    location.reload();                    
                 }
             });
         }
@@ -300,7 +303,7 @@ $(document).ready(function () {
             let rowCsv = allTextLines[i].replace(/;/g, "");
 
             if (rowCsv.search("szeichnungen:") > 0 || rowCsv.search("szeichnung") > 0) {
-                console.log(rowCsv);
+                
                 setAward(rowCsv);
             }
             if (rowCsv.search("ldeschlu") > 0) {

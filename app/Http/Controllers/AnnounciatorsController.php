@@ -56,13 +56,14 @@ class AnnounciatorsController extends Controller
                 return Redirect::to('/', 301);
             }
             $disciplines = $this->disciplineService->getPluck($competition);
+            $disciplineFormat = $this->disciplineService->getPluckFormat($competition);
         }
         $ageclasses        = $this->ageclassService->getAgeclassesPluck($competition);
         $competitionselect = $this->announciatorService->getCompetionSelectable();
 
         return view(
             'front.announciators.create',
-            compact('competition', 'competitionselect', 'disciplines', 'ageclasses')
+            compact('competition', 'competitionselect', 'disciplines', 'ageclasses', 'disciplineFormat')
         );
     }
 
