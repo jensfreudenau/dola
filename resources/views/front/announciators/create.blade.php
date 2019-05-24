@@ -71,7 +71,6 @@
         </div>
         <hr>
         <div id='participantGroup'>
-
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         {!! Form::text('vorname[]',  null, ['id'=> '', 'class' => 'form-control required', 'placeholder' => 'Vorname*', 'required']) !!}
@@ -96,22 +95,44 @@
 
                 </div>
 
-                <div class="form-row" id="disciplines0">
-                        <div class="form-group col-md-5">
-                            @if (@empty($competition) || $competition->season == 'cross' || @empty($disciplines))
-                                {!! Form::text('discipline[0][]', null, [ 'required', 'id'=> 'disciplineGroup_0', 'class' => 'form-control', 'placeholder' => 'Disziplin*']) !!}
-                            @else
-                                {!! Form::select('discipline[0][]', $disciplines , null, ['required', 'id'=> 'disciplineGroup_0', 'class' => 'discipline_select form-control', 'placeholder' => 'Disziplin*', 'style'=>'width: 100%']) !!}
-                            @endif
-                        </div>
-                        <div class="form-group col-md-6" id="besttimeGroup0">
-                            <div class="input-group besttime">
-                                {!! Form::text('bestzeit[0][]', null, ['id'=> '', 'id'=> 'besttimeGroup_0', 'class' => 'form-control', 'placeholder' => 'Bestleistung']) !!}
+                <div class="form-row disciplines" id="disciplines0">
+                    <div class="form-group col-md-5 discipline_0_0">
+                        @if (@empty($competition) || $competition->season == 'cross' || @empty($disciplines))
+                            {!! Form::text('discipline[0][]', null, [ 'required', 'id'=> 'disciplineGroup_0', 'class' => 'form-control', 'placeholder' => 'Disziplin*']) !!}
+                        @else
+                            {!! Form::select('discipline[0][]', $disciplines , null, ['required', 'id'=> 'disciplineGroup_0_0', 'class' => 'discipline_select form-control', 'placeholder' => 'Disziplin*', 'style'=>'width: 100%']) !!}
+                        @endif
+                    </div>
+                    <div class="form-group col-md-6" id="besttimeGroup0">
+                        <div class="input-group besttime" id="time_0_0" style="display: none;">
+                            {!! Form::number('bestzeit_h[0][]', null, ['id'=> 'besttimeGroup_h_0', 'class' => 'form-control', 'placeholder' => 'HH']) !!}
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">-</span>
                             </div>
+                            {!! Form::number('bestzeit_m[0][]', null, ['id'=> 'besttimeGroup_m_0', 'class' => 'form-control', 'placeholder' => 'Min']) !!}
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">-</span>
+                            </div>
+                            {!! Form::number('bestzeit_s[0][]', null, ['id'=> 'besttimeGroup_s_0', 'class' => 'form-control', 'placeholder' => 'Sec']) !!}
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">,</span>
+                            </div>
+                            {!! Form::number('bestzeit_ms[0][]', null, ['id'=> 'besttimeGroup_ms_0', 'class' => 'form-control', 'placeholder' => 'Zehntel.']) !!}
                         </div>
-                        <div class="form-group col-md-1">
-                            {!! Form::button('<i class="fa fa-plus" aria-hidden="true"></i>', array('id'=> 'addDiscipline_0', 'class' => 'btn-lg btn-custom-add addDiscipline')) !!}
+                        <div class="input-group besttime" id="range_0_0"  style="display: none;">
+                            {!! Form::number('bestweite_m[0][]', null, ['id'=> 'besttimeGroup_m_0', 'class' => 'form-control', 'placeholder' => 'm']) !!}
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">,</span>
+                            </div>
+                            {!! Form::number('bestweite_cm[0][]', null, ['id'=> 'besttimeGroup_cm_0', 'class' => 'form-control', 'placeholder' => 'cm']) !!}
                         </div>
+                        <div class="input-group besttime" id="points_0_0" style="display: none;">
+                            {!! Form::number('bestweite_punkte[0][]', null, ['id'=> 'besttimeGroup_p_0', 'class' => 'form-control', 'placeholder' => 'Punkte']) !!}
+                        </div>
+                    </div>
+                    <div class="form-group col-md-1">
+                        {!! Form::button('<i class="fa fa-plus" aria-hidden="true"></i>', array('id'=> 'addDiscipline_0', 'class' => 'btn-lg btn-custom-add addDiscipline')) !!}
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -146,8 +167,12 @@
             <script type="text/javascript">
                 let ageclasses = {!! json_encode($ageclasses) !!};
                 let disciplines = {!! json_encode($disciplines) !!};
-                        @if (@empty(!$competition))
-                let season = {!! json_encode($competition->season) !!};
+                let disciplineFormats = {!! json_encode($disciplineFormat) !!};
+                $('#time_0_0').hide();
+                $('#range_0_0').hide();
+                $('#points_0_0').hide();
+                @if (@empty(!$competition))
+                    let season = {!! json_encode($competition->season) !!};
                 @endif
             </script>
             <script type="text/javascript" src="{{ url('/') }}/front/js/add_participator.js"></script>

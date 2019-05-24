@@ -10,6 +10,7 @@ namespace App\Services;
 
 use App\Helpers\Utils;
 use App\Repositories\Participator\ParticipatorRepositoryInterface;
+use Illuminate\Support\Str;
 
 class ParticipatorService {
     /**
@@ -41,27 +42,118 @@ class ParticipatorService {
     }
 
     private function createParticipatorPerDiscipline($request, $season): array {
+        $participators = [];
         foreach ($request->discipline as $disciplineKey => $discipline) {
-            foreach ($discipline as $keyDisci => $disciplineId) {
-                $participator[$keyDisci]['prename']     = $request->vorname[$disciplineKey];
-                $participator[$keyDisci]['lastname']    = $request->nachname[$disciplineKey];
-                $participator[$keyDisci]['birthyear']   = $request->jahrgang[$disciplineKey];
-                $participator[$keyDisci]['ageclass_id'] = $request->ageclass[$disciplineKey];
-                $participator[$keyDisci]['clubname']    = $request->clubname[$disciplineKey];
+            foreach ($discipline as $participatorNumber => $disciplineId) {
+                $participator[$participatorNumber]['prename']     = $request->vorname[$disciplineKey];
+                $participator[$participatorNumber]['lastname']    = $request->nachname[$disciplineKey];
+                $participator[$participatorNumber]['birthyear']   = $request->jahrgang[$disciplineKey];
+                $participator[$participatorNumber]['ageclass_id'] = $request->ageclass[$disciplineKey];
+                $participator[$participatorNumber]['clubname']    = $request->clubname[$disciplineKey];
 
                 if ($season == 'cross') {
-                    $participator[$keyDisci]['discipline_cross'] = $disciplineId;
-                    $participator[$keyDisci]['discipline_id']    = null;
+                    $participator[$participatorNumber]['discipline_cross'] = $disciplineId;
+                    $participator[$participatorNumber]['discipline_id']    = null;
                 } else {
-                    $participator[$keyDisci]['discipline_cross'] = null;
-                    $participator[$keyDisci]['discipline_id']    = $disciplineId;
+                    $participator[$participatorNumber]['discipline_cross'] = null;
+                    $participator[$participatorNumber]['discipline_id']    = $disciplineId;
                 }
-                $participator[$keyDisci]['best_time'] = $request->bestzeit[$disciplineKey][$keyDisci];
-                $participators[]                      = $participator[$keyDisci];
+                $participator[$participatorNumber]['best_time'] = $this->besttime($request, $disciplineKey, $participatorNumber);
+                $participators[]                                = $participator[$participatorNumber];
             }
         }
-
         return $participators;
+    }
+
+    /**
+     * @param $request
+     * @param $disciplineKey
+     * @param $participatorNumber
+     * @return string
+     */
+    private function besttime($request, $disciplineKey, $participatorNumber) : string
+    {
+        //Zeit
+        if ($request->bestzeit_h[$disciplineKey][$participatorNumber] != null
+                || $request->bestzeit_m[$disciplineKey][$participatorNumber] != null
+                || $request->bestzeit_s[$disciplineKey][$participatorNumber] != null
+                || $request->bestzeit_ms[$disciplineKey][$participatorNumber] != null
+        ) {
+            return $this->handleTime($request->bestzeit_h, $request->bestzeit_m, $request->bestzeit_s, $request->bestzeit_ms, $participatorNumber, $disciplineKey);
+        }
+
+        //Metrisch
+        if ($request->bestweite_m[$disciplineKey][$participatorNumber] != null
+                || $request->bestweite_cm[$disciplineKey][$participatorNumber] != null
+        ) {
+            return $this->handleMetric($request->bestweite_m, $request->bestweite_cm, $participatorNumber, $disciplineKey);
+        }
+        //Punkte
+        if ($request->bestweite_punkte[$disciplineKey][$participatorNumber] != null) {
+            return $request->bestweite_punkte;
+        }
+
+        return '0';
+    }
+
+    /**
+     * @param $meter
+     * @param $centimeter
+     * @param $participatorNumber
+     * @param $disciplineKey
+     * @return string
+     */
+    private function handleMetric($meter, $centimeter, $participatorNumber, $disciplineKey) : string
+    {
+        $metric = 'M,CM';
+        $M      = 0;
+        $CM     = 0;
+        if ($meter[$disciplineKey][$participatorNumber] != null) {
+            $M = $meter[$disciplineKey][$participatorNumber];
+        }
+        if ($centimeter[$disciplineKey][$participatorNumber] != null) {
+            $CM = $centimeter[$disciplineKey][$participatorNumber];
+        }
+        $metric = Str::replaceFirst('M', $M, $metric);
+        $metric = Str::replaceFirst('CM', $CM, $metric);
+
+        return $metric;
+    }
+
+    /**
+     * @param $hour
+     * @param $minute
+     * @param $seconds
+     * @param $millis
+     * @param $participatorNumber
+     * @param $disciplineKey
+     * @return string
+     */
+    private function handleTime($hour, $minute, $seconds, $millis, $participatorNumber, $disciplineKey) : string
+    {
+        $time = 'H:M:S,MS';
+        $h    = '00';
+        if ($hour[$disciplineKey][$participatorNumber] != null) {
+            $h = $hour[$disciplineKey][$participatorNumber];
+        }
+        $min = '00';
+        if ($minute[$disciplineKey][$participatorNumber] != null) {
+            $min = $minute[$disciplineKey][$participatorNumber];
+        }
+        $sec = '00';
+        if ($seconds[$disciplineKey][$participatorNumber] != null) {
+            $sec = $seconds[$disciplineKey][$participatorNumber];
+        }
+        $ms = '00';
+        if ($millis[$disciplineKey][$participatorNumber] != null) {
+            $ms = $millis[$disciplineKey][$participatorNumber];
+        }
+        $time = Str::replaceFirst('H',  $h,   $time);
+        $time = Str::replaceFirst('M',  $min, $time);
+        $time = Str::replaceFirst('S',  $sec, $time);
+        $time = Str::replaceFirst('MS', $ms,  $time);
+
+        return $time;
     }
 
     /**

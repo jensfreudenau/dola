@@ -9,9 +9,9 @@
 </div>
 <div class="col-sm-12 form-group">
     {!! Form::label('address_id', Lang::get('quickadmin.addresses.title'), ['class' => 'control-label']) !!} <br>
-    {!! Form::select('address_id', $addresses, ($organizer ? $organizer : null), ['class' => 'form-control select2', 'required' ]) !!}
-
+    {!! Form::select('address_id', $addresses, ($organizer ? $organizer->address_id : null), ['class' => 'form-control select2', 'required' ]) !!}
 </div>
+
 <div class="col-sm-12 form-group">
     {!! Form::label('homepage', 'Homepage', ['class' => 'control-label']) !!}
     {!! Form::text('homepage', old('homepage'), ['class' => 'form-control', 'placeholder' => '']) !!}

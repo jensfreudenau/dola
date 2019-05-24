@@ -74,6 +74,11 @@ class DisciplineService
         return $competition->disciplines->pluck('shortname', 'id')->toArray();
     }
 
+    public function getPluckFormat($competition)
+    {
+        return $competition->disciplines->pluck('format', 'id')->toArray();
+    }
+
     public function getSelectedDisciplines(): array
     {
         return Discipline::pluck('shortname', 'id')->toArray();
