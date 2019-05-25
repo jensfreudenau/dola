@@ -50,6 +50,7 @@ class AnnounciatorsController extends Controller
     {
         $competition = '';
         $disciplines = '';
+        $disciplineFormat = '';
         if (false !== $id) {
             $competition = $this->competitionService->find($id);
             if(null === $competition) {

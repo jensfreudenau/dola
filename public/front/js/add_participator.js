@@ -89,10 +89,12 @@ $(document).ready(function () {
     $("#competition_id").change(function () {
         window.location.href = "/announciators/create/" + $(this).val();
     });
-    disciplinesOption = '<option value="">Disziplin*</option>';
-    $.each(disciplines, function (index, value) {
-        disciplinesOption += '<option value="' + index + '">' + value + '</option>';
-    });
+    if(disciplines.length>0){
+        disciplinesOption = '<option value="">Disziplin*</option>';
+        $.each(disciplines, function (index, value) {
+            disciplinesOption += '<option value="' + index + '">' + value + '</option>';
+        });
+    }
     $.each(ageclasses, function (index, value) {
         ageclassesOption += '<option value="' + index + '">' + value + '</option>';
     });

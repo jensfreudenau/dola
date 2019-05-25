@@ -68,4 +68,13 @@ class Utils
         return mb_substr($string, 0, $length, self::CHARSET_DEFAULT);
     }
 
+    /**
+     * @return string
+     */
+    public static function replaceSeasonName($season) {
+        if ($season === 'cross') {
+            $season = 'Strasse/Cross';
+        }
+        return $season;
+    }
 }
