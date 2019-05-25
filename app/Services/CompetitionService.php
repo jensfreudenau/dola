@@ -9,6 +9,7 @@
 namespace App\Services;
 
 use App\Helpers\DateTimeHelper;
+use App\Helpers\Utils;
 use App\Library\AgeclassParser;
 use App\Library\DisciplineParser;
 use App\Library\TimetableParser;
@@ -102,11 +103,12 @@ class CompetitionService
         return false;
     }
 
-    public function getArchive()
+    public function getArchive() :array
     {
         $archives = array();
         foreach ($this->competitionRepository->seasons as $season) {
             $files             = Storage::files('public/'.Config::get('constants.Results').'/'.$season);
+            $season = Utils::replaceSeasonName($season);
             $archives[$season] = DateTimeHelper::listdir_by_date($files);
         }
         if (date('Y') >= 2018) {

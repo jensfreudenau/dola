@@ -50,9 +50,13 @@ class DateTimeHelper
             if ($six) {
                 $v = '20' . $v;
             }
-            $date                                   = new DateTime($v);
-            $list[$date->format('Y')][$key]['file'] = $file;
-            $list[$date->format('Y')][$key]['date'] = $date->format('d.m.Y');
+            try {
+                $date = new \DateTime($v);
+                $list[$date->format('Y')][$key]['file'] = $file;
+                $list[$date->format('Y')][$key]['date'] = $date->format('d.m.Y');
+            } catch (\Exception $e) {
+                //echo $e->getMessage();
+            }
         }
         return $list;
     }
