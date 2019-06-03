@@ -44,7 +44,7 @@ class OrganizersController extends Controller
         if (!Gate::allows('organizer_create')) {
             return abort(401);
         }
-        $organizer = $this->organizerRepository->getAll();
+        $organizer = '';
         $addresses = Address::get()->pluck('name', 'id')->prepend('Please select', '');
         return view('admin.organizers.create', compact('addresses', 'organizer'));
     }
