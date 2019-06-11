@@ -55,6 +55,23 @@ class AuthServiceProvider extends ServiceProvider
             return in_array($user->role_id, [self::SUPERADMIN]);
         });
 
+        // Auth gates for: Hashes
+        Gate::define('hashes_access', function ($user) {
+            return in_array($user->role_id, [self::SUPERADMIN]);
+        });
+        Gate::define('hashes_create', function ($user) {
+            return in_array($user->role_id, [self::SUPERADMIN]);
+        });
+        Gate::define('hashes_edit', function ($user) {
+            return in_array($user->role_id, [self::SUPERADMIN]);
+        });
+        Gate::define('hashes_view', function ($user) {
+            return in_array($user->role_id, [self::SUPERADMIN]);
+        });
+        Gate::define('hashes_delete', function ($user) {
+            return in_array($user->role_id, [self::SUPERADMIN]);
+        });
+
         // Auth gates for: Users
         Gate::define('user_access', function ($user) {
             return in_array($user->role_id, [self::SUPERADMIN]);
