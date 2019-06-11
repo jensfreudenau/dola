@@ -74,10 +74,10 @@ class ParticipatorService {
     private function besttime($request, $disciplineKey, $participatorNumber) : string
     {
         //Zeit
-        if ($request->bestzeit_h[$disciplineKey][$participatorNumber] != null
-                || $request->bestzeit_m[$disciplineKey][$participatorNumber] != null
-                || $request->bestzeit_s[$disciplineKey][$participatorNumber] != null
-                || $request->bestzeit_ms[$disciplineKey][$participatorNumber] != null
+        if ($request->bestzeit_h[$disciplineKey][$participatorNumber] !== null
+                || $request->bestzeit_m[$disciplineKey][$participatorNumber] !== null
+                || $request->bestzeit_s[$disciplineKey][$participatorNumber] !== null
+                || $request->bestzeit_ms[$disciplineKey][$participatorNumber] !== null
         ) {
             return $this->handleTime($request->bestzeit_h, $request->bestzeit_m, $request->bestzeit_s, $request->bestzeit_ms, $participatorNumber, $disciplineKey);
         }

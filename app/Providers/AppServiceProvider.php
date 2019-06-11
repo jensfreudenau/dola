@@ -49,6 +49,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Repositories\Additional\AdditionalRepositoryInterface', 'App\Repositories\Additional\AdditionalRepository');
         $this->app->bind('App\Repositories\Organizer\OrganizerRepositoryInterface', 'App\Repositories\Organizer\OrganizerRepository');
         $this->app->bind('App\Repositories\Announciator\AnnounciatorRepositoryInterface', 'App\Repositories\Announciator\AnnounciatorRepository');
+        $this->app->bind('App\Repositories\HashLogin\HashLoginRepositoryInterface', 'App\Repositories\HashLogin\HashLoginRepository');
         $this->app->bind('CompetitionService', CompetitionService::class);
         $this->app->bind('AnnounciatorService', AnnounciatorService::class);
         $this->app->bind('ParticipatorService', ParticipatorService::class);

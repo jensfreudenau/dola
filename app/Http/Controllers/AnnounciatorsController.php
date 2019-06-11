@@ -108,4 +108,14 @@ class AnnounciatorsController extends Controller
 
         return view('front.announciators.list', compact('list'));
     }
+
+    public function hash($hash)
+    {
+        // hash abgleich mit Tabelle Felder: hash, active
+        // View Admin/User mit Hashes
+        // View mit Auswahl vom Wettkampf
+        // View mit Ansicht der Disziplinen und der Altersklassen
+        // View mit dem Upload Formular.
+        // View mit der Ansicht der gemeldeten Athleten
+    }
 }

@@ -54,6 +54,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], 
     Route::resource('/', 'Admin\HomeController');
     Route::resource('/home', 'Admin\HomeController');
     Route::resource('roles', 'Admin\RolesController');
+    Route::resource('hashes', 'Admin\HashLoginController');
+    Route::post('hashes.mass_destroy', ['uses' => 'Admin\HashLoginController@massDestroy', 'as' => 'hashes.mass_destroy']);
     Route::post('roles_mass_destroy', ['uses' => 'Admin\RolesController@massDestroy', 'as' => 'roles.mass_destroy']);
     Route::resource('users', 'Admin\UsersController');
     Route::post('users_mass_destroy', ['uses' => 'Admin\UsersController@massDestroy', 'as' => 'users.mass_destroy']);

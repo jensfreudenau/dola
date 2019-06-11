@@ -23,6 +23,13 @@
                             </span> </a>
                             </li>
                         @endcan
+                        @can('hashes_access')
+                            <li class="{{ $request->segment(2) == 'hashes' ? 'active active-sub' : '' }}">
+                                <a href="{{ route('admin.hashes.index') }}"> <i class="fa fa-briefcase"></i> <span class="title">
+                            @lang('quickadmin.hashes.title')
+                        </span> </a>
+                            </li>
+                        @endcan
                         @can('user_access')
                             <li class="{{ $request->segment(2) == 'users' ? 'active active-sub' : '' }}">
                                 <a href="{{ route('admin.users.index') }}"> <i class="fa fa-user"></i> <span class="title">
