@@ -64,6 +64,7 @@ class HashLoginController extends Controller
         $this->hashLoginRepository->create([
                 'email'  => $request->email,
                 'active' => $request->active,
+                'name' => $request->name,
                 'hash'   => hash('md5', $request->email),
         ]);
 

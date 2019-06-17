@@ -9,8 +9,17 @@ Route::get('php/{url}', function(){
     return Redirect::to('/', 301); 
 });
 
+Route::get('/images-create', 'UploadImagesController@create');
+Route::post('/images-save', 'UploadImagesController@store');
+Route::post('/announciators/masssave', 'AnnounciatorsController@masssave');
+Route::post('/announciators/massstore', 'AnnounciatorsController@massstore');
+Route::post('/images-delete', 'UploadImagesController@destroy');
+Route::get('/images-show', 'UploadImagesController@index');
+
+
+
 Route::get('/', 'HomeController@index');
-Route::get('/home', 'HomeController@index');
+Route::get('/home', 'HomeController@index')->name('home');
 Route::post('competitions', 'CompetitionsController@create');
 Route::get('competitions/comps/{competition_id}', 'CompetitionsController@comps');
 
@@ -23,11 +32,13 @@ Route::get('/archive', 'CompetitionsController@archive');
 
 Route::get('/showByClubId/{competition_id}', 'CompetitionsController@showByClubId');
 
-Route::get('/table', 'TableController@index');
 Route::get('/announciators/competitions_select/{competition_id}', 'AnnounciatorsController@competitions_select');
 Route::get('/announciators/list_participator', 'AnnounciatorsController@listParticipator');
 Route::get('/announciators/create/{competition_id?}', 'AnnounciatorsController@create');
 Route::post('/announciators/store', 'AnnounciatorsController@store')->name('announciators/store');
+Route::get('/announciators/mass/{token}', 'AnnounciatorsController@mass')->name('announciators/mass');
+Route::match(['get', 'post'],'/announciators/massupload', 'AnnounciatorsController@massupload')->name('announciators/massupload');
+Route::match(['get', 'post'],'/announciators/masssave', 'AnnounciatorsController@masssave');
 
 Route::get('/records/record', 'RecordsController@index')->name('records.record');
 Route::get('/records/best', 'RecordsController@best');

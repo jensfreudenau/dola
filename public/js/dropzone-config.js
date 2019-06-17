@@ -1,0 +1,81 @@
+Dropzone.options.droppy = {
+    maxFilesize: 10, // Mb+
+    autoProcessQueue: true,
+    accept: function (file, done) {
+        let reader = new FileReader();
+        reader.onload = function (event) {
+            let contents = event.target.result;
+            processData(contents);
+
+        };
+        reader.onerror = function (event) {
+            console.error("File could not be read! Code " + event.target.error.code);
+        };
+        reader.readAsText(file);
+        done();
+    }
+};
+
+function processData(csv) {
+    parseTableData(csv);
+    return true;
+}
+
+function parseTableData(result) {
+
+    let parsedData = Papa.parse(result, {
+        delimiter: ';'
+    });
+    let table = formDataTable(parsedData);
+
+}
+
+function formDataTable(response) {
+
+    let allData = response.data;
+    allData.shift();
+    $errorOccures = false;
+    let btn = 'btn-outline-success';
+    $(allData).each(function (j) {
+        let ageclass = ageclasses[allData[j][3]];
+        let errorAgeclass = '';
+        let errorDiscipline = '';
+        let duration = allData[j][5];
+
+        if (typeof ageclass == 'undefined') {
+            errorAgeclass = 'is-invalid';
+            if ($errorOccures === false){
+                $errorOccures = true;
+                btn = 'btn-outline-danger';
+            }
+        }
+        let discipline = disciplines[allData[j][4]];
+        if (personalBestFormat[allData[j][4]] == 'ZEIT') {
+            allData[j][5] = allData[j][5].replace(',', '.');
+            let durationUnformat = moment.duration(allData[j][5]);
+            duration = moment(durationUnformat._data).format("H:m:s,SS");
+        }
+        if (typeof discipline == 'undefined') {
+            errorDiscipline = 'is-invalid';
+            if ($errorOccures === false){
+                $errorOccures = true;
+                btn = 'btn-outline-danger';
+            }
+        }
+        $('<div class="form-row">\n' +
+            '<div class="form-group col-md-2"><input class="form-control" value="'+ allData[j][0] +' " name="vorname['+j+']" type="text"></div>' +
+            '<div class="form-group col-md-2"><input class="form-control" value="'+ allData[j][1] +'" name="nachname['+j+']" type="text"></div>' +
+            '<div class="form-group col-md-2"><input class="form-control" value="'+ allData[j][2] +'" name="clubname['+j+']" type="text"></div>' +
+            '<div class="form-group col-md-1"><input class="form-control '+errorAgeclass+' "  value="'+ allData[j][3] +'" name="ageclass['+j+']" type="text"></div>' +
+            '<div class="form-group col-md-1"><input class="form-control" value="'+ allData[j][6] +'" name="jahrgang['+j+']" type="text"></div>' +
+            '<div class="form-group col-md-2"><input class="form-control '+errorDiscipline+' " value="'+ allData[j][4] +'" name="discipline['+j+']" type="text"></div>' +
+            '<div class="form-group col-md-2"><input class="form-control" value="'+ duration +'" name="best_time['+j+']" type="text"></div></div>'
+        ).appendTo("#mycsvdata");
+    });
+    if($errorOccures) {
+        $('<div class="form-row red float-right"><div class="form-group col-md-12"><h5>Es ist ein Fehler passiert</h5></div></div>' ).appendTo("#mycsvdata");
+    }
+    $('#upload').addClass(btn);
+}
+
+

@@ -17,6 +17,7 @@
                     @can('hashes_delete')
                         <th style="text-align:center;"><input type="checkbox" id="select-all" /></th>
                     @endcan
+                    <th>@lang('quickadmin.hashes.fields.name')</th>
                     <th>@lang('quickadmin.hashes.fields.email')</th>
                     <th>@lang('quickadmin.hashes.fields.hash')</th>
                     <th>@lang('quickadmin.hashes.fields.active')</th>
@@ -30,8 +31,8 @@
                             @can('hashes_delete')
                                 <td></td>
                             @endcan
-
                             <td>{{ $hash->email }}</td>
+                            <td>{{ $hash->name }}</td>
                             <td>{!! url('/') !!}/announciators/mass/{{ $hash->hash }}</td>
                             <td>{{ $hash->active }}</td>
                             <td>

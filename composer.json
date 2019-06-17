@@ -12,7 +12,7 @@
         "doctrine/dbal": "*",
         "guzzlehttp/guzzle": "*",
         "intervention/image": "*",
-        "laravel/framework": "5.7.*",
+        "laravel/framework": "5.8.*",
         "laravel/tinker": "*",
         "laravelcollective/html": "*",
         "league/csv": "*",

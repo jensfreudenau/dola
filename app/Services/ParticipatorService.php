@@ -58,7 +58,12 @@ class ParticipatorService {
                     $participator[$participatorNumber]['discipline_cross'] = null;
                     $participator[$participatorNumber]['discipline_id']    = $disciplineId;
                 }
-                $participator[$participatorNumber]['best_time'] = $this->besttime($request, $disciplineKey, $participatorNumber);
+                if($request->massupload) {
+                    $participator[$participatorNumber]['best_time']    = $request->best_time[$disciplineKey];
+                }
+                else{
+                    $participator[$participatorNumber]['best_time'] = $this->besttime($request, $disciplineKey, $participatorNumber);
+                }
                 $participators[]                                = $participator[$participatorNumber];
             }
         }

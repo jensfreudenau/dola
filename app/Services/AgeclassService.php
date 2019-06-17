@@ -101,4 +101,19 @@ class AgeclassService
         }
         return $ageclassIds;
     }
+
+    public function getIdByLADV($ladv)
+    {
+        return Ageclass::where('ladv',  $ladv)->value('id');
+    }
+
+    public function createJson($competition)
+    {
+        $ageclassesJson = '{';
+        foreach ($competition->ageclasses as $ageclass) {
+            $ageclassesJson .=  $ageclass->ladv .':"'. $ageclass->id.'",';
+        }
+        $ageclassesJson .= '}';
+        return $ageclassesJson;
+    }
 }

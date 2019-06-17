@@ -8,13 +8,13 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>{{ config('app.name', 'Dortmunder Leichtathletik') }}</title>
-@include('partials.front.styles')
-<!-- Scripts -->
+    @include('partials.front.styles')
+    @yield('head')
+
     <script>
-        window.Laravel = {!! json_encode([
-            'csrfToken' => csrf_token(),
-        ]) !!};
+        window.Laravel = {!! json_encode([ 'csrfToken' => csrf_token(), ]) !!};
     </script>
 </head>
 
@@ -26,15 +26,16 @@
                 @yield('content')
             </div>
         </div>
-    <div id="mesh"></div>
+        <div id="mesh"></div>
 </div>
 
     
 <!-- Scripts -->
-
 @include('partials.footer')
 @include('partials.front.javascripts')
+@yield('js')
 @yield('page-script')
-</div>
+
+
 </body>
 </html>

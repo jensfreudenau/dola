@@ -1,20 +1,27 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Upload;
+use App\Traits\FileUploadTrait;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use App\Services\AgeclassService;
 use App\Services\AnnounciatorService;
-use App\Services\CompetitionService;
 use App\Services\DisciplineService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class AnnounciatorsController extends Controller
 {
+    /**
+     * @var AnnounciatorService
+     */
     protected $announciatorService;
-    protected $competitionRepository;
+
     /**
      * @var AgeclassService
      */
@@ -29,15 +36,13 @@ class AnnounciatorsController extends Controller
     private $competitionService;
 
     public function __construct(
-        AnnounciatorService $announciatorService,
-        AgeclassService $ageclassService,
-        DisciplineService $disciplineService,
-        CompetitionService $competitionService
+            AnnounciatorService $announciatorService,
+            AgeclassService $ageclassService,
+            DisciplineService $disciplineService
     ) {
         $this->announciatorService = $announciatorService;
         $this->ageclassService     = $ageclassService;
         $this->disciplineService   = $disciplineService;
-        $this->competitionService  = $competitionService;
     }
 
     /**
@@ -48,23 +53,23 @@ class AnnounciatorsController extends Controller
      */
     public function create($id = false)
     {
-        $competition = '';
-        $disciplines = '';
+        $competition      = '';
+        $disciplines      = '';
         $disciplineFormat = '';
         if (false !== $id) {
-            $competition = $this->competitionService->find($id);
-            if(null === $competition) {
+            $competition = $this->announciatorService->findCompetition($id);
+            if (null === $competition) {
                 return Redirect::to('/', 301);
             }
-            $disciplines = $this->disciplineService->getPluck($competition);
+            $disciplines      = $this->disciplineService->getPluck($competition);
             $disciplineFormat = $this->disciplineService->getPluckFormat($competition);
         }
         $ageclasses        = $this->ageclassService->getAgeclassesPluck($competition);
         $competitionselect = $this->announciatorService->getCompetionSelectable();
 
         return view(
-            'front.announciators.create',
-            compact('competition', 'competitionselect', 'disciplines', 'ageclasses', 'disciplineFormat')
+                'front.announciators.create',
+                compact('competition', 'competitionselect', 'disciplines', 'ageclasses', 'disciplineFormat')
         );
     }
 
@@ -86,10 +91,10 @@ class AnnounciatorsController extends Controller
             Bugsnag::notifyException($exception);
             if ($request->wantsJson()) {
                 return response()->json(
-                    [
-                        'error' => true,
-                        'message' => $exception->getMessageBag(),
-                    ]
+                        [
+                                'error'   => true,
+                                'message' => $exception->getMessageBag(),
+                        ]
                 );
             }
             $message = $exception->getMessage();
@@ -109,13 +114,132 @@ class AnnounciatorsController extends Controller
         return view('front.announciators.list', compact('list'));
     }
 
-    public function hash($hash)
+    public function mass($hash)
     {
-        // hash abgleich mit Tabelle Felder: hash, active
-        // View Admin/User mit Hashes
-        // View mit Auswahl vom Wettkampf
-        // View mit Ansicht der Disziplinen und der Altersklassen
-        // View mit dem Upload Formular.
-        // View mit der Ansicht der gemeldeten Athleten
+        if (!$this->announciatorService->findHash($hash)) {
+            return redirect()->route('home');
+        }
+        $competitionselect = $this->announciatorService->getCompetionSelectable();
+
+        return view('front.announciators.mass', compact('competitionselect', 'hash'));
+
+
     }
+
+    public function massupload(Request $request)
+    {
+        $announciator = $this->announciatorService->findHash($request->hash);
+        if (!$announciator) {
+            return redirect()->route('home');
+        }
+        if (0 == $request->competition_id) {
+            return Redirect::to('announciators/mass/'.$request->hash, 301);
+        }
+        $competition            = $this->announciatorService->findCompetition($request->competition_id);
+        $disciplines            = $this->disciplineService->getPluck($competition);
+        $ageclasses             = $this->ageclassService->getAgeclassesPluck($competition);
+        $ageclassesJson         = $this->ageclassService->createJson($competition);
+        $disciplinesJson        = $this->disciplineService->createJson($competition);
+        $personalBestFormatJson = $this->disciplineService->createPersonalBestJson($competition);
+
+        return view('front.announciators.massupload', compact('personalBestFormatJson', 'disciplines', 'ageclasses', 'competition', 'announciator', 'ageclassesJson', 'disciplinesJson'));
+
+    }
+
+
+
+    public function masssave(Request $request)
+    {
+        $competition = $this->announciatorService->findCompetition($request->competition_id);
+        foreach ($competition->disciplines as $discipline) {
+            $disciplines[] = $discipline->shortname;
+        }
+        foreach ($competition->ageclasses as $ageclass) {
+            $ageclasses[] = $ageclass->ladv;
+        }
+
+        $validator = Validator::make($request->all(), [
+                "ageclass.*"    => "in_array:ageclasses",
+        ]);
+//        $data = $request->validate([
+//                "ageclass"    => "required|array|min:234",
+//                "ageclass.*"  => "required|string|min:3344",
+//        ]);
+        dump($validator->fails());
+        $input = $request->all();
+dump($input);
+//        $validation = Validator::make($input['ageclass'], [
+//                'required' => 'in_array:ageclass',
+//        ]);
+
+        $validator = Validator::make($request->all(), [
+                'ageclass.*' => [
+                        'required' => 'in_array:ageclasses'
+                ]
+        ]);
+        dump($validator->fails(),__LINE__.__FILE__);
+        $validator = Validator::make($request->all(), [
+                'discipline.*' => [
+                        'required' => 'in_array:disciplines',
+                ]
+        ]);
+        dump($validator->fails(),__LINE__.__FILE__);
+
+
+
+//        $request->validate($request, ['ageclass' => new CheckAgeclass]);
+//        $val = Validator::make($disciplines, [
+//                'ageclasses' => [
+//                        'required',
+//                        Rule::in_array($request->ageclasses),
+//                ],
+//        ]);
+
+
+        dd("You can proceed now...");
+        try {
+            $request      = $this->announciatorService->prepareAgeclasses($request);
+            $request      = $this->announciatorService->prepareDisciplines($request);
+            $announciator = $this->announciatorService->processAnnouncement($request);
+            $cookie       = Cookie::make('announciators_id', $announciator->id);
+
+            return redirect()->action('AnnounciatorsController@listParticipator')->withCookie($cookie);
+        } catch (\Exception $exception) {
+            Bugsnag::notifyException($exception);
+            if ($request->wantsJson()) {
+                return response()->json(
+                        [
+                                'error'   => true,
+                                'message' => $exception->getMessageBag(),
+                        ]
+                );
+            }
+            $message = $exception->getMessage();
+
+            return Redirect::back()->withInput()->withErrors(array('user_name' => $message));
+        }
+    }
+
+    use FileUploadTrait;
+
+    public function uploader(Request $request, $id)
+    {
+        if (!Gate::allows('competition_access')) {
+            return abort(401);
+        }
+        $competition                = $this->competitionService->find($id);
+        $path                       = 'public/'.$request->type.'/'.$competition->season;
+        $uploads                    = $this->saveFiles($request, $path);
+        $requests                   = $request->all();
+        $requests['competition_id'] = $id;
+        $requests['type']           = $request->type;
+        $requests['filename']       = $uploads->uploader;
+        Upload::create($requests);
+
+        return response()->json(
+                $uploads
+        );
+    }
+
+
 }
