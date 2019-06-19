@@ -1,14 +1,14 @@
 Dropzone.options.droppy = {
     maxFilesize: 10, // Mb+
     autoProcessQueue: true,
-    accept: function (file, done) {
+    accept: function(file, done) {
         let reader = new FileReader();
-        reader.onload = function (event) {
+        reader.onload = function(event) {
             let contents = event.target.result;
             processData(contents);
 
         };
-        reader.onerror = function (event) {
+        reader.onerror = function(event) {
             console.error("File could not be read! Code " + event.target.error.code);
         };
         reader.readAsText(file);
@@ -36,7 +36,7 @@ function formDataTable(response) {
     allData.shift();
     $errorOccures = false;
     let btn = 'btn-outline-success';
-    $(allData).each(function (j) {
+    $(allData).each(function(j) {
         let ageclass = ageclasses[allData[j][3]];
         let errorAgeclass = '';
         let errorDiscipline = '';
@@ -44,7 +44,7 @@ function formDataTable(response) {
 
         if (typeof ageclass == 'undefined') {
             errorAgeclass = 'is-invalid';
-            if ($errorOccures === false){
+            if ($errorOccures === false) {
                 $errorOccures = true;
                 btn = 'btn-outline-danger';
             }
@@ -57,25 +57,54 @@ function formDataTable(response) {
         }
         if (typeof discipline == 'undefined') {
             errorDiscipline = 'is-invalid';
-            if ($errorOccures === false){
+            if ($errorOccures === false) {
                 $errorOccures = true;
                 btn = 'btn-outline-danger';
             }
         }
         $('<div class="form-row">\n' +
-            '<div class="form-group col-md-2"><input class="form-control" value="'+ allData[j][0] +' " name="vorname['+j+']" type="text"></div>' +
-            '<div class="form-group col-md-2"><input class="form-control" value="'+ allData[j][1] +'" name="nachname['+j+']" type="text"></div>' +
-            '<div class="form-group col-md-2"><input class="form-control" value="'+ allData[j][2] +'" name="clubname['+j+']" type="text"></div>' +
-            '<div class="form-group col-md-1"><input class="form-control '+errorAgeclass+' "  value="'+ allData[j][3] +'" name="ageclass['+j+']" type="text"></div>' +
-            '<div class="form-group col-md-1"><input class="form-control" value="'+ allData[j][6] +'" name="jahrgang['+j+']" type="text"></div>' +
-            '<div class="form-group col-md-2"><input class="form-control '+errorDiscipline+' " value="'+ allData[j][4] +'" name="discipline['+j+']" type="text"></div>' +
-            '<div class="form-group col-md-2"><input class="form-control" value="'+ duration +'" name="best_time['+j+']" type="text"></div></div>'
+            '<div class="form-group col-md-2"><input class="form-control" value="' + allData[j][0] + ' " name="vorname[' + j + ']" type="text"></div>' +
+            '<div class="form-group col-md-2"><input class="form-control" value="' + allData[j][1] + '" name="nachname[' + j + ']" type="text"></div>' +
+            '<div class="form-group col-md-2"><input class="form-control" value="' + allData[j][2] + '" name="clubname[' + j + ']" type="text"></div>' +
+            '<div class="form-group col-md-1"><input class="form-control ' + errorAgeclass + ' "  value="' + allData[j][3] + '" name="ageclass[' + j + ']" type="text"></div>' +
+            '<div class="form-group col-md-1"><input class="form-control" value="' + allData[j][6] + '" name="jahrgang[' + j + ']" type="text"></div>' +
+            '<div class="form-group col-md-2"><input class="form-control ' + errorDiscipline + ' " value="' + allData[j][4] + '" name="discipline[' + j + ']" type="text"></div>' +
+            '<div class="form-group col-md-2"><input class="form-control" value="' + duration + '" name="best_time[' + j + ']" type="text"></div></div>'
         ).appendTo("#mycsvdata");
     });
-    if($errorOccures) {
-        $('<div class="form-row red float-right"><div class="form-group col-md-12"><h5>Es ist ein Fehler passiert</h5></div></div>' ).appendTo("#mycsvdata");
+    if ($errorOccures) {
+        $('<div id="formerror" class="form-row red float-right"><div class="form-group col-md-12"><h5>Es ist ein Fehler passiert</h5></div></div>').appendTo("#mycsvdata");
     }
     $('#upload').addClass(btn);
 }
 
+$(document)
+    .on('click', 'form button[type=submit]', function(e) {
+        isValid = true;
+        $('input[name^="ageclass"]').each(function(key, value) {
+            let ageclass = ageclasses[value.value];
+            if (typeof ageclass == 'undefined') {
+                jQuery(value).addClass('is-invalid');
+                if (isValid === true) {
+                    isValid = false;
+                }
+            } else {
+                jQuery(value).removeClass('is-invalid');
+            }
+        });
 
+        $('input[name^="discipline"]').each(function(key, value) {
+            let discipline = disciplines[value.value];
+            if (typeof discipline == 'undefined') {
+                jQuery(value).addClass('is-invalid');
+                if (isValid === true) {
+                    isValid = false;
+                }
+            } else {
+                jQuery(value).removeClass('is-invalid');
+            }
+        });
+        if (!isValid) {
+            e.preventDefault(); //prevent the default action
+        }
+    });

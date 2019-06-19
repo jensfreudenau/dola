@@ -24,7 +24,7 @@ function ageclassSelectList(ageclassesOption) {
 }
 
 function setClubname(counterParticipant) {
-    let clubnameColl = $("input[name='clubname[]']").map(function () {
+    let clubnameColl = $("input[name='clubname[]']").map(function() {
         return $(this).val();
     }).get();
 
@@ -60,10 +60,10 @@ function addPointsForms(countParticipant, counterDiscipline) {
         '</div>';
 }
 
-$(document).ready(function () {
+$(document).ready(function() {
     let whereAmIIdArr = '0_0'.split('_'); //init
     //////
-    $(document).on('change', '.disciplines', function (event) {
+    $(document).on('change', '.disciplines', function(event) {
         let whereAmIId = $(event.target).attr('id');
         let myVal = event.target.value;
         whereAmIIdArr = whereAmIId.split('_');
@@ -85,38 +85,36 @@ $(document).ready(function () {
     });
     //////
 
-    $(".disciplines").on('change', function () {
-    });
+    $(".disciplines").on('change', function() {});
     /* Load positions into postion <selec> */
-    $("#competition_id").change(function () {
+    $("#competition_id").change(function() {
         window.location.href = "/announciators/create/" + $(this).val();
     });
 
     if (Object.keys(disciplines).length > 0) {
         disciplinesOption = '<option value="">Disziplin*</option>';
-        $.each(disciplines, function (index, value) {
+        $.each(disciplines, function(index, value) {
             disciplinesOption += '<option value="' + index + '">' + value + '</option>';
         });
     }
-    $.each(ageclasses, function (index, value) {
+    $.each(ageclasses, function(index, value) {
         ageclassesOption += '<option value="' + index + '">' + value + '</option>';
     });
 
-    $('.dropdown-toggle').dropdown();
 
     $('#resultBoxShowHide').is(':checked') ? $('#resultBox').show() : $('#resultBox').hide();
 
-    $('#resultBoxShowHide').click(function () {
+    $('#resultBoxShowHide').click(function() {
         this.checked ? $('#resultBox').show(200) : $('#resultBox').hide(200);
     });
 
-    $('#participantGroup').on('click', '.remove_discipline', function () {
+    $('#participantGroup').on('click', '.remove_discipline', function() {
         let disciplineGroupId = $(this).attr("id");
         let arr = disciplineGroupId.split('_');
         $('.discipline_' + arr[1] + '_' + arr[2]).remove();
     });
 
-    $('#participantGroup').on('click', '.remove', function () {
+    $('#participantGroup').on('click', '.remove', function() {
         let participantId = $(this).attr("id");
         let arr = participantId.split('_');
         $('#singleParticipant_' + arr[1]).remove();
@@ -124,7 +122,7 @@ $(document).ready(function () {
 
     let disciplineCounter = 1;
 
-    $('#participantGroup').on('click', '.addDiscipline', function () {
+    $('#participantGroup').on('click', '.addDiscipline', function() {
         let disciplineId = $(this).attr("id");
         let arr = disciplineId.split('_');
         let countParticipant = arr[1];
@@ -144,7 +142,7 @@ $(document).ready(function () {
         disciplineCounter++;
     });
 
-    $("#addParticipant").click(function () {
+    $("#addParticipant").click(function() {
 
         let clubname = setClubname(counterParticipant);
         let disciplineSelect = disciplineSelectList(disciplinesOption, counterParticipant, 0);

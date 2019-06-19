@@ -9,15 +9,6 @@ Route::get('php/{url}', function(){
     return Redirect::to('/', 301); 
 });
 
-Route::get('/images-create', 'UploadImagesController@create');
-Route::post('/images-save', 'UploadImagesController@store');
-Route::post('/announciators/masssave', 'AnnounciatorsController@masssave');
-Route::post('/announciators/massstore', 'AnnounciatorsController@massstore');
-Route::post('/images-delete', 'UploadImagesController@destroy');
-Route::get('/images-show', 'UploadImagesController@index');
-
-
-
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::post('competitions', 'CompetitionsController@create');
@@ -35,10 +26,11 @@ Route::get('/showByClubId/{competition_id}', 'CompetitionsController@showByClubI
 Route::get('/announciators/competitions_select/{competition_id}', 'AnnounciatorsController@competitions_select');
 Route::get('/announciators/list_participator', 'AnnounciatorsController@listParticipator');
 Route::get('/announciators/create/{competition_id?}', 'AnnounciatorsController@create');
-Route::post('/announciators/store', 'AnnounciatorsController@store')->name('announciators/store');
-Route::get('/announciators/mass/{token}', 'AnnounciatorsController@mass')->name('announciators/mass');
-Route::match(['get', 'post'],'/announciators/massupload', 'AnnounciatorsController@massupload')->name('announciators/massupload');
-Route::match(['get', 'post'],'/announciators/masssave', 'AnnounciatorsController@masssave');
+Route::post('announciators/store', 'AnnounciatorsController@store')->name('announciators/store');
+Route::get('announciators/mass/{token}', 'AnnounciatorsController@mass')->name('announciators/mass');
+Route::get('announciators/massupload', 'AnnounciatorsController@massupload')->name('announciators/massupload');
+Route::post('announciators/massupload', 'AnnounciatorsController@massupload')->name('announciators/massupload');
+Route::match(['get', 'post'],'announciators/masssave', 'AnnounciatorsController@masssave')->name('announciators/masssave');
 
 Route::get('/records/record', 'RecordsController@index')->name('records.record');
 Route::get('/records/best', 'RecordsController@best');
@@ -47,19 +39,19 @@ Route::get('/pages/altersklassen', 'PagesController@ageclasses');
 Route::get('/pages/{mnemonic}', 'PagesController@show');
 
 // Authentication Routes...
-$this->get('login', 'Auth\LoginController@showLoginForm')->name('auth.login');
-$this->post('login', 'Auth\LoginController@login')->name('auth.login');
-$this->post('logout', 'Auth\LoginController@logout')->name('auth.logout');
+Route::get('login', 'Auth\LoginController@showLoginForm')->name('auth.login');
+Route::post('login', 'Auth\LoginController@login')->name('auth.login');
+Route::post('logout', 'Auth\LoginController@logout')->name('auth.logout');
 
 // Change Password Routes...
-$this->get('change_password', 'Auth\ChangePasswordController@showChangePasswordForm')->name('auth.change_password');
-$this->patch('change_password', 'Auth\ChangePasswordController@changePassword')->name('auth.change_password');
+Route::get('change_password', 'Auth\ChangePasswordController@showChangePasswordForm')->name('auth.change_password');
+//Route::patch('change_password', 'Auth\ChangePasswordController@changePassword')->name('auth.change_password');
 
 // Password Reset Routes...
-$this->get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('auth.password.reset');
-$this->post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('auth.password.reset');
-$this->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-$this->post('password/reset', 'Auth\ResetPasswordController@reset')->name('auth.password.reset');
+Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('auth.password.reset');
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('auth.password.reset');
+Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('auth.password.reset');
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::resource('/', 'Admin\HomeController');

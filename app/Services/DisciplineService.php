@@ -87,16 +87,7 @@ class DisciplineService
 
     public function getIdByShortname($shortname)
     {
-
-
-        $id = Discipline::where('shortname', 'LIKE', '%' . $shortname . '%')
-                            ->orWhere('ladv', 'LIKE', '%' . $shortname . '%')
-                            ->orWhere('dlv', 'LIKE', '%' . $shortname . '%')
-                            ->value('id');
-
-
-
-        return $id;
+        return Discipline::where('shortname', '=', $shortname)->value('id');
     }
 
     public function createJson($competition)

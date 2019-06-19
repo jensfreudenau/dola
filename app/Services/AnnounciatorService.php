@@ -83,26 +83,30 @@ class AnnounciatorService
     }
 
     use EmailTrait;
+
     /**
      * @param $request
+     * @param $massupload
      * @return Announciator
      */
-    public function processAnnouncement($request): Announciator {
+    public function processAnnouncement($request, $massupload): Announciator {
         //wk finden
         $this->competition = $this->competitionService->find($request->competition_id);
-
         //melder registrieren
         $this->announciator = $this->announciatorRepository->create($request->all());
         //teilnehmer abhängig vom Melder registrieren
-        $this->participatorService->create($request, $this->announciator->id, $this->competition->season);
-        $participators = $this->participatorService->getParticipators();
-
+        if($massupload){
+            $this->participatorService->createMassupload($request, $this->announciator->id);
+        }
+        else {
+            $this->participatorService->create($request, $this->announciator->id, $this->competition->season);
+        }
         //Teilnehmer Informationen für seltec generieren
         $this->participatorService->listParticipatorForSeltec($this->competition);
         //email abschicken mit Teilnehmerliste
-        $this->sendEmailWithCsvFile($this->participatorService->getSeltecCollection(), $this->competition, $participators);
+        $this->sendEmailWithCsvFile();
         //email an Melder schicken
-        $this->sendEmailToAnnounciator($this->announciator, $this->competition);
+        $this->sendEmailToAnnounciator();
 
         return $this->announciator;
     }
@@ -165,9 +169,7 @@ class AnnounciatorService
         foreach ($request->discipline as $key => $discipline) {
             $disciplineAr[$key] = $this->disciplineService->getIdByShortname($discipline);
         }
-        $request->merge([
-                'discipline' => $disciplineAr
-        ]);
+        $request->merge([ 'discipline' => $disciplineAr ]);
         return $request;
 
     }

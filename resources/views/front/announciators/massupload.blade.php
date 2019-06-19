@@ -2,6 +2,7 @@
 @section('head')
     <link rel="stylesheet" href="{{ url('/adminlte/css/dropzone.css') }}">
     <link rel="stylesheet" href="{{ url('/css/custom.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 
 @section('js')
@@ -14,27 +15,19 @@
         let disciplines = {!! $disciplinesJson !!};
         let personalBestFormat = {!! $personalBestFormatJson !!};
 
-        let contents = 'Forename;Name;Team;Ageclass;Discipline;Value;YOB\n' +
-            'Lara;Bogumil;;MJU14;50m;00:00:02,55;2009\n' +
-            'Lara;Bogumil;;MJU14;75m;0;2009\n' +
-            'Juliane;Biermann;LAC Dortmund;WJU14;800m;0;2007\n' +
-            'Juliane;Biermann;LAC Dortmund;WJU14;Speer;0;2007\n' +
-            'Juliane;Biermann;LAC Dortmund;WJU14;1.500m;0:4:03.4;2007\n' +
-            'Jens;Freudenau;LC Rapid Dortmund;WJU14;50;00:00:0,00;2009\n' +
-            'Jens;Freudenau;LC Rapid Dortmund;MJU14;WEI;3,4;1969\n' +
-            'Jens;Freudenau;LC Rapid Dortmund;MJU14;75;0;1969\n' +
-            'Jens;Freudenau;LC Rapid Dortmund;MJU14;50;0;1969\n' +
-            'Jens;Freudenau;LC Rapid Dortmund;MJU14;WEI;0;1969\n' +
-            'Jens;Freudenau;LC Rapid Dortmund;MJU14;50;0;1969\n' +
-            'Cassandra;Müller;TSC Eintracht Dortmund;WKU12;4X5;0;2009\n' +
-            'Cassandra;Müller;TSC Eintracht Dortmund;WKU12;800;0;2009';
-        processData(contents);
-
     </script>
 
 @endsection
 @section('content')
-
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <div class="card card-default mb-5 p-3">
         <h3>Massen Anmeldung 2</h3>
 
@@ -57,6 +50,7 @@
         <p class="desc">Nach 2 Stunden ist die Sitzung abgelaufen.</p>
 
         {{ Form::open(['url'=>'/announciators/masssave', 'enctype'=>'multipart/form-data', 'class'=>'dropzone', 'id' => 'droppy']) }}
+        {{csrf_field()}}
         <div class="form-group">
             <div class="input-group">
                 <input class="form-control" placeholder="Veranstalter" disabled id="organizer_name"

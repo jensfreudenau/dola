@@ -83,7 +83,7 @@ class AnnounciatorsController extends Controller
     public function store(Request $request)
     {
         try {
-            $announciator = $this->announciatorService->processAnnouncement($request);
+            $announciator = $this->announciatorService->processAnnouncement($request, false);
             $cookie       = Cookie::make('announciators_id', $announciator->id);
 
             return redirect()->action('AnnounciatorsController@listParticipator')->withCookie($cookie);
@@ -152,72 +152,33 @@ class AnnounciatorsController extends Controller
     {
         $competition = $this->announciatorService->findCompetition($request->competition_id);
         foreach ($competition->disciplines as $discipline) {
-            $disciplines[] = $discipline->shortname;
+            $this->disciplines[] = $discipline->shortname;
         }
         foreach ($competition->ageclasses as $ageclass) {
-            $ageclasses[] = $ageclass->ladv;
+            $this->ageclasses[] = $ageclass->ladv;
         }
 
-        $validator = Validator::make($request->all(), [
-                "ageclass.*"    => "in_array:ageclasses",
-        ]);
-//        $data = $request->validate([
-//                "ageclass"    => "required|array|min:234",
-//                "ageclass.*"  => "required|string|min:3344",
-//        ]);
-        dump($validator->fails());
-        $input = $request->all();
-dump($input);
-//        $validation = Validator::make($input['ageclass'], [
-//                'required' => 'in_array:ageclass',
-//        ]);
-
-        $validator = Validator::make($request->all(), [
-                'ageclass.*' => [
-                        'required' => 'in_array:ageclasses'
-                ]
-        ]);
-        dump($validator->fails(),__LINE__.__FILE__);
-        $validator = Validator::make($request->all(), [
-                'discipline.*' => [
-                        'required' => 'in_array:disciplines',
-                ]
-        ]);
-        dump($validator->fails(),__LINE__.__FILE__);
-
-
-
-//        $request->validate($request, ['ageclass' => new CheckAgeclass]);
-//        $val = Validator::make($disciplines, [
-//                'ageclasses' => [
-//                        'required',
-//                        Rule::in_array($request->ageclasses),
-//                ],
-//        ]);
-
-
-        dd("You can proceed now...");
         try {
             $request      = $this->announciatorService->prepareAgeclasses($request);
             $request      = $this->announciatorService->prepareDisciplines($request);
-            $announciator = $this->announciatorService->processAnnouncement($request);
+
+            $announciator = $this->announciatorService->processAnnouncement($request, true);
             $cookie       = Cookie::make('announciators_id', $announciator->id);
 
-            return redirect()->action('AnnounciatorsController@listParticipator')->withCookie($cookie);
-        } catch (\Exception $exception) {
-            Bugsnag::notifyException($exception);
-            if ($request->wantsJson()) {
-                return response()->json(
-                        [
-                                'error'   => true,
-                                'message' => $exception->getMessageBag(),
-                        ]
-                );
-            }
-            $message = $exception->getMessage();
-
-            return Redirect::back()->withInput()->withErrors(array('user_name' => $message));
-        }
+             return redirect()->action('AnnounciatorsController@listParticipator')->withCookie($cookie);
+         } catch (\Exception $exception) {
+             Bugsnag::notifyException($exception);
+             if ($request->wantsJson()) {
+                 return response()->json(
+                         [
+                                 'error'   => true,
+                                 'message' => $exception->getMessageBag(),
+                         ]
+                 );
+             }
+             $message = $exception->getMessage();
+             return Redirect::back()->withInput()->withErrors(array('user_name' => $message));
+         }
     }
 
     use FileUploadTrait;

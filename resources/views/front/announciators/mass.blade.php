@@ -20,6 +20,17 @@
         </div>
         {!! Form::hidden('hash',$hash) !!}
         {!! Form::close() !!}
+
     </div>
+    <h3>Hinweise</h3>
+    <ul>
+        <li>Die erste Zeile wird nicht importiert.</li>
+        <li>Vorname und Nachname sind Pflichtfelder.</li>
+        <li>Die Felder in der Excel Tabelle müssen das Textformat haben.</li>
+        <li>Die Exceldatei als CSV exportieren. Mit Semikolon als Trennzeichen (<a href="https://www.anleitung24.com/anleitung-csv-datei-mit-excel-erstellen-trennzeichen-selbst-bestimmen.html" target="_blank">Anleitung</a>) </li>
+        <li>Die Werte für die Altersklassen und der Disziplinen müssen mit denen der Ausschreibung übereinstimmen (nächste Seite, nach Auswahl des Wettkampfes). Die können aber noch geändert werden</li>
+    </ul>
+    <p><a href="{{ url('public/storage') }}/teilnehmer.xlsx" target="_blank">Beispieldatei</a></p>
+
 @stop
 

@@ -12,7 +12,8 @@ use App\Helpers\Utils;
 use App\Repositories\Participator\ParticipatorRepositoryInterface;
 use Illuminate\Support\Str;
 
-class ParticipatorService {
+class ParticipatorService
+{
     /**
      * @var ParticipatorRepositoryInterface
      */
@@ -23,7 +24,8 @@ class ParticipatorService {
     protected $participators;
     protected $seltecCollection = [];
 
-    public function __construct(ParticipatorRepositoryInterface $participatorRepository) {
+    public function __construct(ParticipatorRepositoryInterface $participatorRepository)
+    {
         $this->participatorRepository = $participatorRepository;
     }
 
@@ -32,41 +34,59 @@ class ParticipatorService {
      * @param $announciatorId
      * @param $season
      */
-    public function create($request, $announciatorId, $season) {
+    public function create($request, $announciatorId, $season)
+    {
         $participators = $this->createParticipatorPerDiscipline($request, $season);
-
         foreach ($participators as $participator) {
             $participator['announciator_id'] = $announciatorId;
             $this->participators[]           = $this->participatorRepository->create($participator);
         }
     }
 
-    private function createParticipatorPerDiscipline($request, $season): array {
+    public function createMassupload($request, $announciatorId): void
+    {
+        foreach ($request->discipline as $key => $discipline) {
+            $participator['prename']         = $request->vorname [$key];
+            $participator['lastname']        = $request->nachname[$key];
+            $participator['birthyear']       = $request->jahrgang[$key];
+            $participator['ageclass_id']     = $request->ageclass[$key];
+            $participator['clubname']        = $request->clubname[$key];
+            $participator['discipline_id']   = $discipline;
+            $participator['best_time']       = $request->best_time[$key];
+            $participator['announciator_id'] = $announciatorId;
+            $this->participators[]           = $this->participatorRepository->create($participator);
+        }
+    }
+
+    protected function createParticipatorPerDiscipline($request, $season): array
+    {
         $participators = [];
         foreach ($request->discipline as $disciplineKey => $discipline) {
             foreach ($discipline as $participatorNumber => $disciplineId) {
-                $participator[$participatorNumber]['prename']     = $request->vorname[$disciplineKey];
-                $participator[$participatorNumber]['lastname']    = $request->nachname[$disciplineKey];
-                $participator[$participatorNumber]['birthyear']   = $request->jahrgang[$disciplineKey];
-                $participator[$participatorNumber]['ageclass_id'] = $request->ageclass[$disciplineKey];
-                $participator[$participatorNumber]['clubname']    = $request->clubname[$disciplineKey];
-
-                if ($season == 'cross') {
-                    $participator[$participatorNumber]['discipline_cross'] = $disciplineId;
-                    $participator[$participatorNumber]['discipline_id']    = null;
-                } else {
-                    $participator[$participatorNumber]['discipline_cross'] = null;
-                    $participator[$participatorNumber]['discipline_id']    = $disciplineId;
-                }
-                if($request->massupload) {
-                    $participator[$participatorNumber]['best_time']    = $request->best_time[$disciplineKey];
-                }
-                else{
-                    $participator[$participatorNumber]['best_time'] = $this->besttime($request, $disciplineKey, $participatorNumber);
-                }
-                $participators[]                                = $participator[$participatorNumber];
+                $participators = $this->createParticipatorCollection($request, $participatorNumber, $disciplineKey, $disciplineId, $season);
             }
         }
+
+        return $participators;
+    }
+
+    protected function createParticipatorCollection($request, $participatorNumber, $disciplineKey, $disciplineId, $season): array
+    {
+        $participator[$participatorNumber]['prename']     = $request->vorname[$disciplineKey];
+        $participator[$participatorNumber]['lastname']    = $request->nachname[$disciplineKey];
+        $participator[$participatorNumber]['birthyear']   = $request->jahrgang[$disciplineKey];
+        $participator[$participatorNumber]['ageclass_id'] = $request->ageclass[$disciplineKey];
+        $participator[$participatorNumber]['clubname']    = $request->clubname[$disciplineKey];
+        $participator[$participatorNumber]['best_time']   = $this->besttime($request, $disciplineKey, $participatorNumber);
+        if ($season === 'cross') {
+            $participator[$participatorNumber]['discipline_cross'] = $disciplineId;
+            $participator[$participatorNumber]['discipline_id']    = null;
+        } else {
+            $participator[$participatorNumber]['discipline_cross'] = null;
+            $participator[$participatorNumber]['discipline_id']    = $disciplineId;
+        }
+        $participators[] = $participator[$participatorNumber];
+
         return $participators;
     }
 
@@ -76,7 +96,7 @@ class ParticipatorService {
      * @param $participatorNumber
      * @return string
      */
-    private function besttime($request, $disciplineKey, $participatorNumber) : string
+    protected function besttime($request, $disciplineKey, $participatorNumber): string
     {
         //Zeit
         if ($request->bestzeit_h[$disciplineKey][$participatorNumber] !== null
@@ -108,7 +128,7 @@ class ParticipatorService {
      * @param $disciplineKey
      * @return string
      */
-    private function handleMetric($meter, $centimeter, $participatorNumber, $disciplineKey) : string
+    private function handleMetric($meter, $centimeter, $participatorNumber, $disciplineKey): string
     {
         $metric = 'M,CM';
         $M      = 0;
@@ -134,7 +154,7 @@ class ParticipatorService {
      * @param $disciplineKey
      * @return string
      */
-    private function handleTime($hour, $minute, $seconds, $millis, $participatorNumber, $disciplineKey) : string
+    private function handleTime($hour, $minute, $seconds, $millis, $participatorNumber, $disciplineKey): string
     {
         $time = 'H:M:S,MS';
         $h    = '00';
@@ -153,10 +173,10 @@ class ParticipatorService {
         if ($millis[$disciplineKey][$participatorNumber] != null) {
             $ms = $millis[$disciplineKey][$participatorNumber];
         }
-        $time = Str::replaceFirst('H',  $h,   $time);
-        $time = Str::replaceFirst('M',  $min, $time);
-        $time = Str::replaceFirst('S',  $sec, $time);
-        $time = Str::replaceFirst('MS', $ms,  $time);
+        $time = Str::replaceFirst('H', $h, $time);
+        $time = Str::replaceFirst('M', $min, $time);
+        $time = Str::replaceFirst('S', $sec, $time);
+        $time = Str::replaceFirst('MS', $ms, $time);
 
         return $time;
     }
@@ -190,26 +210,33 @@ class ParticipatorService {
     /**
      * @return array seltecCollection
      */
-    public function getSeltecCollection() {
+    public function getSeltecCollection()
+    {
         return $this->seltecCollection;
     }
 
     /**
      * @return mixed
      */
-    public function getParticipators() {
+    public function getParticipators()
+    {
         return $this->participators;
     }
 
-    public function sendCsvFile($competition) {
+    public function sendCsvFile($competition)
+    {
         $this->participators = $competition->participators;
         $this->listParticipatorForSeltec($competition);
         $headers = [
-                'Cache-Control'     => 'must-revalidate, post-check=0, pre-check=0'
-            , 'Content-type'        => 'text/csv'
-            , 'Content-Disposition' => 'attachment; filename=participators.csv'
-            , 'Expires'             => '0'
-            , 'Pragma'              => 'public',
+                'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0'
+            ,
+                'Content-type'        => 'text/csv'
+            ,
+                'Content-Disposition' => 'attachment; filename=participators.csv'
+            ,
+                'Expires'             => '0'
+            ,
+                'Pragma'              => 'public',
         ];
         $list    = $this->getSeltecCollection();
         # add headers for each column in the CSV download
