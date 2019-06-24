@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class HashLogin extends Model
 {
-    protected $fillable = ['email', 'hash', 'active'];
+    protected $fillable = ['email', 'hash', 'active', 'name'];
 }

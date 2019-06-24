@@ -1,18 +1,28 @@
 Dropzone.options.droppy = {
     maxFilesize: 10, // Mb+
-    autoProcessQueue: true,
+    autoProcessQueue: false,
+    processData: false,
+    contentType: false,
+
+    acceptedFiles: '.csv, .CSV',
     accept: function(file, done) {
         let reader = new FileReader();
         reader.onload = function(event) {
             let contents = event.target.result;
             processData(contents);
+         $(".dz-progress").css("display", "none");
+            $(".dz-error-mark").css("display", "none");
+
 
         };
         reader.onerror = function(event) {
-            console.error("File could not be read! Code " + event.target.error.code);
+            alert("File could not be read! Code " + event.target.error.code);
+            $(".dz-error-mark svg").css("background", "red");
+            $(".dz-success-mark").css("display", "none");
         };
         reader.readAsText(file);
         done();
+        return file.previewElement.classList.add("dz-success");
     }
 };
 
@@ -24,7 +34,8 @@ function processData(csv) {
 function parseTableData(result) {
 
     let parsedData = Papa.parse(result, {
-        delimiter: ';'
+        delimiter: ';',
+        skipEmptyLines: 'greedy'
     });
     let table = formDataTable(parsedData);
 
@@ -41,7 +52,7 @@ function formDataTable(response) {
         let errorAgeclass = '';
         let errorDiscipline = '';
         let duration = allData[j][5];
-
+      
         if (typeof ageclass == 'undefined') {
             errorAgeclass = 'is-invalid';
             if ($errorOccures === false) {

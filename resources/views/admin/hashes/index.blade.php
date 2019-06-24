@@ -31,8 +31,8 @@
                             @can('hashes_delete')
                                 <td></td>
                             @endcan
-                            <td>{{ $hash->email }}</td>
-                            <td>{{ $hash->name }}</td>
+                                <td>{{ $hash->name }}</td>
+                                <td>{{ $hash->email }}</td>
                             <td>{!! url('/') !!}/announciators/mass/{{ $hash->hash }}</td>
                             <td>{{ $hash->active }}</td>
                             <td>

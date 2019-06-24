@@ -2,11 +2,36 @@
 @section('content')
 
     <div class="card card-default mb-5 p-3">
-        <h3>Massen Anmeldung</h3>
+        <h3>Anmeldung</h3>
         {!! Form::open(['method' => 'POST', 'route' => ['announciators/massupload']]) !!}
+
         <div class="form-group">
-            {!! Form::label('competition_id', Lang::get('quickadmin.competitions.title'), ['class' => 'control-label']) !!}
-            {!! Form::select('competition_id', $competitionselect, null, ['id'=> 'competition_id', 'class' => 'competition_select form-control','style'=>'width: 100%']) !!}
+
+            @foreach ($competitions as $competition)
+                @if ($competition->only_list) @continue; @endif
+                @if ($competition->register) @continue; @endif
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="competition_id" id="{{$competition->id}}" value="{{$competition->id}}">
+                        <label class="form-check-label" for="{{$competition->id}}">
+                            {{$competition->header}}
+                            <p class="desc">
+                                @foreach ($competition->ageclasses as $ageclass)
+                                    <span class="entry_tags">
+                                {{$ageclass->ladv}}@if (!$loop->last)@endif
+                            </span>
+                                @endforeach
+                            </p>
+                            <p class="desc">
+                                @foreach ($competition->disciplines as $disciplines)
+                                    <span class="entry_tags">
+                                {{$disciplines->shortname}}@if (!$loop->last)@endif
+                            </span>
+                                @endforeach
+                            </p>
+                        </label>
+
+                    </div> <br>
+            @endforeach
         </div>
         <div class="form-group">
             <div class="col-md-12">
@@ -24,13 +49,13 @@
     </div>
     <h3>Hinweise</h3>
     <ul>
-        <li>Die erste Zeile wird nicht importiert.</li>
-        <li>Vorname und Nachname sind Pflichtfelder.</li>
-        <li>Die Felder in der Excel Tabelle müssen das Textformat haben.</li>
-        <li>Die Exceldatei als CSV exportieren. Mit Semikolon als Trennzeichen (<a href="https://www.anleitung24.com/anleitung-csv-datei-mit-excel-erstellen-trennzeichen-selbst-bestimmen.html" target="_blank">Anleitung</a>) </li>
-        <li>Die Werte für die Altersklassen und der Disziplinen müssen mit denen der Ausschreibung übereinstimmen (nächste Seite, nach Auswahl des Wettkampfes). Die können aber noch geändert werden</li>
+        <li>Die erste Zeile der CSV Datei ist eine Überschrift und wird nicht ausgewertet.</li>
+        <li>Vorname, Nachname und Geburtsjahr sind Pflichtfelder.</li>
+        <li>Die Felder in der Excel Tabelle müssen das Textformat haben. Sonst werden die Disziplinen und Altersklassen falsch von Excel formatiert.</li>
+        <li>Die Exceldatei als CSV exportieren, mit Semikolon als Trennzeichen. Das Semikolon ist normalerweise standardmäßig als Trennzeichen eingestellt. (<a href="https://www.anleitung24.com/anleitung-csv-datei-mit-excel-erstellen-trennzeichen-selbst-bestimmen.html" target="_blank">Anleitung</a>) </li>
+        <li>Die Werte für die Altersklassen und der Disziplinen müssen mit denen der Ausschreibung übereinstimmen. Die können aber in dem Formular noch geändert werden, falls sie rot markiert wurden.</li>
     </ul>
-    <p><a href="{{ url('public/storage') }}/teilnehmer.xlsx" target="_blank">Beispieldatei</a></p>
+    <p><a href="{{ url('/storage') }}/teilnehmer.xlsx" target="_blank">Beispieldatei</a></p>
 
 @stop
 

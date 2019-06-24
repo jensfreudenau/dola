@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Upload;
+use App\Repositories\Competition\CompetitionRepositoryInterface;
 use App\Traits\FileUploadTrait;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use App\Services\AgeclassService;
@@ -21,6 +22,10 @@ class AnnounciatorsController extends Controller
      * @var AnnounciatorService
      */
     protected $announciatorService;
+    /**
+     * @var CompetitionRepositoryInterface
+     */
+    protected $competitionRepository;
 
     /**
      * @var AgeclassService
@@ -38,11 +43,13 @@ class AnnounciatorsController extends Controller
     public function __construct(
             AnnounciatorService $announciatorService,
             AgeclassService $ageclassService,
-            DisciplineService $disciplineService
+            DisciplineService $disciplineService,
+            CompetitionRepositoryInterface $competitionRepository
     ) {
-        $this->announciatorService = $announciatorService;
-        $this->ageclassService     = $ageclassService;
-        $this->disciplineService   = $disciplineService;
+        $this->announciatorService   = $announciatorService;
+        $this->ageclassService       = $ageclassService;
+        $this->disciplineService     = $disciplineService;
+        $this->competitionRepository = $competitionRepository;
     }
 
     /**
@@ -119,9 +126,8 @@ class AnnounciatorsController extends Controller
         if (!$this->announciatorService->findHash($hash)) {
             return redirect()->route('home');
         }
-        $competitionselect = $this->announciatorService->getCompetionSelectable();
-
-        return view('front.announciators.mass', compact('competitionselect', 'hash'));
+        $competitions = $this->competitionRepository->getOrderedCompetitons();
+        return view('front.announciators.mass', compact( 'hash', 'competitions'));
 
 
     }

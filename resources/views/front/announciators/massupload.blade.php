@@ -29,8 +29,8 @@
         </div>
     @endif
     <div class="card card-default mb-5 p-3">
-        <h3>Massen Anmeldung 2</h3>
-
+        <h3>Anmeldung Upload</h3>
+        <h4>{{$competition->header}}</h4>
         <p class="desc">
         <span class="desc_type">Werte für die Altersklassen:</span> <br>
             @foreach ($competition->ageclasses as $ageclass)

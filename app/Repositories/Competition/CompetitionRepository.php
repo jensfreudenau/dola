@@ -28,10 +28,17 @@ class CompetitionRepository extends Repository implements CompetitionRepositoryI
         return Competition::class;
     }
 
+    public function getOrderedCompetitons()
+    {
+        return $this->model->orderBy('start_date', 'asc')
+                ->whereDate('submit_date', '>', date('Y-m-d'))
+                ->where('only_list', '=', '0')
+                ->where('register', '=', '0')
+                ->get();
+    }
     /**
      * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection|static[]
      */
-
     public function getFutured()
     {
         $competitions = $this->model->orderBy('start_date', 'asc')->whereDate('start_date', '>', date('Y-m-d'))->get();

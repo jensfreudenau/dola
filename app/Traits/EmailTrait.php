@@ -21,7 +21,7 @@ trait EmailTrait
     {
         $seltecCollection = $this->participatorService->getSeltecCollection();
         $participator     = $this->participatorService->getParticipators();
-        $columnHeaders = array('BIB', 'Code', 'Event', 'Team', 'Telefon', 'Straße', 'Stadt', 'Vorname', 'Nachname', 'Value', 'YOB', 'discipline', 'ageclass');
+        $columnHeaders = array('Firstname', 'Lastname','BIB', 'Team', 'Ageclass','Sex', 'Discipline', 'Best', 'Event', 'Announciator', 'Code',  'Telefon', 'Straße', 'Stadt', 'YOB');
         $filename      = 'teilnehmer.csv';
         $file          = fopen('php://temp', 'w+');
         fputcsv($file, $columnHeaders, ',');

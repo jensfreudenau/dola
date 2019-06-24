@@ -60,13 +60,13 @@ class HashLoginController extends Controller
         if (!Gate::allows('hashes_create')) {
             return abort(401);
         }
-
-        $this->hashLoginRepository->create([
-                'email'  => $request->email,
-                'active' => $request->active,
-                'name' => $request->name,
-                'hash'   => hash('md5', $request->email),
-        ]);
+         $data = [
+                 'email'  => $request->email,
+                 'active' => $request->active,
+                 'name' => $request->name,
+                 'hash'   => hash('md5', $request->email),
+         ];
+        $this->hashLoginRepository->create($data);
 
         return redirect()->route('admin.hashes.index');
     }

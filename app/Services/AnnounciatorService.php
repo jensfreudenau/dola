@@ -66,11 +66,11 @@ class AnnounciatorService
             DisciplineService $disciplineService
     ) {
         $this->announciatorRepository = $announciatorRepository;
-        $this->hashLoginRepository = $hashLoginRepository;
+        $this->hashLoginRepository    = $hashLoginRepository;
         $this->participatorService    = $participatorService;
         $this->competitionService     = $competitionService;
-        $this->ageclassService     = $ageclassService;
-        $this->disciplineService     = $disciplineService;
+        $this->ageclassService        = $ageclassService;
+        $this->disciplineService      = $disciplineService;
     }
 
 
@@ -91,7 +91,7 @@ class AnnounciatorService
      */
     public function processAnnouncement($request, $massupload): Announciator {
         //wk finden
-        $this->competition = $this->competitionService->find($request->competition_id);
+        $this->competition  = $this->competitionService->find($request->competition_id);
         //melder registrieren
         $this->announciator = $this->announciatorRepository->create($request->all());
         //teilnehmer abhängig vom Melder registrieren
