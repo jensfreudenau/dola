@@ -108,7 +108,8 @@ class CompetitionController extends Controller
         }
         $competition                = $this->competitionService->find($id);
         $path                       = 'public/'.$request->type.'/'.$competition->season;
-        $uploads                    = $this->saveFiles($request, $path);
+        $filename                   = str_replace('-','',$competition->createMysqlFormat( $competition->start_date)).'_'.$competition->id;
+        $uploads                    = $this->saveFiles($request, $path, $filename);
         $requests                   = $request->all();
         $requests['competition_id'] = $id;
         $requests['type']           = $request->type;

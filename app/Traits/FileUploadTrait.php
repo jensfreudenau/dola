@@ -46,13 +46,13 @@ trait FileUploadTrait
      * @param $path
      * @return array
      */
-    public function saveFiles(Request $request, $path)
+    public function saveFiles(Request $request, $path, $filename)
     {
         $response = [];
         $finalRequest = $request;
         foreach ($request->all() as $key => $value) {
             if ($request->hasFile($key)) {
-                $filename = $request->file($key)->getClientOriginalName();
+                $filename = $filename.'.'.$request->file('uploader')->getClientOriginalExtension();
                 Storage::putFileAs($path, $request->file('uploader'), $filename);
                 $finalRequest = new Request(array_merge($finalRequest->all(), [$key => $filename]));
 

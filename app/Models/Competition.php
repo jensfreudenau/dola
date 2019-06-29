@@ -178,7 +178,7 @@ class Competition extends Model
      * @param $input
      * @return null|string
      */
-    protected function createMysqlFormat($input)
+    public function createMysqlFormat($input)
     {
         if (!empty($input)) {
             $date = Carbon::parse($input)->format('d.m.Y');
