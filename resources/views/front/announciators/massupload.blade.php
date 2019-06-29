@@ -59,12 +59,12 @@
         </div>
         <div class="form-group">
             <div class="input-group">
-                {!! Form::text('name',$announciator->name, ['id'=> 'name', 'class' => 'form-control required', 'placeholder' => 'Name*', 'required']) !!}
+                {!! Form::text('name',null, ['id'=> 'name', 'class' => 'form-control required', 'placeholder' => 'Name*', 'required']) !!}
             </div>
         </div>
         <div class="form-group" id="">
             <div class="input-group">
-                {!! Form::email('email',$announciator->email, ['id'=> 'email', 'class' => 'form-control required']) !!}
+                {!! Form::email('email',null, ['id'=> 'email', 'class' => 'form-control required', 'placeholder' => 'Email*', 'required']) !!}
             </div>
         </div>
 <span id="mycsvdata"> </span>
@@ -84,7 +84,6 @@
             </div>
         </div>
         {!! Form::hidden('massupload', true) !!}
-        {!! Form::hidden('hash',$announciator->hash) !!}
         {!! Form::hidden('competition_id',$competition->id) !!}
         {!! Form::close() !!}
     </div>

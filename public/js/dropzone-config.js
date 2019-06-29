@@ -46,7 +46,6 @@ function formDataTable(response) {
     let allData = response.data;
     allData.shift();
     $errorOccures = false;
-    let btn = 'btn-outline-success';
     $(allData).each(function(j) {
         let ageclass = ageclasses[allData[j][3]];
         let errorAgeclass = '';
@@ -57,7 +56,6 @@ function formDataTable(response) {
             errorAgeclass = 'is-invalid';
             if ($errorOccures === false) {
                 $errorOccures = true;
-                btn = 'btn-outline-danger';
             }
         }
         let discipline = disciplines[allData[j][4]];
@@ -70,7 +68,6 @@ function formDataTable(response) {
             errorDiscipline = 'is-invalid';
             if ($errorOccures === false) {
                 $errorOccures = true;
-                btn = 'btn-outline-danger';
             }
         }
         $('<div class="form-row">\n' +
@@ -86,7 +83,6 @@ function formDataTable(response) {
     if ($errorOccures) {
         $('<div id="formerror" class="form-row red float-right"><div class="form-group col-md-12"><h5>Es ist ein Fehler passiert</h5></div></div>').appendTo("#mycsvdata");
     }
-    $('#upload').addClass(btn);
 }
 
 $(document)

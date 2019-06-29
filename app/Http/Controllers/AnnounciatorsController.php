@@ -121,25 +121,16 @@ class AnnounciatorsController extends Controller
         return view('front.announciators.list', compact('list'));
     }
 
-    public function mass($hash)
+    public function mass()
     {
-        if (!$this->announciatorService->findHash($hash)) {
-            return redirect()->route('home');
-        }
         $competitions = $this->competitionRepository->getOrderedCompetitons();
-        return view('front.announciators.mass', compact( 'hash', 'competitions'));
-
-
+        return view('front.announciators.mass', compact( 'competitions'));
     }
 
     public function massupload(Request $request)
     {
-        $announciator = $this->announciatorService->findHash($request->hash);
-        if (!$announciator) {
-            return redirect()->route('home');
-        }
         if (0 == $request->competition_id) {
-            return Redirect::to('announciators/mass/'.$request->hash, 301);
+            return Redirect::to('announciators/mass/', 301);
         }
         $competition            = $this->announciatorService->findCompetition($request->competition_id);
         $disciplines            = $this->disciplineService->getPluck($competition);
@@ -148,11 +139,8 @@ class AnnounciatorsController extends Controller
         $disciplinesJson        = $this->disciplineService->createJson($competition);
         $personalBestFormatJson = $this->disciplineService->createPersonalBestJson($competition);
 
-        return view('front.announciators.massupload', compact('personalBestFormatJson', 'disciplines', 'ageclasses', 'competition', 'announciator', 'ageclassesJson', 'disciplinesJson'));
-
+        return view('front.announciators.massupload', compact('personalBestFormatJson', 'disciplines', 'ageclasses', 'competition', 'ageclassesJson', 'disciplinesJson'));
     }
-
-
 
     public function masssave(Request $request)
     {

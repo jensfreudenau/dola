@@ -43,7 +43,6 @@
                 </div>
             </div>
         </div>
-        {!! Form::hidden('hash',$hash) !!}
         {!! Form::close() !!}
 
     </div>

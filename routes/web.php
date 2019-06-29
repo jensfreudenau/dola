@@ -27,7 +27,7 @@ Route::get('/announciators/competitions_select/{competition_id}', 'Announciators
 Route::get('/announciators/list_participator', 'AnnounciatorsController@listParticipator');
 Route::get('/announciators/create/{competition_id?}', 'AnnounciatorsController@create');
 Route::post('announciators/store', 'AnnounciatorsController@store')->name('announciators/store');
-Route::get('announciators/mass/{token}', 'AnnounciatorsController@mass')->name('announciators/mass');
+Route::get('announciators/mass', 'AnnounciatorsController@mass')->name('announciators/mass');
 Route::get('announciators/massupload', 'AnnounciatorsController@massupload')->name('announciators/massupload');
 Route::post('announciators/massupload', 'AnnounciatorsController@massupload')->name('announciators/massupload');
 Route::match(['get', 'post'],'announciators/masssave', 'AnnounciatorsController@masssave')->name('announciators/masssave');
