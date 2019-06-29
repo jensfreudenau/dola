@@ -81,37 +81,26 @@ function formDataTable(response) {
         ).appendTo("#mycsvdata");
     });
     if ($errorOccures) {
-        $('<div id="formerror" class="form-row red float-right"><div class="form-group col-md-12"><h5>Es ist ein Fehler passiert</h5></div></div>').appendTo("#mycsvdata");
+        $('<div id="formerror" class="form-row red float-right form-text "><div class="form-group col-md-12"><h5>Es ist ein Fehler passiert</h5></div></div><br><br>').appendTo("#mycsvdata");
     }
 }
+$(document).on('mouseout', '#mycsvdata', function() {
+    $('input[name^="ageclass"]').each(function(key, value) {
+        let ageclass = ageclasses[value.value];
+        if (typeof ageclass == 'undefined') {
+            jQuery(value).addClass('is-invalid');
 
-$(document)
-    .on('click', 'form button[type=submit]', function(e) {
-        isValid = true;
-        $('input[name^="ageclass"]').each(function(key, value) {
-            let ageclass = ageclasses[value.value];
-            if (typeof ageclass == 'undefined') {
-                jQuery(value).addClass('is-invalid');
-                if (isValid === true) {
-                    isValid = false;
-                }
-            } else {
-                jQuery(value).removeClass('is-invalid');
-            }
-        });
-
-        $('input[name^="discipline"]').each(function(key, value) {
-            let discipline = disciplines[value.value];
-            if (typeof discipline == 'undefined') {
-                jQuery(value).addClass('is-invalid');
-                if (isValid === true) {
-                    isValid = false;
-                }
-            } else {
-                jQuery(value).removeClass('is-invalid');
-            }
-        });
-        if (!isValid) {
-            e.preventDefault(); //prevent the default action
+        } else {
+            jQuery(value).removeClass('is-invalid');
         }
     });
+    $('input[name^="discipline"]').each(function(key, value) {
+        let discipline = disciplines[value.value];
+        if (typeof discipline == 'undefined') {
+            jQuery(value).addClass('is-invalid');
+
+        } else {
+            jQuery(value).removeClass('is-invalid');
+        }
+    });
+});
