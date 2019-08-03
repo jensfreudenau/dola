@@ -63,7 +63,7 @@ class OrganizersController extends Controller
         $this->organizerRepository->create([
                               'name' => $request->name,
                               'leader' => $request->leader,
-                              'addresses_id' => $request->address_id,
+                              'address_id' => $request->address_id,
                               'homepage' => $request->homepage,
                           ]);
         return redirect()->route('admin.organizers.index');

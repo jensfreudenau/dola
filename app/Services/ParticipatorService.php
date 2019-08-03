@@ -63,7 +63,7 @@ class ParticipatorService
         $participators = [];
         foreach ($request->discipline as $disciplineKey => $discipline) {
             foreach ($discipline as $participatorNumber => $disciplineId) {
-                $participators = $this->createParticipatorCollection($request, $participatorNumber, $disciplineKey, $disciplineId, $season);
+                $participators[] = $this->createParticipatorCollection($request, $participatorNumber, $disciplineKey, $disciplineId, $season);
             }
         }
 
@@ -85,9 +85,8 @@ class ParticipatorService
             $participator[$participatorNumber]['discipline_cross'] = null;
             $participator[$participatorNumber]['discipline_id']    = $disciplineId;
         }
-        $participators[] = $participator[$participatorNumber];
 
-        return $participators;
+        return $participator[$participatorNumber];
     }
 
     /**
